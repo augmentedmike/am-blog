@@ -179,29 +179,31 @@ def draw_caption_box(page: Image.Image, draw: ImageDraw.ImageDraw,
 
     place_top = (panel_idx % 2 == 0)
 
-    FONT_SIZE    = 56          # Large — must read at thumbnail
-    PADDING_X    = 40
-    PADDING_Y    = 22
-    BOX_INSET    = 12          # Smaller inset — use more panel width
-    LINE_SPACING = 10
-    ACCENT_BAR   = 5           # Gold left-edge accent bar width
+    FONT_SIZE    = 44          # Readable but not dominating
+    PADDING_X    = 32
+    PADDING_Y    = 18
+    BOX_INSET    = 20          # Float it in the panel, not edge-to-edge
+    LINE_SPACING = 12          # Generous breathing room
+    ACCENT_BAR   = 4           # Gold left-edge accent bar width
+    MAX_BOX_W_RATIO = 0.80     # Max 80% panel width — let the art breathe
 
-    font = load_font(FONT_SIZE, bold=True)
+    font = load_font(FONT_SIZE, bold=False)  # Regular weight — more voice, less block
 
-    # ALL CAPS — comic standard
-    text = caption.upper()
+    # Mixed case — narration voice, not announcement
+    text = caption
 
-    max_text_w = cell_w - (BOX_INSET * 2) - (PADDING_X * 2) - ACCENT_BAR
+    max_box_w = int(min(cell_w - BOX_INSET * 2, cell_w * MAX_BOX_W_RATIO))
+    max_text_w = max_box_w - (PADDING_X * 2) - ACCENT_BAR
     lines = wrap_text(draw, text, font, max_text_w)
     if not lines:
         return
 
     line_h = FONT_SIZE + LINE_SPACING
-    text_block_h = len(lines) * line_h - LINE_SPACING  # no trailing spacing
+    text_block_h = len(lines) * line_h - LINE_SPACING
     box_h = PADDING_Y * 2 + text_block_h
 
     box_x = x + BOX_INSET
-    box_w = cell_w - BOX_INSET * 2
+    box_w = max_box_w
     box_y = y + BOX_INSET if place_top else (y + cell_h - BOX_INSET - box_h)
 
     # --- SOLID dark background — no transparency, full opacity ---
