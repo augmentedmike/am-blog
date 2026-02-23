@@ -47,8 +47,9 @@ CAPTION_H = 80
 
 BG          = (15,  15,  20)    # near-black, dark blue tint
 BORDER_CLR  = (220, 180, 80)    # gold border — premium feel
-CAPTION_BG  = (15,  15,  20)
-CAPTION_FG  = (220, 180, 80)    # gold text
+CAPTION_BG  = (8,   8,   12)    # near-black, fully opaque
+CAPTION_FG  = (255, 255, 255)   # WHITE — maximum readability over complex art
+CAPTION_ACCENT = (220, 180, 80) # gold — used for border only
 
 # ---------------------------------------------------------------------------
 # Layouts — (row_h_weight, [col_weights])
@@ -160,64 +161,77 @@ def draw_caption_box(page: Image.Image, draw: ImageDraw.ImageDraw,
                      x: int, y: int, cell_w: int, cell_h: int,
                      caption: str, panel_idx: int):
     """
-    Draw a real comic-style caption box INSIDE the panel on the page canvas.
+    Real comic-style caption box — Spawn/Vertigo lettering standard.
 
-    Design rules (from actual comics):
-      - Caption box TOP of panel for establishing/opening beats (even panels)
-      - Caption box BOTTOM of panel for closing/reflective beats (odd panels)
-      - Full panel width minus small inset margins
-      - Semi-transparent dark background over the scene image
-      - Gold text, bold, LARGE — 52px (readable, not a subtitle bar)
-      - Thin gold border on the box
+    Design rules (from actual Spawn/Image comics):
+      - SOLID near-black fill (no transparency over busy art — kills readability)
+      - WHITE text — maximum contrast, works on any panel regardless of art color
+      - Gold accent border — the ONLY gold element
+      - Gold left-edge accent bar (3px) — professional comics detail
+      - ALL CAPS text (comic convention)
+      - TOP of panel = establishing/opening beats (odd panels 0,2,4)
+      - BOTTOM of panel = closing/reflective beats (odd panels 1,3,5)
+      - Full-width box with generous padding
+      - Font size 56px — large enough to read at thumbnail size
     """
     if not caption.strip():
         return
 
     place_top = (panel_idx % 2 == 0)
 
-    FONT_SIZE    = 52
-    PADDING_X    = 36
-    PADDING_Y    = 20
-    BOX_INSET    = 18
-    LINE_SPACING = 8
+    FONT_SIZE    = 56          # Large — must read at thumbnail
+    PADDING_X    = 40
+    PADDING_Y    = 22
+    BOX_INSET    = 12          # Smaller inset — use more panel width
+    LINE_SPACING = 10
+    ACCENT_BAR   = 5           # Gold left-edge accent bar width
 
     font = load_font(FONT_SIZE, bold=True)
-    max_text_w = cell_w - (BOX_INSET * 2) - (PADDING_X * 2)
-    lines = wrap_text(draw, caption, font, max_text_w)
+
+    # ALL CAPS — comic standard
+    text = caption.upper()
+
+    max_text_w = cell_w - (BOX_INSET * 2) - (PADDING_X * 2) - ACCENT_BAR
+    lines = wrap_text(draw, text, font, max_text_w)
     if not lines:
         return
 
     line_h = FONT_SIZE + LINE_SPACING
-    box_h = min(PADDING_Y * 2 + len(lines) * line_h, int(cell_h * 0.42))
+    text_block_h = len(lines) * line_h - LINE_SPACING  # no trailing spacing
+    box_h = PADDING_Y * 2 + text_block_h
 
     box_x = x + BOX_INSET
     box_w = cell_w - BOX_INSET * 2
     box_y = y + BOX_INSET if place_top else (y + cell_h - BOX_INSET - box_h)
 
-    # --- Semi-transparent black overlay using alpha composite ---
-    region = page.crop((box_x, box_y, box_x + box_w, box_y + box_h))
-    overlay = Image.new("RGBA", region.size, (10, 10, 18, 215))
-    blended = Image.alpha_composite(region.convert("RGBA"), overlay)
-    page.paste(blended.convert("RGB"), (box_x, box_y))
+    # --- SOLID dark background — no transparency, full opacity ---
+    draw.rectangle(
+        [box_x, box_y, box_x + box_w, box_y + box_h],
+        fill=CAPTION_BG
+    )
+
+    # --- Gold left-edge accent bar (Spawn-style detail) ---
+    draw.rectangle(
+        [box_x, box_y, box_x + ACCENT_BAR, box_y + box_h],
+        fill=CAPTION_ACCENT
+    )
 
     # --- Gold border ---
     draw.rectangle(
         [box_x, box_y, box_x + box_w, box_y + box_h],
-        outline=BORDER_CLR,
+        outline=CAPTION_ACCENT,
         width=3
     )
 
-    # --- Text: shadow + gold ---
-    text_x = box_x + PADDING_X
+    # --- White text with subtle shadow for depth ---
+    text_x = box_x + PADDING_X + ACCENT_BAR
     text_y = box_y + PADDING_Y
     for line in lines:
-        # Drop shadow
-        draw.text((text_x + 2, text_y + 2), line, fill=(0, 0, 0), font=font)
-        # Gold text
+        # Subtle shadow (1px offset — enough depth, not muddy)
+        draw.text((text_x + 1, text_y + 1), line, fill=(0, 0, 0), font=font)
+        # White text — crisp, readable
         draw.text((text_x, text_y), line, fill=CAPTION_FG, font=font)
         text_y += line_h
-        if text_y > box_y + box_h - PADDING_Y:
-            break
 
 
 def composite_page(panel_images: List[Path], layout: Layout,

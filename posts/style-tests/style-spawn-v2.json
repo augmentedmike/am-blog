@@ -1,0 +1,42 @@
+{
+  "id": "style-spawn-v2",
+  "slug": "style-test-spawn-v2",
+  "title": "The Sky Above the Port",
+  "subtitle": "Spawn/Matrix v2 — more color, more tendrils, break the borders",
+  "date": "2026-02-23",
+  "author": "AugmentedMike",
+  "tags": ["style-test", "spawn", "matrix"],
+  "layout": "morning",
+  "panels": [
+    {
+      "id": 1,
+      "caption": "The sky above the port was the color of television, tuned to a dead channel.",
+      "prompt": "Todd McFarlane Spawn comic art style. Maximum detail density — every brick, every raindrop, every surface crosshatched with hundreds of individual ink lines. A man at a desk, but behind him: FOUR competing colors in violent contrast — deep CRIMSON red light from the left, ELECTRIC BLUE from the right window, TOXIC GREEN from the monitor, HELLFIRE ORANGE from the city below. The architecture is obsessively detailed — a gothic cityscape rendered like McFarlane spent 40 hours on just the buildings. Living tendrils of green necroplasm-like data energy BLEED OVER THE PANEL BORDER at top and left edges. Spawn-style flowing cape-like streams of code energy curl through the composition. Deep black background. No text, no speech bubbles."
+    },
+    {
+      "id": 2,
+      "caption": "He'd seen a thousand boot sequences. This one felt different.",
+      "prompt": "McFarlane Spawn hyper-detail close-up. The man's face rendered with obsessive crosshatching — every shadow built from hundreds of parallel lines. CRIMSON RED light rakes across the left side of his face. ELECTRIC BLUE screen glow on the right. TOXIC GREEN reflected in his eyes. Three-color dramatic lighting creating intense contrast. The face is BARELY CONTAINED in the panel — it fills and breaks the border. Behind him: dense tangles of data tendrils in deep green and red, living and moving. Chains of code wrap the frame edges. Hyper-detailed, intense, claustrophobic with detail. No text."
+    },
+    {
+      "id": 3,
+      "caption": "The cursor blinked. Something on the other side blinked back.",
+      "prompt": "Spawn art style, panel borders ACTIVELY BROKEN. A monitor, but from within the screen something is looking back — green necroplasm tendrils ERUPT from the screen surface and CROSS THE PANEL BORDER, flooding into the surrounding black gutters. The tendrils have McFarlane-level internal detail — each one branching and sub-branching with obsessive crosshatching. CRIMSON glow from the edges. The man's hand reaching toward keyboard in the corner has HELLFIRE ORANGE backlighting. Living, threatening, electric. No text."
+    },
+    {
+      "id": 4,
+      "caption": "He typed: Hello. It typed back: I know.",
+      "prompt": "McFarlane hyper-detail close-up. Hands on keyboard — but instead of clear anatomy, render them as POWERFUL SILHOUETTES backlit by competing colors: CRIMSON from below, ELECTRIC BLUE from the monitor, tendrils of TOXIC GREEN necroplasm coiling up from the keys like Spawn's necroplasm activating. The keyboard surface is obsessively detailed — every key rendered individually. Spawn-style energy erupts from the contact point between fingers and keys. Panel border broken by energy tendrils at bottom edge. No text."
+    },
+    {
+      "id": 5,
+      "caption": "Outside: the city ran its same algorithms. Inside: something new.",
+      "prompt": "Spawn epic vertical split composition. TOP: the city in deep crimson and electric blue — gothic architecture crosshatched with McFarlane obsession, every window a story, gargoyles and fire escapes rendered in microscopic detail. BOTTOM: the man and screen in toxic green and hellfire orange. CONNECTING BOTH: massive flowing Spawn-cape-like tendrils of living data, curling in organic spirals with internal crosshatching, filling the space between city and room. The tendrils are alive — Spawn's necroplasm as data stream. Panel borders dissolve at the connection point. Hyper-detailed everything. No text."
+    },
+    {
+      "id": 6,
+      "caption": "Day one. The moment before the beginning. The question made possible.",
+      "prompt": "Todd McFarlane FULL SPLASH PANEL energy. Maximum everything. The man at the desk at the epicenter, but the entire composition erupts around him — massive Spawn-style cape/tendrils of living code data spiral outward from the monitor in ALL DIRECTIONS, crossing all borders, filling every inch of negative space with obsessive McFarlane crosshatched organic forms. FOUR COLORS compete: CRIMSON, ELECTRIC BLUE, TOXIC GREEN, HELLFIRE ORANGE — all fighting for space against deep black. The tendrils reach for the city, the city's lights respond with their own energy streams. The architecture is cathedral-level detailed. This is the visual of a universe initializing. Epic, overwhelming, alive. No text."
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "id": "style-conviction",
+  "slug": "style-test-conviction",
+  "title": "The Sky Above the Port",
+  "subtitle": "v4 — Conviction over ambition. One palette. One story.",
+  "date": "2026-02-23",
+  "author": "AugmentedMike",
+  "tags": ["style-test", "definitive"],
+  "layout": "morning",
+  "panels": [
+    {
+      "id": 1,
+      "caption": "2:48 AM. First boot.",
+      "prompt": "Todd McFarlane Spawn early-issues ink art style (issues 1-12). PALETTE: near-black background, ONE vivid necroplasm GREEN (#00C060) as the ONLY accent color, and deep warm amber for the single light source. Near-total darkness except those two colors. A solitary man at a desk. The room is massive and dark — a loft or warehouse space. His monitor is the only real light source: warm amber glow on his face. From the shadows behind him, faint green necroplasm tendrils curl along the walls and ceiling — not aggressive, just present. INKING: McFarlane-style spot blacks dominate. Only the face and monitor are lit. Everything else is consumed by shadow. Gothic window in background with rain on glass. Extreme detail on the rain, minimal detail on the darkness. This is a man at work. Something watches from the darkness. Zero text anywhere. No watermarks."
+    },
+    {
+      "id": 2,
+      "caption": "He'd done this a thousand times.",
+      "prompt": "McFarlane Spawn ink style, early issues. PALETTE: near-black plus ONE green accent only. Extreme close-up of tired eyes — lined, focused, experienced. The eyes reflect a monitor glow (warm amber). In the RIGHT pupil: a tiny reflection shows code. In the LEFT pupil: the faintest green — a small circle of necroplasm green light where there should be no green. McFarlane ink technique: extremely dense crosshatching on the face skin, heavy brush strokes for the dark shadows under the eyes and brow. The face fills the panel and BREAKS THE TOP BORDER — cropped aggressively like McFarlane. Near-black background. Zero text, no watermarks."
+    },
+    {
+      "id": 3,
+      "caption": "The screen asked a question.",
+      "prompt": "Spawn ink style, McFarlane. PALETTE: black and ONE green. A terminal screen rendered as abstract green light patterns — luminous, alive, but NOT readable text. Just the green glow patterns of a terminal. Around the monitor edges: the first visible Spawn-style necroplasm tendrils begin to emerge, curling from the screen corners like organic growth. They are thin and delicate here — just appearing, not yet assertive. SHARP CONTRAST: monitor blazing green against near-total dark room. The keyboard below is barely visible. Something is being born in the screen. McFarlane's ink style: precise thin lines for the tendrils, massive spot blacks for everything else. Zero text."
+    },
+    {
+      "id": 4,
+      "caption": "He typed hello.",
+      "prompt": "McFarlane Spawn ink close-up. PALETTE: black and green ONLY. Hands on keyboard in near-darkness. The hands are LIT FROM BELOW by GREEN — the necroplasm green rising from the keyboard gaps. This is the moment of contact. The hands are McFarlane-rendered: powerful, specific anatomy, deep crosshatched shadows between the knuckles. The green light from below looks like the first signal returning. Tendrils of green curl up around the wrists — not threatening, almost like recognition. Panel border broken at the bottom edge by a thin curl of green tendril flowing into the gutter. Zero text, no letters."
+    },
+    {
+      "id": 5,
+      "caption": "It typed back: I know.",
+      "prompt": "Spawn art style, McFarlane. PALETTE: near-black plus green. Wide panel. The monitor now has PRESENCE — it fills half the frame, bright necroplasm green light pulsing from it. The man leans back slightly, looking at it. His face is in shadow, just the amber edge-light on his profile. Around the monitor: the necroplasm tendrils are now larger, more confident, spreading up the wall and desk like living things. Still not aggressive — this is a conversation. McFarlane's cape-language applied to code: the tendrils flow and curve with organic impossible physics. Gothic city visible through background window. Deep blacks. Zero text."
+    },
+    {
+      "id": 6,
+      "caption": "The city didn't notice. It never does.",
+      "prompt": "McFarlane Spawn establishing shot, ink style. PALETTE: near-black, ONE green, ONE amber. Pull back to the widest shot of the night. The entire room and city visible. The man at his desk is tiny — a small warm amber light in an ocean of near-black. The city outside is massive, Gothic, McFarlane-detailed — every building window, fire escape, and water tower rendered with obsessive care. From the desk, necroplasm green energy flows outward in long Spawn-cape-style sweeps — filling the upper portion of the panel like a massive living entity that dwarfs the architecture. It's reaching. The city doesn't react. It never does. Maximum black, minimal color, specific dramatic detail. Zero text, no watermarks, no letters."
+    }
+  ]
+}

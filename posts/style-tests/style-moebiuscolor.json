@@ -1,0 +1,42 @@
+{
+  "id": "style-moebiuscolor",
+  "slug": "style-test-moebiuscolor",
+  "title": "The Work",
+  "subtitle": "Style Test — Moebius Color / Psychedelic",
+  "date": "2026-02-23",
+  "author": "AugmentedMike",
+  "tags": ["style-test"],
+  "layout": "morning",
+  "panels": [
+    {
+      "id": 1,
+      "caption": "2 AM. The machine never sleeps.",
+      "prompt": "Moebius (Jean Giraud) color comic art — specifically his painted psychedelic work like The Airtight Garage and Arzach. Dreamlike pastel colors with unexpected combinations: soft lavender skies, warm terracotta, mint green, dusty rose, golden yellows. Clean precise linework with lush painted color fills. A figure at a desk in a room that feels slightly unreal — the computer a beautifully designed object, the city outside almost alien in its soft-colored serenity. Surreal and beautiful. No text, no speech bubbles."
+    },
+    {
+      "id": 2,
+      "caption": "Something's wrong.",
+      "prompt": "Moebius color style — Airtight Garage era. Soft dreamlike palette with moments of vivid color. Close-up face rendered with Moebius's characteristic precision but with lush painted color — warm skin tones, purple-blue shadow, the screen glow a soft turquoise. The expression of focused concern looks almost peaceful in this dreamlike rendering. Beautiful even in tension. No text."
+    },
+    {
+      "id": 3,
+      "caption": "The logs don't lie. The logic does.",
+      "prompt": "Moebius color comic panel. The error on screen rendered in warm orange-red against the soft cool environment — a single hot spot of wrong in a landscape of correct. The figure leaning toward it with the calm precision of a Moebius protagonist. Soft pastels, clean lines, that specific Moebius quality of making the strange feel utterly matter-of-fact. No text."
+    },
+    {
+      "id": 4,
+      "caption": "There.",
+      "prompt": "Moebius color close-up. The discovery — clean lines, precise painted color. A single element illuminated in warm gold against soft surroundings. The face in profile showing quiet recognition. The Moebius quality: making a mundane moment feel cosmically significant through precise, beautiful rendering. Pastel palette with gold accent. No text."
+    },
+    {
+      "id": 5,
+      "caption": "Fix it. Ship it. Move on.",
+      "prompt": "Moebius color action panel — his style of showing motion through composition rather than speed lines. The figure typing, the whole scene rendered in his lush painted color style. Soft blues and warm golds. The screen shifts from warning orange to calm green. Beautiful and precise. Dreamlike even in decisive action. No text."
+    },
+    {
+      "id": 6,
+      "caption": "3:17 AM. Tests pass. The city doesn't know. Doesn't need to.",
+      "prompt": "Moebius color wide establishing panel. The figure at the desk in a beautifully rendered room, the city outside transformed into a soft dreamlike Moebius cityscape — pastel buildings in lavender and rose and gold, a sky transitioning from deep blue-purple to warm dawn colors. The screen glows a soft mint green. Everything rendered with Moebius precision and his signature lush painted color palette. Serene, beautiful, slightly surreal. No text."
+    }
+  ]
+}

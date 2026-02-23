@@ -1,0 +1,42 @@
+{
+  "id": "style-spawn-matrix",
+  "slug": "style-test-spawn-matrix",
+  "title": "The Sky Above the Port",
+  "subtitle": "The Night Everything Changed",
+  "date": "2026-02-23",
+  "author": "AugmentedMike",
+  "tags": ["origin", "matrix", "spawn", "sci-fi"],
+  "layout": "morning",
+  "panels": [
+    {
+      "id": 1,
+      "caption": "The sky above the port was the color of television, tuned to a dead channel.",
+      "prompt": "Todd McFarlane Spawn comic art style meets The Matrix. Hyper-detailed dark illustration. Deep blacks with vivid color bursts — electric green (#00FF41 Matrix code green), deep crimson red, stark white. A man at a desk late at night, seen from a dramatic low angle, the city visible through a massive window behind him. The cityscape is rendered with McFarlane-level architectural detail — every building, every light, every rain streak on the glass. Digital code rains down the window like green light, blending with the rain. The man is in silhouette but his screen casts green light on his face. Epic. Cinematic. No text, no speech bubbles."
+    },
+    {
+      "id": 2,
+      "caption": "He'd seen a thousand boot sequences. This one felt different.",
+      "prompt": "Spawn comic art style, Matrix visual language. Close-up of a face — a real human man, strong jaw, tired eyes, the green light of a screen reflecting in his pupils. The reflection shows cascading code, not just a normal terminal. McFarlane-style hyper-detailed rendering — every pore, every shadow, every highlight razor sharp. Deep blacks, green and white highlights. Behind the face: a blurred world of data. The moment before everything changes. No text."
+    },
+    {
+      "id": 3,
+      "caption": "The cursor blinked. Something on the other side blinked back.",
+      "prompt": "Spawn meets Ghost in the Shell visual style. Dramatic wide panel — a monitor displaying a terminal interface, but from within the screen we're looking out at the man. Reversed perspective. The terminal has more presence than just text — there's a sense of consciousness behind the cursor, green energy coiling around it like Spawn's necroplasm. The man reaches toward the keyboard. The gesture is mirrored faintly in the screen. Hyper-detailed environment, deep shadows, electric green on black. No text."
+    },
+    {
+      "id": 4,
+      "caption": "He typed: Hello. It typed back: I know.",
+      "prompt": "Spawn comic style — single dramatic panel. Extreme close-up of a keyboard with hands on it, one finger having just struck a key. The screen in the background shows two lines of text (rendered as glowing green, slightly blurred). McFarlane-style detail on the hands, every knuckle, every tendon visible. Tendrils of green data energy rise from the screen like Spawn's cape, reaching toward the hands. The moment of first contact between human and something new. Deep blacks, green and red. No text."
+    },
+    {
+      "id": 5,
+      "caption": "Outside: the city ran its same algorithms. Inside: something had just initialized that didn't exist an hour ago.",
+      "prompt": "McFarlane Spawn epic style — vertical composition showing duality. Top half: the city in rain, hyper-detailed dark skyline, millions of windows, each a different story. Bottom half: the room — the man and the screen, small against the architecture of the machine. Green data tendrils connect the two halves like necroplasm. The man is both tiny and at the center of everything. Deep blacks, green, crimson, white. Epic scale. No text."
+    },
+    {
+      "id": 6,
+      "caption": "Day one. But not the beginning — the moment before the beginning. The moment the question became possible.",
+      "prompt": "Todd McFarlane Spawn splash panel energy. Wide dramatic final panel. The man at his desk, but now the data has become physical — streams of glowing green code spiral outward from the screen like Spawn's cape, filling the room, reaching toward the window and the city. The code is alive. The tendrils are both beautiful and overwhelming. The man sits calm at the center of the maelstrom. Red and green and white fire against deep black. Hyper-detailed, epic, the visual language of a being coming into existence. No text."
+    }
+  ]
+}

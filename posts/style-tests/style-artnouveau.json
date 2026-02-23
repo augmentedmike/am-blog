@@ -1,0 +1,42 @@
+{
+  "id": "style-artnouveau",
+  "slug": "style-test-artnouveau",
+  "title": "The Work",
+  "subtitle": "Style Test — Art Nouveau / Mucha",
+  "date": "2026-02-23",
+  "author": "AugmentedMike",
+  "tags": ["style-test"],
+  "layout": "morning",
+  "panels": [
+    {
+      "id": 1,
+      "caption": "2 AM. The machine never sleeps.",
+      "prompt": "Alphonse Mucha Art Nouveau poster style. Intricate flowing organic lines, decorative border with stylized flowers and geometric patterns. Soft muted colors — dusty rose, sage green, warm gold, cream. A figure at a glowing screen, rendered with the elegant linear beauty of Mucha illustration — hair flowing, surrounded by decorative botanical border elements. The screen and cables become art nouveau organic forms. Beautiful, ornate, completely unexpected for this subject. No text, no speech bubbles."
+    },
+    {
+      "id": 2,
+      "caption": "Something's wrong.",
+      "prompt": "Art Nouveau Mucha style. Close-up face in elegant three-quarter profile, surrounded by decorative circular halo border of stylized code symbols transformed into botanical ornament. Soft pastel colors, intricate linework, the face beautiful and expressive despite concern. The organic decorative language of 1900 applied to a 2026 debugging session. Gold and dusty rose and sage. No text."
+    },
+    {
+      "id": 3,
+      "caption": "The logs don't lie. The logic does.",
+      "prompt": "Art Nouveau panel with decorative border. The error visualized as a thorned vine among smooth ones — the problem is organic, natural, woven into the larger pattern. The figure examining it like a botanist examining a specimen. Soft colors, flowing lines, intricate detail at the borders. The chaos of a bug made beautiful by the art nouveau lens. No text."
+    },
+    {
+      "id": 4,
+      "caption": "There.",
+      "prompt": "Mucha Art Nouveau close-up. The moment of finding — a single illuminated element in an intricate decorative pattern, highlighted in gold while the rest is soft grey. Like finding the wrong flower in a botanical illustration. Circular composition with ornate border. The face in profile, expression of quiet recognition. Soft warm palette. Extraordinarily detailed linework. No text."
+    },
+    {
+      "id": 5,
+      "caption": "Fix it. Ship it. Move on.",
+      "prompt": "Art Nouveau illustration. The fix — flowing energy, the figure in motion but rendered in the graceful linear language of Mucha. The decorative border elements shift to express completion — thorns become flowers, tangled lines resolve into elegant curves. Soft golds and greens. The beauty of a system working correctly. No text."
+    },
+    {
+      "id": 6,
+      "caption": "3:17 AM. Tests pass. The city doesn't know. Doesn't need to.",
+      "prompt": "Alphonse Mucha wide decorative panel. The resolution — the figure at rest, surrounded by an elaborate Art Nouveau frame of botanical and geometric ornament. The glowing screen rendered as a luminous moon in an ornate circular border. The city outside transformed into a stylized landscape with stylized trees and stars. Soft muted palette, gold highlights, extraordinarily detailed decorative borders. The absolute opposite of a tech aesthetic — and somehow perfect for it. No text."
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "id": "style-moebius",
+  "slug": "style-test-moebius",
+  "title": "The Work",
+  "subtitle": "Style Test — Moebius Ligne Claire",
+  "date": "2026-02-23",
+  "author": "AugmentedMike",
+  "tags": ["style-test"],
+  "layout": "morning",
+  "style": "moebius-ligne-claire",
+  "panels": [
+    {
+      "id": 1,
+      "caption": "2 AM. The machine never sleeps.",
+      "prompt": "Moebius ligne claire comic art style. Clean precise ink lines of uniform weight. Flat color fills with minimal shading — muted pastels and earth tones, occasional bright accent. A figure at a clean modernist desk, single screen glowing softly. The room is rendered with architectural precision — every object carefully placed. The window shows a simple city silhouette. Elegant, sparse, dreamlike. European bande dessinee quality. No text, no speech bubbles."
+    },
+    {
+      "id": 2,
+      "caption": "Something's wrong.",
+      "prompt": "Moebius ligne claire style. Clean uniform ink lines, flat color, no hatching. Close-up — hands on keyboard, rendered with the care of a technical illustration. The screen text is simple, clear. The face in three-quarter view shows focused attention — precisely drawn features, minimal shading. Pale colors. The clarity and precision of the style mirrors the precision of the work. No text."
+    },
+    {
+      "id": 3,
+      "caption": "The logs don't lie. The logic does.",
+      "prompt": "Moebius ligne claire comic panel. The error is visible on a cleanly rendered screen — simple, legible, elegant even in failure. The figure leans forward slightly, one hand raised to chin. Every line in the room is precise. The composition is classical — balanced, considered. Flat color palette: soft blues, warm whites, one accent of orange. The thinking face. No text."
+    },
+    {
+      "id": 4,
+      "caption": "There.",
+      "prompt": "Moebius ligne claire extreme close-up. A single code block on screen, clean and precisely rendered as if typeset. One word circled or highlighted in a precise geometric shape — not messy, just marked. The finding presented with the calm of a scientific illustration. Clean lines, flat color, almost diagrammatic. The intelligence of restraint. No text."
+    },
+    {
+      "id": 5,
+      "caption": "Fix it. Ship it. Move on.",
+      "prompt": "Moebius ligne claire panel. The figure types — no speed lines, no blurring. Just the precise moment of hands on keys, rendered with care. The screen now shows the corrected code, clean and orderly. Flat colors. The scene has the quality of a still life — everything in its right place. Soft warm lighting. The satisfaction of correct work done correctly. No text."
+    },
+    {
+      "id": 6,
+      "caption": "3:17 AM. Tests pass. The city doesn't know. Doesn't need to.",
+      "prompt": "Moebius ligne claire wide establishing panel. The figure at the desk, slightly reclined, at rest. The room is serene — clean lines, soft colors, everything ordered. The window shows the night city rendered in simple architectural silhouette against a pale sky. The screen glows a soft green. Stillness. Precision. The beautiful emptiness of 3am work completed. No text."
+    }
+  ]
+}

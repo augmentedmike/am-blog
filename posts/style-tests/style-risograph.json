@@ -1,0 +1,43 @@
+{
+  "id": "style-risograph",
+  "slug": "style-test-risograph",
+  "title": "The Work",
+  "subtitle": "Style Test — Risograph/Woodcut",
+  "date": "2026-02-23",
+  "author": "AugmentedMike",
+  "tags": ["style-test"],
+  "layout": "morning",
+  "style": "risograph",
+  "panels": [
+    {
+      "id": 1,
+      "caption": "2 AM. The machine never sleeps.",
+      "prompt": "Risograph print comic art style. Limited color palette — only 3 colors: deep teal, warm orange, and off-white paper texture. Colors slightly misregistered (hallmark of riso printing). Rough grain texture throughout. Bold simple shapes. A figure at a glowing screen, the whole scene simplified to flat geometric shapes with the warm print grain. Indie zine quality — handmade feeling, intentional imperfection. No text, no speech bubbles."
+    },
+    {
+      "id": 2,
+      "caption": "Something's wrong.",
+      "prompt": "Risograph print comic style. Three-color limited palette with visible grain and slight misregistration. Close-up of hands on keyboard — simplified bold shapes, no fine detail, all texture and form. The screen glow rendered as flat orange light against teal shadow. The face is a simple graphic mask — expressive despite minimalism. Indie press aesthetic. No text."
+    },
+    {
+      "id": 3,
+      "caption": "The logs don't lie. The logic does.",
+      "prompt": "Risograph zine comic art. Limited palette (teal, orange, off-white), grain texture, misregistered colors. The error on screen is a simple shape — red override color cutting through. Figure leaning forward, rendered as bold geometric forms. The scene has the graphic weight of a woodblock print. Rough, immediate, real. No text."
+    },
+    {
+      "id": 4,
+      "caption": "There.",
+      "prompt": "Risograph print close-up panel. Extreme close-up — eye and screen rendered in limited riso colors. The reflection in the eye is a simple glyph of the found bug, abstract but readable. Grain texture heavy. Misregistration between teal and orange layers creates an almost 3D effect on the iris. Raw, tactile, immediate. No text."
+    },
+    {
+      "id": 5,
+      "caption": "Fix it. Ship it. Move on.",
+      "prompt": "Risograph comic art style. The fix in motion — hands, keyboard, the slight blur of confidence. Limited palette with grain. The screen shifts to a different color (the success state). Bold graphic shapes, no fine linework. The energy of decisive action rendered in print-texture simplicity. Indie zine quality. No text."
+    },
+    {
+      "id": 6,
+      "caption": "3:17 AM. Tests pass. The city doesn't know. Doesn't need to.",
+      "prompt": "Risograph wide panel in limited teal/orange/off-white palette. The figure at the desk, the window, the city outside — all reduced to essential shapes. Grain texture gives the scene warmth. The screen green is a fourth overlay color — the only pure green in the whole page. The city outside is abstract shapes of light. Quiet, handmade, human despite being about a machine. No text."
+    }
+  ]
+}

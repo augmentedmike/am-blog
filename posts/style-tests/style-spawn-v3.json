@@ -1,0 +1,42 @@
+{
+  "id": "style-spawn-v3",
+  "slug": "style-test-spawn-v3",
+  "title": "The Sky Above the Port",
+  "subtitle": "Spawn/Matrix v3 — cross the gutters, chains + tendrils, zero text artifacts",
+  "date": "2026-02-23",
+  "author": "AugmentedMike",
+  "tags": ["style-test", "spawn", "matrix"],
+  "layout": "morning",
+  "panels": [
+    {
+      "id": 1,
+      "caption": "The sky above the port was the color of television, tuned to a dead channel.",
+      "prompt": "Todd McFarlane Spawn comic art. IMPORTANT: absolutely zero text, zero letters, zero words, no writing of any kind anywhere in the image. A man at a desk. The KEY FEATURE: massive CAPE-LIKE flows of living data energy originate from the monitor and sweep UPWARD AND OUTWARD beyond the panel edges in impossible physics — like Spawn's cape defying gravity. The cape IS made of code-tendrils with obsessive internal crosshatching. SIMULTANEOUSLY: iron CHAINS with skull links hang through the composition. FOUR competing light sources: CRIMSON window left, ELECTRIC BLUE window right, TOXIC GREEN monitor, HELLFIRE ORANGE city below. Gothic city visible through rain-streaked glass, every building rendered with individual brick crosshatching. McFarlane hyper-detail. No text of any kind."
+    },
+    {
+      "id": 2,
+      "caption": "He'd seen a thousand boot sequences. This one felt different.",
+      "prompt": "McFarlane Spawn close-up. ZERO TEXT, ZERO LETTERS anywhere. Face filling the panel, breaking the frame at top and sides — face is too large to be contained. OBSESSIVE crosshatching on every shadow — hundreds of individual parallel ink lines on cheeks, forehead, neck. THREE light colors simultaneously: CRIMSON across jaw, ELECTRIC BLUE across temple, TOXIC GREEN in both eyes. From behind the figure, Spawn-cape tendrils with internal detail BLEED OVER THE RIGHT PANEL BORDER into the black gutter space. The face should feel trapped and intense. No writing."
+    },
+    {
+      "id": 3,
+      "caption": "The cursor blinked. Something on the other side blinked back.",
+      "prompt": "Spawn art style. ZERO TEXT ANYWHERE. Monitor panel: the screen shows abstract green light patterns (NOT readable text — pure abstract green light). From the screen surface, THICK ORGANIC TENDRILS erupt and PHYSICALLY CROSS INTO THE BLACK GUTTER ON ALL SIDES — they invade neighboring panels' space. The tendrils are chains AND organic at once — biomechanical, each one crosshatched with individual lines. CRIMSON back-lighting around the frame edges. The man's hand, small in corner, backlit HELLFIRE ORANGE. The screen has MORE PRESENCE than the human. No text, no letters, no words."
+    },
+    {
+      "id": 4,
+      "caption": "He typed: Hello. It typed back: I know.",
+      "prompt": "McFarlane hyper-detail. NO TEXT OF ANY KIND. Hands on keyboard as POWERFUL SILHOUETTES — not clear anatomy, just the dark shape of hands against TOXIC GREEN glow from below. From the keyboard surface: SPAWN NECROPLASM (green glowing organic liquid/tendrils) rises up between the keys and coils around the fingers like living things. Separately: iron CHAINS descend from above into frame. CRIMSON light from left, ELECTRIC BLUE from right. Panel border broken at bottom by spilling necroplasm. Obsessive linework. Zero letters."
+    },
+    {
+      "id": 5,
+      "caption": "Outside: the city ran its same algorithms. Inside: something new.",
+      "prompt": "Spawn epic vertical composition. ZERO TEXT. The panel is split CITY (top) / ROOM (bottom) with MASSIVE FLOWING SPAWN-CAPE tendrils connecting them — each tendril 10x more detailed than v2, branching fractally with sub-tendrils, chains woven in, all crossing from the bottom half into the top half and PAST THE PANEL BORDER. The city: gothic rooftops, gargoyles, steam, rain, every element obsessively crosshatched. CRIMSON city lights. ELECTRIC BLUE lightning. TOXIC GREEN data streams connecting city to room. Man below in HELLFIRE ORANGE ambient. No words."
+    },
+    {
+      "id": 6,
+      "caption": "Day one. The moment before the beginning. The question made possible.",
+      "prompt": "Todd McFarlane MAXIMUM EVERYTHING splash. ABSOLUTELY NO TEXT ANYWHERE — this is critical. The man at desk is the still eye of a storm: EVERYTHING AROUND HIM erupts outward. Spawn-cape data tendrils as thick as tree trunks BREAK ALL FOUR PANEL BORDERS, flowing into the margins. Iron chains with skull links spiral through. Chains and tendrils INTERMIX — biomechanical hybrid. ALL FOUR COLORS at full saturation: CRIMSON, ELECTRIC BLUE, TOXIC GREEN, HELLFIRE ORANGE — each in its own region, clashing at borders. City through window is cathedral-scale gothic architecture crosshatched into hyper-reality. Every square inch of this image has dense detail. The man sits in a pocket of calm amid cosmic chaos. No letters, no words, no text whatsoever."
+    }
+  ]
+}

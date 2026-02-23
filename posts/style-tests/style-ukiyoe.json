@@ -1,0 +1,42 @@
+{
+  "id": "style-ukiyoe",
+  "slug": "style-test-ukiyoe",
+  "title": "The Work",
+  "subtitle": "Style Test — Ukiyo-e Woodblock",
+  "date": "2026-02-23",
+  "author": "AugmentedMike",
+  "tags": ["style-test"],
+  "layout": "morning",
+  "panels": [
+    {
+      "id": 1,
+      "caption": "2 AM. The machine never sleeps.",
+      "prompt": "Japanese ukiyo-e woodblock print style. Flat areas of color with visible wood grain texture. Traditional Japanese color palette — indigo blues, vermillion red, pale yellows, black outlines. A figure at a glowing screen, but the scene rendered as if by Hokusai or Hiroshige — the monitor becomes a glowing lantern, the city outside the window rendered as a mountain and wave landscape at night. Stylized clouds, bold flat shapes, decorative border pattern. No text, no speech bubbles."
+    },
+    {
+      "id": 2,
+      "caption": "Something's wrong.",
+      "prompt": "Ukiyo-e woodblock print. Traditional Japanese illustration style. Close-up of hands at a keyboard, rendered as hands working at a writing desk with brushes and scrolls — the modern transformed into the classical. Flat color fills, strong black outlines, visible print texture. Deep indigo and warm vermillion. Expressive face in three-quarter view. Traditional decorative border elements. No text."
+    },
+    {
+      "id": 3,
+      "caption": "The logs don't lie. The logic does.",
+      "prompt": "Ukiyo-e woodblock style. The code error visualized as a tangled koi fish or crashing wave — the chaos of the bug rendered in traditional Japanese visual metaphor. The figure studying it like a scholar studying a scroll. Rich flat colors, decorative cloud patterns, strong silhouettes. Pale paper texture background. Red and indigo. No text."
+    },
+    {
+      "id": 4,
+      "caption": "There.",
+      "prompt": "Japanese woodblock print close-up. The moment of discovery — a single character on a scroll, or a single fish swimming opposite the others. The isolating of the problem in the visual language of ukiyo-e. Stark, graphic, beautiful. Strong black outlines, limited flat color, visible grain. No text."
+    },
+    {
+      "id": 5,
+      "caption": "Fix it. Ship it. Move on.",
+      "prompt": "Ukiyo-e woodblock print. Dynamic action — the figure at work, rendered with the bold energy of a samurai print but in a modern office. Speed and purpose conveyed through dramatic diagonal composition. Bright vermillion and gold against deep indigo. Traditional garments transformed into modern work clothes but illustrated in classical style. No text."
+    },
+    {
+      "id": 6,
+      "caption": "3:17 AM. Tests pass. The city doesn't know. Doesn't need to.",
+      "prompt": "Ukiyo-e woodblock wide panel. A beautiful night scene — the figure at rest at their desk, screen glowing green like a moon, the city outside transformed into a traditional Japanese townscape at night with paper lanterns, Mt. Fuji silhouette on the horizon, stars rendered as traditional mon crests. Peaceful, complete. Rich indigo sky, warm lamplight, decorative border. No text."
+    }
+  ]
+}

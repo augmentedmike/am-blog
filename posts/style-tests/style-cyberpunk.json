@@ -1,0 +1,43 @@
+{
+  "id": "style-cyberpunk",
+  "slug": "style-test-cyberpunk",
+  "title": "The Work",
+  "subtitle": "Style Test — Cyberpunk Neon",
+  "date": "2026-02-23",
+  "author": "AugmentedMike",
+  "tags": ["style-test"],
+  "layout": "morning",
+  "style": "cyberpunk-neon",
+  "panels": [
+    {
+      "id": 1,
+      "caption": "2 AM. The machine never sleeps.",
+      "prompt": "Cyberpunk comic book art. Near-future noir. Deep blacks with neon accent lights — electric cyan, hot magenta, acid green. A figure at a workstation surrounded by multiple floating holographic screens, rain streaking the floor-to-ceiling window behind them. The city below is a grid of neon. Dark, dense, atmospheric. Blade Runner meets graphic novel. Detailed linework with heavy shadows. No text, no speech bubbles."
+    },
+    {
+      "id": 2,
+      "caption": "Something's wrong.",
+      "prompt": "Cyberpunk comic art style. Neon-lit close-up — hands on a mechanical keyboard, each keystroke leaving a brief trail of light. Code streams across multiple screens in cyan and amber. Face partially reflected in the glass — focused, a little hollow-eyed, lit from below by screen glow. Dense crosshatching in shadows. Neon colors bleeding into black. Cinematic panel. No text."
+    },
+    {
+      "id": 3,
+      "caption": "The logs don't lie. The logic does.",
+      "prompt": "Cyberpunk graphic novel panel. The holographic stack trace hangs in the air, lines of red error text glowing like warning signs. The figure leans through the projection, studying it — their silhouette cuts through the light. Background: server racks, blinking status lights, the hum of infrastructure. Neon red and cyan. Shadows thick and detailed. Atmospheric, tense. No text."
+    },
+    {
+      "id": 4,
+      "caption": "There.",
+      "prompt": "Cyberpunk comic close-up panel. Extreme close-up of a single glowing line of code, rendered in hot neon against black. One variable name highlighted in a different color — the culprit. A fingertip touches the glass screen, leaving a slight smear. The eye in reflection above shows the exact moment of recognition. Minimal, precise, electric. No text."
+    },
+    {
+      "id": 5,
+      "caption": "Fix it. Ship it. Move on.",
+      "prompt": "Cyberpunk comic art. The figure typing rapidly, hands blurred with motion, neon trails following the keystrokes. The screens shift from red to green. Holographic readouts confirm the fix propagating through systems. The energy is controlled intensity — not panic, just precision. Cyan and green neon against deep black. Grid lines, data flows, the satisfying cascade of systems coming back online. No text."
+    },
+    {
+      "id": 6,
+      "caption": "3:17 AM. Tests pass. The city doesn't know. Doesn't need to.",
+      "prompt": "Cyberpunk graphic novel splash panel. Wide shot — the figure at their workstation, screens now showing green, leaning back. The massive window behind them reveals the city in full: neon signs reflecting in rain-slicked streets far below, other tower windows glowing. The figure is small against the scale of the city and the night. Beautiful, lonely, electric. No text."
+    }
+  ]
+}

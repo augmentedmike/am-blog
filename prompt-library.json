@@ -1,0 +1,96 @@
+{
+  "version": "1.0",
+  "updated": "2026-02-23",
+  "purpose": "Track what works in Gemini image generation prompts. Build this over time. Each entry is a lesson.",
+
+  "style_modifiers": {
+    "ALWAYS_APPEND": "No text, no watermarks, no speech bubbles. Pure visual storytelling.",
+    "CINEMATIC": "Dramatic camera angle. Cinematic composition. Rule of thirds.",
+    "DETAIL": "Hyper-detailed rendering. Every surface, every shadow, razor sharp.",
+    "NOIR_LIGHT": "Single strong light source. Deep shadows. Chiaroscuro."
+  },
+
+  "what_works": [
+    {
+      "lesson": "Specifying '40-hour detail density' and 'obsessive crosshatching' triggers McFarlane-level rendering more than 'detailed'",
+      "example": "spawn-matrix-v2 prompts — explicit instruction about spending 40 hours inking"
+    },
+    {
+      "lesson": "UPPERCASE color names in prompts get more attention from Gemini — 'CRIMSON' vs 'crimson'",
+      "example": "v2 uses CRIMSON, ELECTRIC BLUE, TOXIC GREEN, HELLFIRE ORANGE — more vivid than lowercase descriptions"
+    },
+    {
+      "lesson": "Explicitly saying 'panel borders ACTIVELY BROKEN' and 'tendrils CROSS THE PANEL BORDER' triggers the bleeding-panel effect",
+      "example": "McFarlane's signature — cape/energy that refuses to be contained by the grid"
+    },
+    {
+      "lesson": "Naming competing light sources by color creates more interesting facial lighting than 'dramatic lighting'",
+      "example": "'CRIMSON from left, ELECTRIC BLUE from right, TOXIC GREEN in eyes' > 'dramatic screen glow'"
+    },
+    {
+      "lesson": "Specifying a real artist's name (McFarlane, Kirby, Moebius, Mucha) produces more recognizable style than describing the style abstractly",
+      "example": "'Todd McFarlane Spawn art style' > 'dark hyper-detailed comic art'"
+    },
+    {
+      "lesson": "Giving AI a color temperature conflict creates interesting panels. E.g. 'deep black exterior, warm amber interior'",
+      "example": "Cyberpunk neon batch — the warm/cool contrast was the strongest element"
+    },
+    {
+      "lesson": "Limited palette prompts produce more coherent pages than 'vibrant colors'. 3-4 specific colors > 'colorful'",
+      "example": "Risograph batch: 'teal, orange, off-white' produced unified feel across all 6 panels"
+    },
+    {
+      "lesson": "Specifying WHAT the camera sees and FROM WHERE produces better composition than just describing subject",
+      "example": "'dramatic low angle, city visible through window behind him' > 'man at desk at night'"
+    },
+    {
+      "lesson": "AI struggles with hands on keyboards — specify 'hands in soft focus' or 'hands as silhouette' to avoid the uncanny valley",
+      "example": "Every batch — hands in sharp focus come out wrong"
+    },
+    {
+      "lesson": "Text in panels (code on screen) always comes out garbled. Either ask for abstracted/glowing code or accept it as texture",
+      "example": "Ask for 'lines of glowing text as texture, not readable' rather than real code"
+    },
+    {
+      "lesson": "Moody dark styles all look similar — 'depressed batman' problem. Need to specify vivid color explicitly and name specific saturation anchors",
+      "example": "Mike's feedback on batch 1: all looked the same, only cyberpunk had real color"
+    },
+    {
+      "lesson": "The STORY in the caption should be written BEFORE the visual prompt — the narrative informs the image direction, not the reverse",
+      "example": "Gibson opening line as caption → the image prompt wrote itself from that"
+    },
+    {
+      "lesson": "Referencing a specific sci-fi/cultural touchstone in the prompt adds depth that pure visual descriptions miss",
+      "example": "Matrix digital rain + Spawn cape tendrils → specific visual language with emotional resonance"
+    }
+  ],
+
+  "what_fails": [
+    "Asking for 'consistent character' across panels — independent generations always drift",
+    "Specifying 'realistic hands on keyboard' — always comes out wrong",
+    "Asking for readable code on screen — always garbled",
+    "Generic style names without artist reference ('noir style', 'comic book style') — too vague",
+    "'Vibrant colors' without naming specific colors — AI defaults to muddy or dark",
+    "Newspaper/strip style — AI defaults to moody noir regardless of prompt"
+  ],
+
+  "style_ratings": {
+    "noir-gold": {"stars": 3, "want_to": 2, "note": "Our original style. Good but generic."},
+    "50s-silver-age": {"stars": 3, "want_to": 2, "note": "Retro but fights the subject matter"},
+    "cyberpunk-neon": {"stars": 2, "want_to": 1, "note": "Too common in AI art. But Mike liked it — has real color."},
+    "moebius-ligne-claire": {"stars": 2, "want_to": 1, "note": "AI can't do proper ligne claire"},
+    "risograph": {"stars": 5, "want_to": 5, "note": "Strongest of batch 1. Plays to AI strengths."},
+    "ukiyoe": {"stars": 4, "want_to": 4, "note": "Genuinely colorful, unexpected, has visual identity"},
+    "newspaper": {"stars": 1, "want_to": 0, "note": "AI ignores the brief, defaults to noir"},
+    "constructivist": {"stars": 3, "want_to": 2, "note": "Bold but dark. Limited palette."},
+    "spawn-matrix-v1": {"stars": 3, "want_to": 4, "note": "Story strong, art 40% there. Missing: competing colors, flowing tendrils, detail density, broken panel borders."},
+    "spawn-matrix-v2": {"stars": "TBD", "want_to": "TBD", "note": "Generating now — applied: 4-color violence, explicit tendrils breaking borders, 40-hour detail density instruction"}
+  },
+
+  "next_experiments": [
+    "Spawn/Matrix with Mike's face as reference — will need photo input",
+    "Risograph + color (3 colors but make one vivid)",
+    "Ukiyo-e + stronger narrative beats from Gibson/Gibson/Matrix text",
+    "Test Imagen 4 vs Gemini 3 pro for comic panels — may produce cleaner results"
+  ]
+}

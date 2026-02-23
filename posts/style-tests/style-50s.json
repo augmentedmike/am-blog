@@ -1,0 +1,43 @@
+{
+  "id": "style-50s",
+  "slug": "style-test-50s",
+  "title": "The Work",
+  "subtitle": "Style Test — 50s Silver Age",
+  "date": "2026-02-23",
+  "author": "AugmentedMike",
+  "tags": ["style-test"],
+  "layout": "morning",
+  "style": "50s-silver-age",
+  "panels": [
+    {
+      "id": 1,
+      "caption": "2 AM. The machine never sleeps.",
+      "prompt": "1950s Silver Age comic book art style. Bright primary colors — deep reds, cobalt blues, sunshine yellows. Bold black ink outlines. Halftone dot patterns in the shadows. A figure sits at a glowing computer desk in a dark apartment, city skyline visible through the window. The screen casts a heroic blue glow. Optimistic retro-futurism. Ben-Day dots. Jack Kirby energy. Clean, graphic, bold. No text, no speech bubbles."
+    },
+    {
+      "id": 2,
+      "caption": "Something's wrong.",
+      "prompt": "1950s Silver Age comic art. Bright flat colors, bold outlines, halftone shading. Close-up of hands on a keyboard, fingers poised mid-type. The code on screen glows bright yellow-green. The face reflected in the monitor — intense concentration, eyes narrowed. Retro computer panels with dials and lights. Primary color palette. Dynamic composition, slightly low angle. No text."
+    },
+    {
+      "id": 3,
+      "caption": "The logs don't lie. The logic does.",
+      "prompt": "1950s Silver Age comic style. Bold primary colors, thick ink outlines, Ben-Day dot texture. Split panel feel: left side shows cascading error messages in bright red on screen, right side shows the figure leaning forward, one hand raised in a 'wait' gesture, expression of sudden alertness. Classic comic book action pose adapted for intellectual discovery. No text."
+    },
+    {
+      "id": 4,
+      "caption": "There.",
+      "prompt": "1950s Silver Age comic art. Extreme close-up — a single line of code on a bright screen, one word highlighted in red. A finger pointing at it. Eyes in the reflection above — that specific look of recognition. Bold flat colors. The moment of finding it. Halftone dots. Clean graphic design, almost poster-like. No text."
+    },
+    {
+      "id": 5,
+      "caption": "Fix it. Ship it. Move on.",
+      "prompt": "1950s Silver Age comic style. Bright optimistic colors — the figure typing fast, confident, the screen now showing green. Speed lines radiating from the hands. The energy of getting it right. Retro computer equipment with chunky buttons and glowing displays. Bold outlines, flat color fills, halftone shadows. Action hero energy applied to coding. No text."
+    },
+    {
+      "id": 6,
+      "caption": "3:17 AM. Tests pass. The city doesn't know. Doesn't need to.",
+      "prompt": "1950s Silver Age comic book splash panel. Wide establishing shot — figure at desk, leaning back, arms relaxed. The screen shows bright green — success. The city skyline outside the window is rendered in beautiful retro-futurist style with neon signs and vintage cars below. Primary colors. The quiet triumph of finished work. Ben-Day dots in the sky. No text."
+    }
+  ]
+}
