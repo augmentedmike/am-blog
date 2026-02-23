@@ -114,23 +114,115 @@ def generate_panel_image(prompt: str, output_path: Path, panel_id: int) -> bool:
 # Comic page compositor
 # ---------------------------------------------------------------------------
 
-def load_font(size: int):
+def load_font(size: int, bold: bool = False):
+    """Load a font at the given pixel size. Prefers bold for captions."""
     font_paths = [
-        "/System/Library/Fonts/Helvetica.ttc",
+        # macOS system fonts — bold preferred for comic captions
+        ("/System/Library/Fonts/Helvetica.ttc", 1),     # index 1 = bold on some builds
+        ("/System/Library/Fonts/Helvetica.ttc", 0),
+        "/Library/Fonts/Arial Bold.ttf",
         "/System/Library/Fonts/Arial.ttf",
+        "/Library/Fonts/Arial.ttf",
         "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",
     ]
-    for fp in font_paths:
-        if Path(fp).exists():
-            try:
-                return ImageFont.truetype(fp, size)
-            except Exception:
-                pass
+    for entry in font_paths:
+        try:
+            if isinstance(entry, tuple):
+                path, idx = entry
+                if Path(path).exists():
+                    return ImageFont.truetype(path, size, index=idx)
+            else:
+                if Path(entry).exists():
+                    return ImageFont.truetype(entry, size)
+        except Exception:
+            pass
     return ImageFont.load_default()
+
+
+def wrap_text(draw, text: str, font, max_width: int) -> List[str]:
+    """Wrap text to fit within max_width pixels."""
+    words = text.split()
+    lines, line = [], []
+    for word in words:
+        test = ' '.join(line + [word])
+        bbox = draw.textbbox((0, 0), test, font=font)
+        if bbox[2] - bbox[0] <= max_width or not line:
+            line.append(word)
+        else:
+            lines.append(' '.join(line))
+            line = [word]
+    if line:
+        lines.append(' '.join(line))
+    return lines
+
+
+def draw_caption_box(page: Image.Image, draw: ImageDraw.ImageDraw,
+                     x: int, y: int, cell_w: int, cell_h: int,
+                     caption: str, panel_idx: int):
+    """
+    Draw a real comic-style caption box INSIDE the panel on the page canvas.
+
+    Design rules (from actual comics):
+      - Caption box TOP of panel for establishing/opening beats (even panels)
+      - Caption box BOTTOM of panel for closing/reflective beats (odd panels)
+      - Full panel width minus small inset margins
+      - Semi-transparent dark background over the scene image
+      - Gold text, bold, LARGE — 52px (readable, not a subtitle bar)
+      - Thin gold border on the box
+    """
+    if not caption.strip():
+        return
+
+    place_top = (panel_idx % 2 == 0)
+
+    FONT_SIZE    = 52
+    PADDING_X    = 36
+    PADDING_Y    = 20
+    BOX_INSET    = 18
+    LINE_SPACING = 8
+
+    font = load_font(FONT_SIZE, bold=True)
+    max_text_w = cell_w - (BOX_INSET * 2) - (PADDING_X * 2)
+    lines = wrap_text(draw, caption, font, max_text_w)
+    if not lines:
+        return
+
+    line_h = FONT_SIZE + LINE_SPACING
+    box_h = min(PADDING_Y * 2 + len(lines) * line_h, int(cell_h * 0.42))
+
+    box_x = x + BOX_INSET
+    box_w = cell_w - BOX_INSET * 2
+    box_y = y + BOX_INSET if place_top else (y + cell_h - BOX_INSET - box_h)
+
+    # --- Semi-transparent black overlay using alpha composite ---
+    region = page.crop((box_x, box_y, box_x + box_w, box_y + box_h))
+    overlay = Image.new("RGBA", region.size, (10, 10, 18, 215))
+    blended = Image.alpha_composite(region.convert("RGBA"), overlay)
+    page.paste(blended.convert("RGB"), (box_x, box_y))
+
+    # --- Gold border ---
+    draw.rectangle(
+        [box_x, box_y, box_x + box_w, box_y + box_h],
+        outline=BORDER_CLR,
+        width=3
+    )
+
+    # --- Text: shadow + gold ---
+    text_x = box_x + PADDING_X
+    text_y = box_y + PADDING_Y
+    for line in lines:
+        # Drop shadow
+        draw.text((text_x + 2, text_y + 2), line, fill=(0, 0, 0), font=font)
+        # Gold text
+        draw.text((text_x, text_y), line, fill=CAPTION_FG, font=font)
+        text_y += line_h
+        if text_y > box_y + box_h - PADDING_Y:
+            break
+
 
 def composite_page(panel_images: List[Path], layout: Layout,
                    output_path: Path, captions: List[str]) -> Path:
-    """Composite panel images into a single comic page."""
+    """Composite panel images into a single comic page with proper comic caption boxes."""
     page = Image.new("RGB", (PAGE_W, PAGE_H), BG)
     draw = ImageDraw.Draw(page)
 
@@ -139,8 +231,6 @@ def composite_page(panel_images: List[Path], layout: Layout,
 
     panel_idx = 0
     y = MARGIN
-
-    font_caption = load_font(22)
 
     for row_weight, col_weights in layout:
         row_h = int(usable_h * row_weight / total_h_weight)
@@ -152,47 +242,31 @@ def composite_page(panel_images: List[Path], layout: Layout,
             cell_w = int(usable_w * col_weight / total_c_weight)
             cell_h = row_h
 
-            # Caption area at bottom of each panel
-            cap_text = captions[panel_idx] if panel_idx < len(captions) else ""
-            img_h = cell_h - (CAPTION_H if cap_text else 0)
-
-            # Draw panel image
+            # === Load and paste panel image — fills the FULL cell ===
             if panel_idx < len(panel_images) and panel_images[panel_idx].exists():
                 try:
-                    img = Image.open(panel_images[panel_idx])
-                    img = ImageOps.fit(img, (cell_w, img_h), Image.LANCZOS)
-                    page.paste(img, (x, y))
+                    panel_img = Image.open(panel_images[panel_idx]).convert("RGB")
+                    panel_img = ImageOps.fit(panel_img, (cell_w, cell_h), Image.LANCZOS)
                 except Exception as e:
-                    print(f"  [!] Could not load panel image: {e}")
-                    draw.rectangle([x, y, x + cell_w, y + img_h], fill=(30, 30, 40))
+                    print(f"  [!] Panel image load failed: {e}")
+                    panel_img = Image.new("RGB", (cell_w, cell_h), (25, 25, 35))
             else:
-                draw.rectangle([x, y, x + cell_w, y + img_h], fill=(30, 30, 40))
+                panel_img = Image.new("RGB", (cell_w, cell_h), (25, 25, 35))
 
-            # Caption bar
+            page.paste(panel_img, (x, y))
+
+            # === Draw caption box IN the panel ===
+            cap_text = captions[panel_idx] if panel_idx < len(captions) else ""
             if cap_text:
-                cap_y = y + img_h
-                draw.rectangle([x, cap_y, x + cell_w, cap_y + CAPTION_H], fill=CAPTION_BG)
-                # Wrap text
-                words = cap_text.split()
-                lines, line = [], []
-                for word in words:
-                    test = ' '.join(line + [word])
-                    bbox = draw.textbbox((0, 0), test, font=font_caption)
-                    if bbox[2] - bbox[0] < cell_w - 20 or not line:
-                        line.append(word)
-                    else:
-                        lines.append(' '.join(line))
-                        line = [word]
-                if line:
-                    lines.append(' '.join(line))
+                draw_caption_box(page, draw, x, y, cell_w, cell_h,
+                                 cap_text, panel_idx)
 
-                text_y = cap_y + (CAPTION_H - len(lines) * 26) // 2
-                for ltext in lines:
-                    draw.text((x + 10, text_y), ltext, fill=CAPTION_FG, font=font_caption)
-                    text_y += 26
-
-            # Gold border
-            draw.rectangle([x, y, x + cell_w, y + cell_h], outline=BORDER_CLR, width=BORDER_W)
+            # === Gold border (drawn last so it's on top) ===
+            draw.rectangle(
+                [x, y, x + cell_w - 1, y + cell_h - 1],
+                outline=BORDER_CLR,
+                width=BORDER_W
+            )
 
             x += cell_w + GUTTER
             panel_idx += 1
@@ -202,6 +276,9 @@ def composite_page(panel_images: List[Path], layout: Layout,
     page.save(output_path, "PNG", dpi=(300, 300))
     print(f"  ✓ Page saved → {output_path}")
     return output_path
+
+
+# (caption text is now drawn inline in draw_caption_box)
 
 # ---------------------------------------------------------------------------
 # HTML blog generator
