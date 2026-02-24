@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.11
 """
 am-blog build engine
 Turns post JSON → Gemini panel images → comic page → HTML blog post
@@ -25,14 +25,14 @@ except ImportError:
 
 # Gemini
 try:
-    import google.generativeai as genai
+    import google.genai as genai
     from dotenv import load_dotenv
     load_dotenv(Path.home() / "Desktop/youtube-channel/.env")
     api_key = os.getenv("GOOGLE_API_KEY")
-    if api_key:
-        genai.configure(api_key=api_key)
+    _genai_client = genai.Client(api_key=api_key) if api_key else None
     GEMINI_OK = bool(api_key)
 except ImportError:
+    _genai_client = None
     GEMINI_OK = False
 
 # ---------------------------------------------------------------------------
@@ -75,6 +75,40 @@ def count_panels(layout: Layout) -> int:
     return sum(len(cols) for _, cols in layout)
 
 # ---------------------------------------------------------------------------
+# Cost tracking
+# Gemini gemini-3-pro-image-preview pricing (estimate, update when GA pricing releases)
+# Based on Imagen 3 pricing: ~$0.04/image at 1024px+
+# ---------------------------------------------------------------------------
+COST_PER_FRAME   = 0.04    # USD per generated panel image
+COST_PER_PAGE    = 0.00    # Compositor only — local CPU, no API cost
+
+class CostTracker:
+    def __init__(self):
+        self.frames = 0
+        self.skipped = 0
+
+    def charge_frame(self):
+        self.frames += 1
+
+    def skip_frame(self):
+        self.skipped += 1
+
+    @property
+    def total(self):
+        return self.frames * COST_PER_FRAME
+
+    def report(self, post_title: str = ""):
+        print(f"\n  💰 Cost Report{f' — {post_title}' if post_title else ''}:")
+        print(f"     Frames generated : {self.frames} × ${COST_PER_FRAME:.4f} = ${self.frames * COST_PER_FRAME:.4f}")
+        if self.skipped:
+            print(f"     Frames skipped   : {self.skipped} (cached, $0.00)")
+        print(f"     Page composite   : $0.00 (local)")
+        print(f"     ─────────────────────────────────────")
+        print(f"     Total this post  : ${self.total:.4f}")
+        print(f"     (est. 25 posts   : ${self.total * 25:.2f})")
+        return self.total
+
+# ---------------------------------------------------------------------------
 # Gemini image generation
 # ---------------------------------------------------------------------------
 
@@ -84,7 +118,8 @@ NOIR_SUFFIX = (
     "no speech bubbles. Pure visual storytelling. Panel border implied by composition."
 )
 
-def generate_panel_image(prompt: str, output_path: Path, panel_id: int) -> bool:
+def generate_panel_image(prompt: str, output_path: Path, panel_id: int,
+                         cost: "CostTracker | None" = None) -> bool:
     """Generate a single panel using Gemini. Returns True on success."""
     if not GEMINI_OK:
         print(f"  [!] Gemini not available — skipping panel {panel_id}")
@@ -93,17 +128,17 @@ def generate_panel_image(prompt: str, output_path: Path, panel_id: int) -> bool:
     full_prompt = f"{prompt}\n\n{NOIR_SUFFIX}"
 
     try:
-        model = genai.GenerativeModel("gemini-3-pro-image-preview")
         print(f"  → Generating panel {panel_id}...")
-        response = model.generate_content(full_prompt)
+        response = _genai_client.models.generate_content(
+            model="gemini-3-pro-image-preview",
+            contents=full_prompt,
+        )
 
         for part in response.candidates[0].content.parts:
             if hasattr(part, 'inline_data') and part.inline_data:
-                import io
+                import io, base64
                 raw = part.inline_data.data
-                # SDK may return bytes or base64 string
                 if isinstance(raw, str):
-                    import base64
                     raw = base64.b64decode(raw)
                 img = Image.open(io.BytesIO(raw))
                 img.save(output_path, "PNG")
@@ -671,15 +706,18 @@ def build_post(post_path: Path, skip_generate: bool = False, out_dir: Path = Non
     panels_dir.mkdir(exist_ok=True)
 
     # 1. Generate panels
+    cost = CostTracker()
     panel_paths = []
     for i, panel in enumerate(post["panels"][:n_panels]):
         p = panels_dir / f"panel_{i+1:02d}.png"
         panel_paths.append(p)
         if not skip_generate or not p.exists():
-            ok = generate_panel_image(panel["prompt"], p, panel["id"])
+            ok = generate_panel_image(panel["prompt"], p, panel["id"], cost)
             if ok:
+                cost.charge_frame()
                 time.sleep(2)  # rate limit
         else:
+            cost.skip_frame()
             print(f"  ↷ Skipping panel {panel['id']} (exists)")
 
     # 2. Composite page
@@ -690,9 +728,34 @@ def build_post(post_path: Path, skip_generate: bool = False, out_dir: Path = Non
     # 3. Generate HTML
     body = post.get("body", "")
     if not body:
-        body = "\n".join(
-            f"<p>{p['caption']}</p>" for p in post["panels"]
-        )
+        # Look for a companion body.md file (e.g. 003-nano-banana-body.md)
+        body_md = post_path.parent / (post_path.stem + "-body.md")
+        if body_md.exists():
+            import re as _re
+            md_text = body_md.read_text()
+            # Convert markdown to simple HTML: headers, paragraphs, hr
+            lines = md_text.splitlines()
+            html_lines = []
+            for line in lines:
+                if line.startswith("## "):
+                    html_lines.append(f"<h2>{line[3:].strip()}</h2>")
+                elif line.startswith("# "):
+                    pass  # Skip h1 title (already in template)
+                elif line.strip() == "---":
+                    html_lines.append("<hr>")
+                elif line.strip() == "":
+                    html_lines.append("")
+                else:
+                    # Bold: **text**
+                    line = _re.sub(r'\*\*(.+?)\*\*', r'<strong>\1</strong>', line)
+                    # Italic: *text*
+                    line = _re.sub(r'\*(.+?)\*', r'<em>\1</em>', line)
+                    html_lines.append(f"<p>{line}</p>")
+            body = "\n".join(html_lines)
+        else:
+            body = "\n".join(
+                f"<p>{p['caption']}</p>" for p in post["panels"]
+            )
 
     tags_html = "\n    ".join(
         f'<span class="tag">#{t}</span>' for t in post.get("tags", [])
@@ -711,6 +774,7 @@ def build_post(post_path: Path, skip_generate: bool = False, out_dir: Path = Non
 
     (post_dir / "index.html").write_text(html)
     print(f"  ✓ HTML → {post_dir}/index.html")
+    cost.report(post.get("title", slug))
     return post, post_dir
 
 def build_index(posts_meta: list, out_dir: Path):
