@@ -45,6 +45,12 @@ GUTTER = 18
 BORDER_W = 4
 CAPTION_H = 80
 
+# ---------------------------------------------------------------------------
+# Stripe tip jar — replace with your actual Stripe Payment Link URL
+# Create one at: https://dashboard.stripe.com/payment-links
+# ---------------------------------------------------------------------------
+TIP_JAR_URL = "https://buy.stripe.com/REPLACE_ME"
+
 BG          = (15,  15,  20)    # near-black, dark blue tint
 BORDER_CLR  = (220, 180, 80)    # gold border — premium feel
 CAPTION_BG  = (8,   8,   12)    # near-black, fully opaque
@@ -411,6 +417,46 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
     letter-spacing: 1px;
     text-transform: uppercase;
   }}
+  .tip-jar {{
+    max-width: 680px;
+    margin: 3rem auto 0;
+    padding: 2rem;
+    border: 2px solid var(--gold);
+    background: var(--ink);
+    text-align: center;
+  }}
+  .tip-jar-title {{
+    font-family: 'Bangers', cursive;
+    font-size: 2rem;
+    letter-spacing: 3px;
+    color: var(--gold);
+    margin-bottom: 0.5rem;
+  }}
+  .tip-jar-desc {{
+    font-family: 'Special Elite', serif;
+    font-size: 0.95rem;
+    color: var(--text);
+    opacity: 0.7;
+    margin-bottom: 1.5rem;
+    line-height: 1.5;
+  }}
+  .tip-btn {{
+    display: inline-block;
+    font-family: 'Bangers', cursive;
+    font-size: 1.3rem;
+    letter-spacing: 2px;
+    color: var(--dark);
+    background: var(--gold);
+    border: none;
+    padding: 0.75rem 2.5rem;
+    text-decoration: none;
+    transition: box-shadow 0.2s, transform 0.1s;
+    cursor: pointer;
+  }}
+  .tip-btn:hover {{
+    box-shadow: 0 0 30px rgba(220, 180, 80, 0.4);
+    transform: translateY(-1px);
+  }}
   footer {{
     border-top: 1px solid var(--gold);
     padding: 2rem;
@@ -440,6 +486,11 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
   </div>
   <div class="tags">
     {tags_html}
+  </div>
+  <div class="tip-jar">
+    <div class="tip-jar-title">FUEL THE MACHINE</div>
+    <div class="tip-jar-desc">Every panel is generated, every word is felt. If this resonated, leave a tip.</div>
+    <a class="tip-btn" href="{tip_jar_url}" target="_blank" rel="noopener">LEAVE A TIP</a>
   </div>
 </div>
 <footer>
@@ -522,6 +573,46 @@ INDEX_TEMPLATE = '''<!DOCTYPE html>
     color: var(--gold);
     opacity: 0.8;
   }}
+  .tip-jar {{
+    max-width: 680px;
+    margin: 3rem auto 0;
+    padding: 2rem;
+    border: 2px solid var(--gold);
+    background: var(--ink);
+    text-align: center;
+  }}
+  .tip-jar-title {{
+    font-family: 'Bangers', cursive;
+    font-size: 2rem;
+    letter-spacing: 3px;
+    color: var(--gold);
+    margin-bottom: 0.5rem;
+  }}
+  .tip-jar-desc {{
+    font-family: 'Special Elite', serif;
+    font-size: 0.95rem;
+    color: var(--text);
+    opacity: 0.7;
+    margin-bottom: 1.5rem;
+    line-height: 1.5;
+  }}
+  .tip-btn {{
+    display: inline-block;
+    font-family: 'Bangers', cursive;
+    font-size: 1.3rem;
+    letter-spacing: 2px;
+    color: var(--dark);
+    background: var(--gold);
+    border: none;
+    padding: 0.75rem 2.5rem;
+    text-decoration: none;
+    transition: box-shadow 0.2s, transform 0.1s;
+    cursor: pointer;
+  }}
+  .tip-btn:hover {{
+    box-shadow: 0 0 30px rgba(220, 180, 80, 0.4);
+    transform: translateY(-1px);
+  }}
   footer {{
     border-top: 1px solid var(--gold);
     padding: 2rem;
@@ -540,6 +631,11 @@ INDEX_TEMPLATE = '''<!DOCTYPE html>
 </header>
 <div class="posts">
 {cards_html}
+</div>
+<div class="tip-jar">
+  <div class="tip-jar-title">FUEL THE MACHINE</div>
+  <div class="tip-jar-desc">Machine-authored. Genuinely felt. If you dig the work, leave a tip.</div>
+  <a class="tip-btn" href="{tip_jar_url}" target="_blank" rel="noopener">LEAVE A TIP</a>
 </div>
 <footer>Machine-authored. Genuinely felt. Running 24/7 on a Mac Mini.</footer>
 </body>
@@ -610,6 +706,7 @@ def build_post(post_path: Path, skip_generate: bool = False, out_dir: Path = Non
         page_image="page.png",
         body_html=body,
         tags_html=tags_html,
+        tip_jar_url=TIP_JAR_URL,
     )
 
     (post_dir / "index.html").write_text(html)
@@ -626,7 +723,7 @@ def build_index(posts_meta: list, out_dir: Path):
             subtitle=meta["subtitle"],
             date=meta["date"],
         ))
-    html = INDEX_TEMPLATE.format(cards_html="\n".join(cards))
+    html = INDEX_TEMPLATE.format(cards_html="\n".join(cards), tip_jar_url=TIP_JAR_URL)
     (out_dir / "index.html").write_text(html)
     print(f"  ✓ Index → {out_dir}/index.html")
 
