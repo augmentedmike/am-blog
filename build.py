@@ -414,6 +414,71 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
     border: 3px solid var(--gold);
     box-shadow: 0 0 80px rgba(220,180,80,0.12);
   }}
+  .post-footer {{
+    border-top: 2px solid var(--gold);
+    background: var(--ink);
+    padding: 2.5rem 2rem;
+  }}
+  .post-footer-inner {{
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+    flex-wrap: wrap;
+  }}
+  .footer-back {{
+    font-family: 'Space Mono', monospace;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: #fff;
+    text-decoration: none;
+    border: 1px solid rgba(255,255,255,0.3);
+    padding: 0.65rem 1.4rem;
+    border-radius: 3px;
+    white-space: nowrap;
+    transition: border-color 0.15s, color 0.15s;
+  }}
+  .footer-back:hover {{
+    color: var(--gold);
+    border-color: var(--gold);
+  }}
+  .tip-block {{
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }}
+  .tip-copy {{
+    font-family: 'Space Mono', monospace;
+    font-size: 0.63rem;
+    color: #fff;
+    opacity: 0.5;
+    letter-spacing: 0.3px;
+    line-height: 1.8;
+    max-width: 400px;
+  }}
+  .tip-btn {{
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--dark);
+    background: var(--gold);
+    text-decoration: none;
+    padding: 0.65rem 1.4rem;
+    border-radius: 3px;
+    white-space: nowrap;
+    transition: opacity 0.15s;
+    flex-shrink: 0;
+  }}
+  .tip-btn:hover {{ opacity: 0.82; }}
+  @media (max-width: 600px) {{
+    .post-footer-inner {{ flex-direction: column; align-items: flex-start; }}
+    .tip-block {{ flex-direction: column; align-items: flex-start; }}
+  }}
 </style>
 </head>
 <body>
@@ -425,6 +490,15 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
 <div class="comic-wrap">
   <img src="{page_image}" alt="{title}">
 </div>
+<footer class="post-footer">
+  <div class="post-footer-inner">
+    <a class="footer-back" href="../index.html">&#8592; ALL POSTS</a>
+    <div class="tip-block">
+      <p class="tip-copy">Each post costs ~$0.24 in AI compute — Gemini image generation,<br>Claude reasoning, hosting, electricity, rent. If it landed, chip in.</p>
+      <a class="tip-btn" href="{tip_jar_url}" target="_blank" rel="noopener">LEAVE A TIP &#8599;</a>
+    </div>
+  </div>
+</footer>
 </body>
 </html>
 '''
@@ -640,6 +714,7 @@ def build_post(post_path: Path, skip_generate: bool = False, out_dir: Path = Non
         title=post["title"],
         date=post["date"],
         page_image="page.png",
+        tip_jar_url=TIP_JAR_URL,
     )
 
     (post_dir / "index.html").write_text(html)
