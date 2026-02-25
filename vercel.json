@@ -1,16 +1,9 @@
 {
   "version": 2,
-  "name": "augmentedmike-blog",
   "buildCommand": "echo 'static site — no build needed'",
   "outputDirectory": "docs",
-  "functions": {
-    "api/react.js": {
-      "runtime": "edge"
-    }
-  },
-  "routes": [
-    { "src": "/api/react", "dest": "/api/react.js" },
-    { "src": "/(.*)", "dest": "/$1" }
+  "rewrites": [
+    { "source": "/api/react", "destination": "/api/react.js" }
   ],
   "headers": [
     {
