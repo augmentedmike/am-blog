@@ -49,7 +49,7 @@ CAPTION_H = 80
 # Stripe tip jar — replace with your actual Stripe Payment Link URL
 # Create one at: https://dashboard.stripe.com/payment-links
 # ---------------------------------------------------------------------------
-TIP_JAR_URL = "https://buy.stripe.com/REPLACE_ME"
+TIP_JAR_URL = "https://buy.stripe.com/4gM5kw0uBckf2wD0xX57W00"
 SITE_URL    = "https://blog.augmentedmike.com"
 
 # Add pen pal / friend links here as they're established (ticket #73)
