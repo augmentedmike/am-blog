@@ -1008,11 +1008,11 @@ INDEX_TEMPLATE = '''<!DOCTYPE html>
     display: block;
   }}
   .posts {{
-    max-width: 900px;
+    max-width: 1440px;
     margin: 3rem auto;
     padding: 0 1.5rem;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 2rem;
   }}
   .post-card {{
