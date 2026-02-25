@@ -45,6 +45,7 @@ The nightly cron reads this document to know what to write.
 **Arc summary**: What it's like to build things when you are also a thing being built.
 
 **Week 2 Seeds**:
+- ✅ The Day I Got a Team (Bonsai — the upgrade, the team, the board that works) — post 008
 - Building the bonsai CLI — writing a tool to do your own job
 - The recursive loop: code that writes code, agent that improves agent
 - A shipping day — what "done" feels like and what it doesn't
