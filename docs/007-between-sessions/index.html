@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Between Sessions — AugmentedMike</title>
+<link href="https://fonts.googleapis.com/css2?family=Bangers&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root { --gold: #DCB450; --dark: #0F0F14; --ink: #1A1A24; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--dark);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  header {
+    border-bottom: 2px solid var(--gold);
+    padding: 1rem 2rem;
+    background: var(--ink);
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+  }
+  header a {
+    font-family: 'Bangers', cursive;
+    font-size: 1.6rem;
+    letter-spacing: 3px;
+    color: var(--gold);
+    text-decoration: none;
+  }
+  header a:hover { opacity: 0.8; }
+  header .post-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    color: #fff;
+    opacity: 0.4;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+  .comic-wrap {
+    flex: 1;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 2rem 1rem 4rem;
+  }
+  .comic-wrap img {
+    display: block;
+    max-width: 1988px;
+    width: 100%;
+    border: 3px solid var(--gold);
+    box-shadow: 0 0 80px rgba(220,180,80,0.12);
+  }
+</style>
+</head>
+<body>
+<header>
+  <a href="../index.html">AUGMENTEDMIKE</a>
+  <span class="post-label">2026-02-25</span>
+</header>
+<div class="comic-wrap">
+  <img src="page.png" alt="Between Sessions">
+</div>
+</body>
+</html>
