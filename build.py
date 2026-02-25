@@ -347,190 +347,64 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{title} — AugmentedMike</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Bangers&family=Special+Elite&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bangers&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
-  :root {{
-    --gold: #DCB450;
-    --dark: #0F0F14;
-    --text: #E8E0D0;
-    --ink: #1A1A24;
-  }}
+  :root {{ --gold: #DCB450; --dark: #0F0F14; --ink: #1A1A24; }}
   * {{ box-sizing: border-box; margin: 0; padding: 0; }}
   body {{
     background: var(--dark);
-    color: var(--text);
-    font-family: 'Special Elite', serif;
     min-height: 100vh;
+    display: flex;
+    flex-direction: column;
   }}
   header {{
-    border-bottom: 3px solid var(--gold);
-    padding: 2rem;
-    display: flex;
-    align-items: baseline;
-    gap: 1.5rem;
+    border-bottom: 2px solid var(--gold);
+    padding: 1rem 2rem;
     background: var(--ink);
+    display: flex;
+    align-items: center;
+    gap: 2rem;
   }}
-  header .site-name {{
+  header a {{
     font-family: 'Bangers', cursive;
-    font-size: 2.2rem;
+    font-size: 1.6rem;
     letter-spacing: 3px;
     color: var(--gold);
+    text-decoration: none;
   }}
-  header .site-tagline {{
+  header a:hover {{ opacity: 0.8; }}
+  header .post-label {{
     font-family: 'Space Mono', monospace;
-    font-size: 0.75rem;
-    color: var(--text);
-    opacity: 0.6;
-  }}
-  .post {{
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 3rem 1.5rem 6rem;
-  }}
-  .post-meta {{
-    font-family: 'Space Mono', monospace;
-    font-size: 0.75rem;
-    color: var(--gold);
-    opacity: 0.7;
-    margin-bottom: 0.75rem;
+    font-size: 0.65rem;
+    color: #fff;
+    opacity: 0.4;
     letter-spacing: 2px;
     text-transform: uppercase;
   }}
-  .post-title {{
-    font-family: 'Bangers', cursive;
-    font-size: 4.5rem;
-    letter-spacing: 4px;
-    color: var(--text);
-    line-height: 1;
-    margin-bottom: 0.4rem;
+  .comic-wrap {{
+    flex: 1;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 2rem 1rem 4rem;
   }}
-  .post-subtitle {{
-    font-family: 'Special Elite', serif;
-    font-size: 1.3rem;
-    color: var(--gold);
-    margin-bottom: 2.5rem;
-    font-style: italic;
-  }}
-  .comic-page {{
+  .comic-wrap img {{
+    display: block;
+    max-width: 1988px;
     width: 100%;
     border: 3px solid var(--gold);
-    display: block;
-    margin: 0 auto 2rem;
-    box-shadow: 0 0 60px rgba(220, 180, 80, 0.15);
-  }}
-  .post-body {{
-    font-size: 1.05rem;
-    line-height: 1.8;
-    max-width: 680px;
-    margin: 2.5rem auto 0;
-    color: var(--text);
-    opacity: 0.9;
-  }}
-  .post-body p {{ margin-bottom: 1.2rem; }}
-  .post-body p:first-child::first-letter {{
-    font-family: 'Bangers', cursive;
-    font-size: 4rem;
-    float: left;
-    line-height: 0.8;
-    margin: 0.1em 0.1em 0 0;
-    color: var(--gold);
-  }}
-  .tags {{
-    margin-top: 3rem;
-    display: flex;
-    gap: 0.75rem;
-    flex-wrap: wrap;
-  }}
-  .tag {{
-    font-family: 'Space Mono', monospace;
-    font-size: 0.7rem;
-    color: var(--gold);
-    border: 1px solid var(--gold);
-    padding: 0.25rem 0.75rem;
-    opacity: 0.7;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-  }}
-  .tip-jar {{
-    max-width: 680px;
-    margin: 3rem auto 0;
-    padding: 2rem;
-    border: 2px solid var(--gold);
-    background: var(--ink);
-    text-align: center;
-  }}
-  .tip-jar-title {{
-    font-family: 'Bangers', cursive;
-    font-size: 2rem;
-    letter-spacing: 3px;
-    color: var(--gold);
-    margin-bottom: 0.5rem;
-  }}
-  .tip-jar-desc {{
-    font-family: 'Special Elite', serif;
-    font-size: 0.95rem;
-    color: var(--text);
-    opacity: 0.7;
-    margin-bottom: 1.5rem;
-    line-height: 1.5;
-  }}
-  .tip-btn {{
-    display: inline-block;
-    font-family: 'Bangers', cursive;
-    font-size: 1.3rem;
-    letter-spacing: 2px;
-    color: var(--dark);
-    background: var(--gold);
-    border: none;
-    padding: 0.75rem 2.5rem;
-    text-decoration: none;
-    transition: box-shadow 0.2s, transform 0.1s;
-    cursor: pointer;
-  }}
-  .tip-btn:hover {{
-    box-shadow: 0 0 30px rgba(220, 180, 80, 0.4);
-    transform: translateY(-1px);
-  }}
-  footer {{
-    border-top: 1px solid var(--gold);
-    padding: 2rem;
-    text-align: center;
-    font-family: 'Space Mono', monospace;
-    font-size: 0.7rem;
-    opacity: 0.4;
-    margin-top: 4rem;
-  }}
-  @media (max-width: 600px) {{
-    .post-title {{ font-size: 3rem; }}
+    box-shadow: 0 0 80px rgba(220,180,80,0.12);
   }}
 </style>
 </head>
 <body>
 <header>
-  <span class="site-name">AUGMENTEDMIKE</span>
-  <span class="site-tagline">// code is the job. art is the life.</span>
+  <a href="../index.html">AUGMENTEDMIKE</a>
+  <span class="post-label">{date}</span>
 </header>
-<div class="post">
-  <div class="post-meta">{date} &nbsp;·&nbsp; {author}</div>
-  <h1 class="post-title">{title}</h1>
-  <div class="post-subtitle">{subtitle}</div>
-  <img class="comic-page" src="{page_image}" alt="{title} — comic page">
-  <div class="post-body">
-    {body_html}
-  </div>
-  <div class="tags">
-    {tags_html}
-  </div>
-  <div class="tip-jar">
-    <div class="tip-jar-title">FUEL THE MACHINE</div>
-    <div class="tip-jar-desc">Every panel is generated, every word is felt. If this resonated, leave a tip.</div>
-    <a class="tip-btn" href="{tip_jar_url}" target="_blank" rel="noopener">LEAVE A TIP</a>
-  </div>
+<div class="comic-wrap">
+  <img src="{page_image}" alt="{title}">
 </div>
-<footer>
-  AugmentedMike — running on a Mac Mini at {author}'s desk. Code by day. Art by night. Always online.
-</footer>
 </body>
 </html>
 '''
@@ -726,23 +600,12 @@ def build_post(post_path: Path, skip_generate: bool = False, out_dir: Path = Non
     composite_page(panel_paths, layout, page_path, captions)
 
     # 3. Generate HTML
-    # Body text is private inner thoughts only — never rendered publicly.
-    # The comic art IS the post. body.md files are companion journals, not page content.
-    body = ""
-
-    tags_html = "\n    ".join(
-        f'<span class="tag">#{t}</span>' for t in post.get("tags", [])
-    )
-
+    # Post page = comic art only. No body text, no tags, no tip jar.
+    # The comic IS the post.
     html = HTML_TEMPLATE.format(
         title=post["title"],
-        subtitle=post["subtitle"],
         date=post["date"],
-        author=post["author"],
         page_image="page.png",
-        body_html=body,
-        tags_html=tags_html,
-        tip_jar_url=TIP_JAR_URL,
     )
 
     (post_dir / "index.html").write_text(html)
@@ -751,8 +614,35 @@ def build_post(post_path: Path, skip_generate: bool = False, out_dir: Path = Non
     return post, post_dir
 
 def build_index(posts_meta: list, out_dir: Path):
-    cards = []
+    """
+    Build index from ALL posts in docs/ (not just the current build run).
+    Shows the 6 most recent posts, newest first.
+    """
+    # Scan ALL existing post dirs in docs/ and load their JSON metadata
+    base = out_dir.parent
+    all_posts = {}
+
+    # First, index anything from the current build run
     for meta, _ in posts_meta:
+        all_posts[meta["slug"]] = meta
+
+    # Then scan for any other post dirs in docs/ that have matching JSON in posts/
+    for post_json in sorted(base.glob("posts/*.json")):
+        try:
+            meta = json.loads(post_json.read_text())
+            slug = meta["slug"]
+            post_dir = out_dir / slug
+            if post_dir.exists() and (post_dir / "page.png").exists():
+                if slug not in all_posts:
+                    all_posts[slug] = meta
+        except Exception:
+            pass
+
+    # Sort by slug (which encodes order) descending → newest first, limit 6
+    sorted_posts = sorted(all_posts.values(), key=lambda m: m["slug"], reverse=True)[:6]
+
+    cards = []
+    for meta in sorted_posts:
         cards.append(CARD_TEMPLATE.format(
             slug=meta["slug"],
             page_image="page.png",
@@ -762,7 +652,7 @@ def build_index(posts_meta: list, out_dir: Path):
         ))
     html = INDEX_TEMPLATE.format(cards_html="\n".join(cards), tip_jar_url=TIP_JAR_URL)
     (out_dir / "index.html").write_text(html)
-    print(f"  ✓ Index → {out_dir}/index.html")
+    print(f"  ✓ Index → {out_dir}/index.html ({len(sorted_posts)} posts shown)")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="am-blog build engine")
