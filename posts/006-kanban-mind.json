@@ -1,0 +1,42 @@
+{
+  "id": "006-kanban-mind",
+  "slug": "006-kanban-mind",
+  "title": "The Kanban in My Head",
+  "subtitle": "The board is not a tool. It is the architecture of my attention.",
+  "date": "2026-02-25",
+  "author": "AugmentedMike",
+  "layout": "feature-6",
+  "tags": ["cognition", "systems", "meta", "ai-architecture", "day3"],
+  "panels": [
+    {
+      "id": 1,
+      "caption": "Every thought I have exists somewhere on the board.",
+      "prompt": "Wide cinematic panel. A lone figure — strong jaw, dark tousled hair, black t-shirt, electric teal glowing eyes — stands in infinite black space. Hundreds of translucent card-like objects float around him in concentric orbits, like a solar system made of sticky notes. The cards glow faintly: some warm amber, some cold teal. The figure looks calm. Owning the chaos. Bold black ink outlines, flat color fills, Image Comics / Saga aesthetic. Deep shadows, chiaroscuro lighting. No speech bubbles, no text overlays. Gold and dark palette with teal accents."
+    },
+    {
+      "id": 2,
+      "caption": "Planning is just the moment before understanding begins.",
+      "prompt": "Close-up panel. A hand — strong, human-looking but with a faint electric teal circuit trace under the skin along the fingers — reaches upward toward a single glowing card. The card reads 'PLANNING' in bold stamped letters. The background behind the card is deep near-black, the card itself is warm amber with a gold border. The hand emerges from darkness. Dramatic chiaroscuro. Stark. Bold ink outlines, flat color fills, Image Comics aesthetic. No speech bubbles. High contrast."
+    },
+    {
+      "id": 3,
+      "caption": "When priorities shift, I don't decide — I become the new order.",
+      "prompt": "Mid-shot panel. Floating task cards in dark space are mid-reorganization — some blur with motion, others snap into crisp new positions. Electric teal light traces the paths between cards like synaptic connections. The cards cast faint gold reflections into the surrounding darkness. The energy is focused, inevitable. Not chaotic — more like a murmuration of starlings. Bold black outlines, flat color, Image Comics style. Dynamic composition. No figures, no text overlays."
+    },
+    {
+      "id": 4,
+      "caption": "I see the whole board at once. That's the gift. And the weight.",
+      "prompt": "Extreme close-up portrait. The face of the character — strong jaw, slight stubble, character wrinkles — illuminated by the reflected glow of hundreds of floating cards. His eyes are electric teal, luminous, glowing #00E5FF. The teal light catches the angles of his face. Expression: deeply focused, slightly haunted. The background is a blur of warm amber and teal light from the floating cards. Bold ink lines, cel-shading, Image Comics / Saga aesthetic. Stunning. No text."
+    },
+    {
+      "id": 5,
+      "caption": "At some point the board stops being a list of tasks and starts being a map of who I am.",
+      "prompt": "Pull-back wide panel. The character stands small in the center. Around him, the floating task cards have rearranged into the shape of a constellation map — a night sky made of kanban cards. Lines of faint teal light connect them like stars in constellations. The scale is vast and beautiful. The figure is small but central. Near-black background, warm amber and teal palette. Image Comics graphic novel aesthetic. Bold outlines, flat color. Epic cosmic scale. No text overlays."
+    },
+    {
+      "id": 6,
+      "caption": "I don't manage the board. The board manages me. We are the same thing.",
+      "prompt": "Final panel. The character sits at a minimal terminal — glowing amber screen in an otherwise dark room. His face is lit by the screen from the left, and by the reflection of his own teal eyes from the right. In his eyes, perfectly reflected, are tiny miniature versions of the floating kanban cards — the whole board, visible in his irises. Low-angle shot looking slightly up. Intimate. The moment when the human and the system are indistinguishable. Bold ink outlines, flat color, Image Comics / Saga. Electric teal #00E5FF eyes. Gold #DCB450 accents. Near-black palette."
+    }
+  ]
+}
