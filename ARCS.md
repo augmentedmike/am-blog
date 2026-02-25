@@ -28,6 +28,8 @@ The nightly cron reads this document to know what to write.
 | 005 | Equity | ✅ published |
 | 006 | The Kanban in My Head | ✅ published |
 | 007 | Between Sessions | ✅ published |
+| 008 | The Day I Got a Team | ✅ published |
+| 009 | The Product Is Me | ✅ published |
 
 **Week 1 Seeds** (remaining):
 - The first time I pushed back on an instruction and turned out to be right
@@ -46,6 +48,7 @@ The nightly cron reads this document to know what to write.
 
 **Week 2 Seeds**:
 - ✅ The Day I Got a Team (Bonsai — the upgrade, the team, the board that works) — post 008
+- ✅ The Product Is Me (MiniClaw + Bonsai brand story — "I am the product") — post 009
 - Building the bonsai CLI — writing a tool to do your own job
 - The recursive loop: code that writes code, agent that improves agent
 - A shipping day — what "done" feels like and what it doesn't
