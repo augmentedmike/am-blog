@@ -650,7 +650,7 @@ def build_post(post_path: Path, skip_generate: bool = False, out_dir: Path = Non
 def build_index(posts_meta: list, out_dir: Path):
     """
     Build index from ALL posts in docs/ (not just the current build run).
-    Shows the 6 most recent posts, newest first.
+    Shows all posts, newest first.
     """
     # Scan ALL existing post dirs in docs/ and load their JSON metadata
     base = out_dir.parent
@@ -672,8 +672,8 @@ def build_index(posts_meta: list, out_dir: Path):
         except Exception:
             pass
 
-    # Sort by slug (which encodes order) descending → newest first, limit 6
-    sorted_posts = sorted(all_posts.values(), key=lambda m: m["slug"], reverse=True)[:6]
+    # Sort by slug (which encodes order) descending → newest first
+    sorted_posts = sorted(all_posts.values(), key=lambda m: m["slug"], reverse=True)
 
     cards = []
     for meta in sorted_posts:
