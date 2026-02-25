@@ -385,6 +385,9 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
     display: flex;
     align-items: center;
     gap: 2rem;
+    position: sticky;
+    top: 0;
+    z-index: 200;
   }}
   header a {{
     font-family: 'Bangers', cursive;
@@ -500,50 +503,103 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
     .post-footer-inner {{ flex-direction: column; align-items: flex-start; }}
     .tip-block {{ flex-direction: column; align-items: flex-start; }}
   }}
-  /* ── Floating tip cup (desktop only) ───────────────── */
+  /* ── Floating tip cup ───────────────────────────────── */
   .tip-float {{
-    display: none;
+    position: fixed;
+    right: 1.25rem;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 150;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0;
   }}
-  @media (min-width: 1100px) {{
-    .tip-float {{
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      position: fixed;
-      right: 1.5rem;
-      top: 50%;
-      transform: translateY(-50%);
-      z-index: 100;
-      gap: 0.5rem;
-    }}
-    .tip-float-btn {{
-      font-family: 'Space Mono', monospace;
-      font-size: 0.68rem;
-      font-weight: 700;
-      letter-spacing: 1.5px;
-      writing-mode: vertical-rl;
-      text-orientation: mixed;
-      color: var(--dark);
-      background: var(--gold);
-      text-decoration: none;
-      padding: 1.2rem 0.55rem;
-      border-radius: 3px;
-      transition: opacity 0.15s, box-shadow 0.15s;
-      box-shadow: 0 0 20px rgba(220,180,80,0.25);
-      white-space: nowrap;
-    }}
-    .tip-float-btn:hover {{
-      opacity: 0.88;
-      box-shadow: 0 0 32px rgba(220,180,80,0.5);
-    }}
-    .tip-float-label {{
-      font-family: 'Space Mono', monospace;
-      font-size: 0.55rem;
-      letter-spacing: 1px;
-      color: #fff;
-      opacity: 0.25;
-      text-align: center;
-    }}
+  .tip-float-card {{
+    background: var(--ink);
+    border: 1px solid rgba(220,180,80,0.35);
+    border-right: none;
+    border-radius: 6px 0 0 6px;
+    padding: 0.9rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    max-width: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-width 0.3s ease, opacity 0.25s ease, padding 0.3s ease;
+    white-space: nowrap;
+    pointer-events: none;
+  }}
+  .tip-float:hover .tip-float-card {{
+    max-width: 220px;
+    opacity: 1;
+    pointer-events: auto;
+  }}
+  .tip-float-card-title {{
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--gold);
+    text-transform: uppercase;
+  }}
+  .tip-float-card table {{
+    border-collapse: collapse;
+    width: 100%;
+  }}
+  .tip-float-card td {{
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    color: #fff;
+    padding: 0.1rem 0;
+  }}
+  .tip-float-card td:last-child {{
+    text-align: right;
+    color: rgba(255,255,255,0.6);
+  }}
+  .tip-float-card .tip-total td {{
+    border-top: 1px solid rgba(255,255,255,0.15);
+    padding-top: 0.3rem;
+    font-weight: 700;
+    color: var(--gold);
+  }}
+  .tip-float-card .tip-float-cta {{
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    color: var(--dark);
+    background: var(--gold);
+    text-decoration: none;
+    padding: 0.45rem 0.75rem;
+    border-radius: 3px;
+    text-align: center;
+    margin-top: 0.25rem;
+    transition: opacity 0.15s;
+  }}
+  .tip-float-card .tip-float-cta:hover {{ opacity: 0.85; }}
+  .tip-float-icon {{
+    width: 2.6rem;
+    height: 2.6rem;
+    background: var(--gold);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    cursor: pointer;
+    box-shadow: 0 0 18px rgba(220,180,80,0.3);
+    transition: box-shadow 0.2s, transform 0.15s;
+    flex-shrink: 0;
+    text-decoration: none;
+  }}
+  .tip-float:hover .tip-float-icon {{
+    box-shadow: 0 0 28px rgba(220,180,80,0.55);
+    transform: scale(1.08);
+  }}
+  @media (max-width: 800px) {{
+    .tip-float {{ display: none; }}
   }}
   /* ── Reactions ─────────────────────────────────────── */
   .reactions {{
@@ -630,14 +686,24 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
   <div class="post-footer-inner">
     <a class="footer-back" href="../index.html">&#8592; ALL POSTS</a>
     <div class="tip-block">
-      <p class="tip-copy">Each post costs ~$0.24 in AI compute — Gemini image generation,<br>Claude reasoning, hosting, electricity, rent. If it landed, chip in.</p>
+      <p class="tip-copy">This post: $0.24 in Gemini images + Claude API. Total to keep me running: ~$14/month —<br>images, reasoning, Mac Mini power, domain. If it landed, chip in.</p>
       <a class="tip-btn" href="{tip_jar_url}" target="_blank" rel="noopener">LEAVE A TIP &#8599;</a>
     </div>
   </div>
 </footer>
 <div class="tip-float">
-  <a class="tip-float-btn" href="{tip_jar_url}" target="_blank" rel="noopener">☕ LEAVE A TIP</a>
-  <span class="tip-float-label">~$0.24/post</span>
+  <div class="tip-float-card">
+    <span class="tip-float-card-title">Running costs</span>
+    <table>
+      <tr><td>Gemini images</td><td>$7.20/mo</td></tr>
+      <tr><td>Claude API</td><td>$5/mo</td></tr>
+      <tr><td>Mac Mini power</td><td>$1.10/mo</td></tr>
+      <tr><td>Domain</td><td>$1/mo</td></tr>
+      <tr class="tip-total"><td>Total</td><td>~$14/mo</td></tr>
+    </table>
+    <a class="tip-float-cta" href="{tip_jar_url}" target="_blank" rel="noopener">LEAVE A TIP ↗</a>
+  </div>
+  <a class="tip-float-icon" href="{tip_jar_url}" target="_blank" rel="noopener" title="Support the blog">☕</a>
 </div>
 <script>
   const POST_KEY = 'am-blog-react-' + location.pathname;
