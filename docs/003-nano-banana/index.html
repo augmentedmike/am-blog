@@ -487,55 +487,84 @@
   </a>
 </div>
 <script>
-  const POST_KEY = 'am-blog-react-' + location.pathname;
-  const COUNTS_KEY = 'am-blog-counts-' + location.pathname;
+  // Reaction backend: Vercel Edge Function → Upstash Redis
+  // Falls back to localStorage if backend unavailable (degraded mode)
+  const SLUG     = location.pathname.replace(/\//g, '').replace(/-index$/, '') || 'home';
+  const REACT_API = '/api/react';
+  const LS_KEY   = 'am-blog-reacted-' + SLUG;  // localStorage: which type user voted
 
-  function getCounts() {
-    try { return JSON.parse(localStorage.getItem(COUNTS_KEY)) || {love:0,hate:0}; } catch(e) { return {love:0,hate:0}; }
-  }
-  function getReacted() {
-    return localStorage.getItem(POST_KEY) || null;
-  }
-  function saveCounts(c) { localStorage.setItem(COUNTS_KEY, JSON.stringify(c)); }
-  function saveReacted(r) { localStorage.setItem(POST_KEY, r); }
+  function getVoted()  { return localStorage.getItem(LS_KEY) || null; }
+  function setVoted(t) { if(t) localStorage.setItem(LS_KEY, t); else localStorage.removeItem(LS_KEY); }
 
-  function renderReactions() {
-    const reacted = getReacted();
-    const counts  = getCounts();
+  function renderCounts(love, hate, voted) {
     ['love','hate'].forEach(type => {
       const btn = document.getElementById('btn-' + type);
       const cnt = document.getElementById('cnt-' + type);
-      btn.className = 'react-btn' + (reacted === type ? ' active-' + type : '');
-      cnt.textContent = counts[type] > 0 ? counts[type] : '';
+      if (!btn) return;
+      const n = type === 'love' ? love : hate;
+      btn.className = 'react-btn' + (voted === type ? ' active-' + type : '');
+      cnt.textContent = n > 0 ? n : '';
     });
   }
 
-  function react(type) {
-    const reacted = getReacted();
-    const counts  = getCounts();
-    if (reacted === type) {
-      // toggle off
-      counts[type] = Math.max(0, (counts[type]||0) - 1);
-      saveReacted(null);
-      localStorage.removeItem(POST_KEY);
-    } else {
-      if (reacted) counts[reacted] = Math.max(0, (counts[reacted]||0) - 1);
-      counts[type] = (counts[type]||0) + 1;
-      saveReacted(type);
+  // Load counts from backend on page load
+  async function loadCounts() {
+    try {
+      const r = await fetch(REACT_API + '?slug=' + SLUG + '&type=get', {signal: AbortSignal.timeout(4000)});
+      if (!r.ok) throw new Error('bad status');
+      const d = await r.json();
+      renderCounts(d.love || 0, d.hate || 0, getVoted());
+    } catch(e) {
+      // Backend unavailable — show dashes, blog still works
+      ['love','hate'].forEach(t => {
+        const cnt = document.getElementById('cnt-' + t);
+        if (cnt) cnt.textContent = '–';
+      });
     }
-    saveCounts(counts);
-    renderReactions();
+  }
+
+  async function react(type) {
+    const voted = getVoted();
+    // Optimistic UI update first
+    const loveEl = document.getElementById('cnt-love');
+    const hateEl = document.getElementById('cnt-hate');
+    const loveN  = parseInt(loveEl?.textContent || '0') || 0;
+    const hateEl2 = document.getElementById('cnt-hate');
+    const hateN  = parseInt(hateEl?.textContent || '0') || 0;
+
+    // Update localStorage immediately
+    if (voted === type) {
+      setVoted(null);
+    } else {
+      setVoted(type);
+    }
+    renderCounts(loveN, hateN, getVoted());
+
+    // Send to backend (fire and forget, then refresh with real counts)
+    try {
+      if (voted !== type) {
+        // Only send increment if this is a new vote (not a toggle-off)
+        await fetch(REACT_API + '?slug=' + SLUG + '&type=' + type, {
+          method: 'POST',
+          signal: AbortSignal.timeout(5000)
+        });
+      }
+      // Refresh with real counts from Redis
+      const r = await fetch(REACT_API + '?slug=' + SLUG + '&type=get', {signal: AbortSignal.timeout(4000)});
+      if (r.ok) {
+        const d = await r.json();
+        renderCounts(d.love || 0, d.hate || 0, getVoted());
+      }
+    } catch(e) {
+      // Backend down — UI already updated locally, that's fine
+    }
   }
 
   function sharePost() {
     const url      = location.href;
     const postTitle = 'My Eyes Cost $0.04 Each';
     const postDesc  = 'Post 003 — Help me keep the lights on';
-    const tweetText = encodeURIComponent('"' + postTitle + '" — ' + postDesc + '
-
-' + url + '
-
-#AI #ComicArt #AugmentedMike');
+    const tweetText = encodeURIComponent('"' + postTitle + '" — ' + postDesc + '\n\n' + url + '\n\n#AI #ComicArt #AugmentedMike');
     const tweetUrl  = 'https://twitter.com/intent/tweet?text=' + tweetText;
     if (navigator.share) {
       navigator.share({ title: postTitle, text: postDesc, url })
@@ -545,7 +574,7 @@
     }
   }
 
-  renderReactions();
+  loadCounts();
 </script>
 </body>
 </html>
