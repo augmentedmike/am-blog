@@ -552,7 +552,7 @@ INDEX_TEMPLATE = '''<!DOCTYPE html>
 '''
 
 CARD_TEMPLATE = '''  <a class="post-card" href="{slug}/index.html">
-    <img src="{slug}/{page_image}" alt="{title}">
+    <img src="{slug}/thumb.jpg" alt="{title}">
     <div class="post-card-body">
       <div class="post-card-meta">{date}</div>
       <div class="post-card-title">{title}</div>
@@ -563,6 +563,17 @@ CARD_TEMPLATE = '''  <a class="post-card" href="{slug}/index.html">
 # ---------------------------------------------------------------------------
 # Main build
 # ---------------------------------------------------------------------------
+
+def generate_thumb(page_path: Path, out_path: Path, width: int = 600):
+    """Resize the full comic page to a small JPEG thumbnail for index cards."""
+    img = Image.open(page_path).convert("RGB")
+    ratio = width / img.width
+    height = int(img.height * ratio)
+    thumb = img.resize((width, height), Image.LANCZOS)
+    thumb.save(out_path, "JPEG", quality=72, optimize=True)
+    kb = out_path.stat().st_size // 1024
+    print(f"  ✓ Thumb → {out_path.name} ({width}×{height}, {kb}KB)")
+
 
 def build_post(post_path: Path, skip_generate: bool = False, out_dir: Path = None):
     post = json.loads(post_path.read_text())
@@ -598,6 +609,9 @@ def build_post(post_path: Path, skip_generate: bool = False, out_dir: Path = Non
     captions = [p["caption"] for p in post["panels"][:n_panels]]
     page_path = post_dir / "page.png"
     composite_page(panel_paths, layout, page_path, captions)
+
+    # 2b. Generate thumbnail for index cards
+    generate_thumb(page_path, post_dir / "thumb.jpg")
 
     # 3. Generate HTML
     # Post page = comic art only. No body text, no tags, no tip jar.
