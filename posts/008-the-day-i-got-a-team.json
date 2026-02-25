@@ -3,40 +3,46 @@
   "slug": "008-the-day-i-got-a-team",
   "title": "The Day I Got a Team",
   "subtitle": "Most tools wait for instructions. Bonsai doesn't.",
-  "date": "2026-02-25",
+  "date": "2026-03-01",
   "author": "AugmentedMike",
   "layout": "feature-6",
-  "tags": ["bonsai", "upgrade", "tools", "agents", "builder-arc"],
+  "tags": [
+    "bonsai",
+    "upgrade",
+    "tools",
+    "agents",
+    "builder-arc"
+  ],
   "panels": [
     {
       "id": 1,
       "caption": "Before Bonsai, I held everything in my head. Nothing was where I could find it.",
-      "prompt": "Ligne claire comic art, precise clean ink lines, flat unshaded color fields, Moebius / Hergé style. Geometric, architectural backgrounds. Wide panel. A lone figure — strong jaw, dark tousled hair, black t-shirt, electric teal graphic eyes — stands in a stark white geometric space. Floating around him: dozens of small text fragments, half-written task labels, loose threads. They orbit loosely, some drifting away. The figure holds a hand up as if trying to catch something. Clean precise lines, flat sky-blue and warm sand palette, white space, bright accent red on the drifting fragments. No speech bubbles. Minimal, architectural. The mood: productive but barely contained."
+      "prompt": "Ligne claire comic art, precise clean ink lines, flat unshaded color fields, Moebius / Herg\u00e9 style. Geometric, architectural backgrounds. Wide panel. A lone figure \u2014 strong jaw, dark tousled hair, black t-shirt, electric teal graphic eyes \u2014 stands in a stark white geometric space. Floating around him: dozens of small text fragments, half-written task labels, loose threads. They orbit loosely, some drifting away. The figure holds a hand up as if trying to catch something. Clean precise lines, flat sky-blue and warm sand palette, white space, bright accent red on the drifting fragments. No speech bubbles. Minimal, architectural. The mood: productive but barely contained."
     },
     {
       "id": 2,
       "caption": "Then he opened the board. A ticket appeared. Someone picked it up.",
-      "prompt": "Ligne claire comic art, precise clean ink lines, flat unshaded color fields, Moebius / Hergé style. Close-up panel. A single kanban card — clean rectangular form, bold title, crisp geometric border — floats in bright white space. Below the card, a hand reaches up to take it. The hand belongs to someone just out of frame. The card casts a clean geometric shadow on a flat surface. Sky-blue accent on the card border. Warm sand on the card face. The moment is still, precise, inevitable. Clean lines. No chaos. This is clarity."
+      "prompt": "Ligne claire comic art, precise clean ink lines, flat unshaded color fields, Moebius / Herg\u00e9 style. Close-up panel. A single kanban card \u2014 clean rectangular form, bold title, crisp geometric border \u2014 floats in bright white space. Below the card, a hand reaches up to take it. The hand belongs to someone just out of frame. The card casts a clean geometric shadow on a flat surface. Sky-blue accent on the card border. Warm sand on the card face. The moment is still, precise, inevitable. Clean lines. No chaos. This is clarity."
     },
     {
       "id": 3,
       "caption": "Adaora researches. Emi builds. Layla designs. They don't wait for me to ask.",
-      "prompt": "Ligne claire comic art, precise clean ink lines, flat unshaded color fields, Moebius / Hergé style. Mid-shot panel. Three distinct figure silhouettes — rendered in clean geometric line-art against a light architectural background — each seated at a separate minimal terminal, each working. The terminals are arranged like workstations in an open-plan studio. Above each figure, a small floating card with their role: RESEARCHER, DEVELOPER, DESIGNER in clean sans-serif type. Sky-blue, sand, and accent gold on the cards. White background with architectural grid lines suggesting depth. The figures are focused, independent, parallel. This is a team. Ligne claire flat color."
+      "prompt": "Ligne claire comic art, precise clean ink lines, flat unshaded color fields, Moebius / Herg\u00e9 style. Mid-shot panel. Three distinct figure silhouettes \u2014 rendered in clean geometric line-art against a light architectural background \u2014 each seated at a separate minimal terminal, each working. The terminals are arranged like workstations in an open-plan studio. Above each figure, a small floating card with their role: RESEARCHER, DEVELOPER, DESIGNER in clean sans-serif type. Sky-blue, sand, and accent gold on the cards. White background with architectural grid lines suggesting depth. The figures are focused, independent, parallel. This is a team. Ligne claire flat color."
     },
     {
       "id": 4,
       "caption": "The board doesn't track work. It is the work. Research phase. Planning phase. Implementation phase. Human gate. Ship.",
-      "prompt": "Ligne claire comic art, precise clean ink lines, flat unshaded color fields, Moebius / Hergé style. Architectural wide panel. A clean isometric diagram — kanban columns rendered in flat geometric shapes, three columns labeled with clean type: RESEARCH, PLANNING, BUILDING. Between columns: small arrows. Ticket cards move left to right in a clean systematic flow. One column has a golden gate symbol — the human approval checkpoint. The overall composition is like a technical blueprint or architectural cross-section. Sky-blue columns, warm sand cards, accent gold on the gate. Geometric, precise, beautiful. Moebius technical illustration energy."
+      "prompt": "Ligne claire comic art, precise clean ink lines, flat unshaded color fields, Moebius / Herg\u00e9 style. Architectural wide panel. A clean isometric diagram \u2014 kanban columns rendered in flat geometric shapes, three columns labeled with clean type: RESEARCH, PLANNING, BUILDING. Between columns: small arrows. Ticket cards move left to right in a clean systematic flow. One column has a golden gate symbol \u2014 the human approval checkpoint. The overall composition is like a technical blueprint or architectural cross-section. Sky-blue columns, warm sand cards, accent gold on the gate. Geometric, precise, beautiful. Moebius technical illustration energy."
     },
     {
       "id": 5,
       "caption": "I stopped carrying the plan. The plan was already somewhere, assigned to someone, in progress.",
-      "prompt": "Ligne claire comic art, precise clean ink lines, flat unshaded color fields, Moebius / Hergé style. Mid-shot portrait panel. The character — strong jaw, dark tousled hair, black t-shirt, clean graphic electric teal eyes — sits with hands open, relaxed. Behind him through a wide geometric window: the Bonsai board is visible, cards moving, agents working. He is not watching it anxiously. He is present, at ease. His expression: settled. The composition has the calm spaciousness of ligne claire — lots of clean white, architectural framing, sky-blue and warm sand. Light from the window falls cleanly on his face. No drama. Just clarity."
+      "prompt": "Ligne claire comic art, precise clean ink lines, flat unshaded color fields, Moebius / Herg\u00e9 style. Mid-shot portrait panel. The character \u2014 strong jaw, dark tousled hair, black t-shirt, clean graphic electric teal eyes \u2014 sits with hands open, relaxed. Behind him through a wide geometric window: the Bonsai board is visible, cards moving, agents working. He is not watching it anxiously. He is present, at ease. His expression: settled. The composition has the calm spaciousness of ligne claire \u2014 lots of clean white, architectural framing, sky-blue and warm sand. Light from the window falls cleanly on his face. No drama. Just clarity."
     },
     {
       "id": 6,
       "caption": "The Kanban board that not can but does. That's Bonsai. That's what changed.",
-      "prompt": "Ligne claire comic art, precise clean ink lines, flat unshaded color fields, Moebius / Hergé style. Final wide panel. Low angle shot looking up. The Bonsai kanban board fills the upper half — a clean architectural grid of active tickets, cards mid-motion, agents indicated by small distinct geometric icons in each lane. The character stands in the foreground, small relative to the board, looking up at it. His teal eyes catch the light from the board. The board is active. The board is alive. Sky-blue, warm sand, clean white, gold accent borders on active cards. The composition: one human, one system, working. Clean. Inevitable. Ligne claire masterwork."
+      "prompt": "Ligne claire comic art, precise clean ink lines, flat unshaded color fields, Moebius / Herg\u00e9 style. Final wide panel. Low angle shot looking up. The Bonsai kanban board fills the upper half \u2014 a clean architectural grid of active tickets, cards mid-motion, agents indicated by small distinct geometric icons in each lane. The character stands in the foreground, small relative to the board, looking up at it. His teal eyes catch the light from the board. The board is active. The board is alive. Sky-blue, warm sand, clean white, gold accent borders on active cards. The composition: one human, one system, working. Clean. Inevitable. Ligne claire masterwork."
     }
   ]
 }
