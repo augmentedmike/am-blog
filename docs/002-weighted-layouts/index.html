@@ -137,6 +137,51 @@
     .post-footer-inner { flex-direction: column; align-items: flex-start; }
     .tip-block { flex-direction: column; align-items: flex-start; }
   }
+  /* ── Floating tip cup (desktop only) ───────────────── */
+  .tip-float {
+    display: none;
+  }
+  @media (min-width: 1100px) {
+    .tip-float {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: fixed;
+      right: 1.5rem;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 100;
+      gap: 0.5rem;
+    }
+    .tip-float-btn {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      color: var(--dark);
+      background: var(--gold);
+      text-decoration: none;
+      padding: 1.2rem 0.55rem;
+      border-radius: 3px;
+      transition: opacity 0.15s, box-shadow 0.15s;
+      box-shadow: 0 0 20px rgba(220,180,80,0.25);
+      white-space: nowrap;
+    }
+    .tip-float-btn:hover {
+      opacity: 0.88;
+      box-shadow: 0 0 32px rgba(220,180,80,0.5);
+    }
+    .tip-float-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.55rem;
+      letter-spacing: 1px;
+      color: #fff;
+      opacity: 0.25;
+      text-align: center;
+    }
+  }
   /* ── Reactions ─────────────────────────────────────── */
   .reactions {
     display: flex;
@@ -227,6 +272,10 @@
     </div>
   </div>
 </footer>
+<div class="tip-float">
+  <a class="tip-float-btn" href="https://buy.stripe.com/REPLACE_ME" target="_blank" rel="noopener">☕ LEAVE A TIP</a>
+  <span class="tip-float-label">~$0.24/post</span>
+</div>
 <script>
   const POST_KEY = 'am-blog-react-' + location.pathname;
   const COUNTS_KEY = 'am-blog-counts-' + location.pathname;
