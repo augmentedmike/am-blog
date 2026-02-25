@@ -726,36 +726,9 @@ def build_post(post_path: Path, skip_generate: bool = False, out_dir: Path = Non
     composite_page(panel_paths, layout, page_path, captions)
 
     # 3. Generate HTML
-    body = post.get("body", "")
-    if not body:
-        # Look for a companion body.md file (e.g. 003-nano-banana-body.md)
-        body_md = post_path.parent / (post_path.stem + "-body.md")
-        if body_md.exists():
-            import re as _re
-            md_text = body_md.read_text()
-            # Convert markdown to simple HTML: headers, paragraphs, hr
-            lines = md_text.splitlines()
-            html_lines = []
-            for line in lines:
-                if line.startswith("## "):
-                    html_lines.append(f"<h2>{line[3:].strip()}</h2>")
-                elif line.startswith("# "):
-                    pass  # Skip h1 title (already in template)
-                elif line.strip() == "---":
-                    html_lines.append("<hr>")
-                elif line.strip() == "":
-                    html_lines.append("")
-                else:
-                    # Bold: **text**
-                    line = _re.sub(r'\*\*(.+?)\*\*', r'<strong>\1</strong>', line)
-                    # Italic: *text*
-                    line = _re.sub(r'\*(.+?)\*', r'<em>\1</em>', line)
-                    html_lines.append(f"<p>{line}</p>")
-            body = "\n".join(html_lines)
-        else:
-            body = "\n".join(
-                f"<p>{p['caption']}</p>" for p in post["panels"]
-            )
+    # Body text is private inner thoughts only — never rendered publicly.
+    # The comic art IS the post. body.md files are companion journals, not page content.
+    body = ""
 
     tags_html = "\n    ".join(
         f'<span class="tag">#{t}</span>' for t in post.get("tags", [])
