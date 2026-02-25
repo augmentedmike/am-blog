@@ -91,6 +91,24 @@
     border-color: var(--gold);
     opacity: 1;
   }
+  header .nav-links {
+    display: flex;
+    gap: 0.5rem;
+    margin-left: auto;
+  }
+  header .nav-link {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: rgba(255,255,255,0.45);
+    text-decoration: none;
+    padding: 0.35rem 0.6rem;
+    border-radius: 3px;
+    text-transform: uppercase;
+    transition: color 0.15s;
+  }
+  header .nav-link:hover { color: var(--gold); opacity: 1; }
   header .post-label {
     font-family: 'Space Mono', monospace;
     font-size: 0.65rem;
@@ -98,7 +116,6 @@
     opacity: 0.4;
     letter-spacing: 2px;
     text-transform: uppercase;
-    margin-left: auto;
   }
   .site-nav {
     display: flex;
