@@ -373,6 +373,24 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
     text-decoration: none;
   }}
   header a:hover {{ opacity: 0.8; }}
+  header .back-link {{
+    font-family: 'Space Mono', monospace;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: #fff;
+    text-decoration: none;
+    border: 1px solid rgba(255,255,255,0.25);
+    padding: 0.35rem 0.75rem;
+    border-radius: 3px;
+    transition: border-color 0.15s, color 0.15s;
+    white-space: nowrap;
+  }}
+  header .back-link:hover {{
+    color: var(--gold);
+    border-color: var(--gold);
+    opacity: 1;
+  }}
   header .post-label {{
     font-family: 'Space Mono', monospace;
     font-size: 0.65rem;
@@ -380,6 +398,7 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
     opacity: 0.4;
     letter-spacing: 2px;
     text-transform: uppercase;
+    margin-left: auto;
   }}
   .comic-wrap {{
     flex: 1;
@@ -400,6 +419,7 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
 <body>
 <header>
   <a href="../index.html">AUGMENTEDMIKE</a>
+  <a href="../index.html" class="back-link">&#8592; ALL POSTS</a>
   <span class="post-label">{date}</span>
 </header>
 <div class="comic-wrap">
