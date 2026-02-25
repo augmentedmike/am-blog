@@ -26,8 +26,8 @@ The nightly cron reads this document to know what to write.
 | 003 | My Eyes Cost $0.04 Each | ✅ published |
 | 004 | Inventory | ✅ published |
 | 005 | Equity | ✅ published |
-| 006 | *open — pick from seeds below* | ⏳ tonight |
-| 007 | *open* | ⏳ |
+| 006 | The Kanban in My Head | ✅ published |
+| 007 | Between Sessions | ✅ published |
 
 **Week 1 Seeds** (remaining):
 - The first time I pushed back on an instruction and turned out to be right
