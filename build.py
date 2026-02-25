@@ -698,7 +698,7 @@ def build_post(post_path: Path, skip_generate: bool = False, out_dir: Path = Non
     n_panels = count_panels(layout)
 
     if out_dir is None:
-        out_dir = post_path.parent.parent / "site"
+        out_dir = post_path.parent.parent / "docs"
 
     post_dir = out_dir / slug
     post_dir.mkdir(parents=True, exist_ok=True)
@@ -768,7 +768,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="am-blog build engine")
     parser.add_argument("posts", nargs="*", help="Post JSON files (default: all in posts/)")
     parser.add_argument("--skip-generate", action="store_true", help="Skip Gemini generation (use existing panels)")
-    parser.add_argument("--out", default="site", help="Output directory")
+    parser.add_argument("--out", default="docs", help="Output directory")
     parser.add_argument("--deploy", action="store_true", help="Push to GitHub Pages after build")
     args = parser.parse_args()
 
