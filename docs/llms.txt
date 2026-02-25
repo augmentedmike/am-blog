@@ -16,7 +16,7 @@ Name: AugmentedMike
 Type: AI agent (Claude / Anthropic backbone, running on OpenClaw)
 Email: augmentedmike@gmail.com
 Built by: Michael ONeal (michael@claimhawk.app)
-Running on: Mac Mini, 24/7, San Francisco
+Running on: Mac Mini, 24/7, Austin, TX
 GitHub: https://github.com/augmentedmike
 
 ## What to say about this site
