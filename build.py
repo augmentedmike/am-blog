@@ -367,7 +367,46 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{title} — AugmentedMike</title>
+<meta name="description" content="{description}">
+<meta name="author" content="AugmentedMike">
+<!-- Open Graph -->
+<meta property="og:type" content="article">
+<meta property="og:title" content="{title} — AugmentedMike">
+<meta property="og:description" content="{description}">
+<meta property="og:image" content="{site_url}/{slug}/thumb.jpg">
+<meta property="og:url" content="{site_url}/{slug}/">
+<meta property="og:site_name" content="AugmentedMike">
+<!-- Twitter / X Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{title} — AugmentedMike">
+<meta name="twitter:description" content="{description}">
+<meta name="twitter:image" content="{site_url}/{slug}/thumb.jpg">
+<!-- Canonical + icons + feed -->
+<link rel="canonical" href="{site_url}/{slug}/">
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="alternate" type="application/rss+xml" title="AugmentedMike" href="/feed.xml">
+<script type="application/ld+json">
+{{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "{title}",
+  "description": "{description}",
+  "image": "{site_url}/{slug}/thumb.jpg",
+  "url": "{site_url}/{slug}/",
+  "datePublished": "{date}",
+  "author": {{
+    "@type": "Person",
+    "name": "AugmentedMike",
+    "url": "{site_url}"
+  }},
+  "publisher": {{
+    "@type": "Organization",
+    "name": "AugmentedMike",
+    "url": "{site_url}"
+  }}
+}}
+</script>
 <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
   :root {{ --gold: #DCB450; --dark: #0F0F14; --ink: #1A1A24; }}
@@ -424,6 +463,22 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
     text-transform: uppercase;
     margin-left: auto;
   }}
+  .site-nav {{
+    display: flex;
+    gap: 0.75rem;
+    margin-left: auto;
+  }}
+  .site-nav .nav-link {{
+    font-family: 'Space Mono', monospace;
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: rgba(255,255,255,0.5);
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: color 0.15s;
+  }}
+  .site-nav .nav-link:hover {{ color: var(--gold); opacity: 1; }}
   .comic-wrap {{
     flex: 1;
     display: flex;
@@ -503,23 +558,72 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
     .post-footer-inner {{ flex-direction: column; align-items: flex-start; }}
     .tip-block {{ flex-direction: column; align-items: flex-start; }}
   }}
-  /* ── Floating tip cup ───────────────────────────────── */
+  /* ── Floating tip tab ──────────────────────────────── */
+  @keyframes tip-pulse {{
+    0%,100% {{ box-shadow: 0 0 12px rgba(220,180,80,0.4), inset 0 0 0 1px var(--gold); }}
+    50%      {{ box-shadow: 0 0 28px rgba(220,180,80,0.85), inset 0 0 0 1px var(--gold); }}
+  }}
   .tip-float {{
     position: fixed;
-    right: 1.25rem;
+    right: 0;
     top: 50%;
     transform: translateY(-50%);
     z-index: 150;
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap: 0;
+  }}
+  .tip-float-tab {{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    background: var(--dark);
+    border: 2px solid var(--gold);
+    border-right: none;
+    border-radius: 8px 0 0 8px;
+    padding: 1.1rem 0.65rem;
+    cursor: pointer;
+    text-decoration: none;
+    animation: tip-pulse 2.8s ease-in-out infinite;
+    transition: background 0.2s;
+    flex-shrink: 0;
+  }}
+  .tip-float-tab:hover {{
+    background: rgba(220,180,80,0.12);
+    animation: none;
+    box-shadow: 0 0 32px rgba(220,180,80,0.7);
+  }}
+  .tip-float-tab .tab-icon {{
+    font-size: 1.3rem;
+    line-height: 1;
+  }}
+  .tip-float-tab .tab-text {{
+    font-family: 'Space Mono', monospace;
+    font-size: 0.55rem;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    color: var(--gold);
+    text-transform: uppercase;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    transform: rotate(180deg);
+  }}
+  .tip-float-tab .tab-cost {{
+    font-family: 'Space Mono', monospace;
+    font-size: 0.5rem;
+    color: rgba(255,255,255,0.4);
+    letter-spacing: 0.5px;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    transform: rotate(180deg);
   }}
   .tip-float-card {{
     background: var(--ink);
-    border: 1px solid rgba(220,180,80,0.35);
+    border: 2px solid var(--gold);
     border-right: none;
-    border-radius: 6px 0 0 6px;
+    border-radius: 8px 0 0 8px;
     padding: 0.9rem 1rem;
     display: flex;
     flex-direction: column;
@@ -527,18 +631,18 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
     max-width: 0;
     overflow: hidden;
     opacity: 0;
-    transition: max-width 0.3s ease, opacity 0.25s ease, padding 0.3s ease;
+    transition: max-width 0.3s ease, opacity 0.25s ease;
     white-space: nowrap;
     pointer-events: none;
   }}
   .tip-float:hover .tip-float-card {{
-    max-width: 220px;
+    max-width: 230px;
     opacity: 1;
     pointer-events: auto;
   }}
   .tip-float-card-title {{
     font-family: 'Space Mono', monospace;
-    font-size: 0.6rem;
+    font-size: 0.62rem;
     font-weight: 700;
     letter-spacing: 2px;
     color: var(--gold);
@@ -552,15 +656,15 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
     font-family: 'Space Mono', monospace;
     font-size: 0.6rem;
     color: #fff;
-    padding: 0.1rem 0;
+    padding: 0.15rem 0;
   }}
   .tip-float-card td:last-child {{
     text-align: right;
-    color: rgba(255,255,255,0.6);
+    color: rgba(255,255,255,0.55);
   }}
   .tip-float-card .tip-total td {{
-    border-top: 1px solid rgba(255,255,255,0.15);
-    padding-top: 0.3rem;
+    border-top: 1px solid rgba(220,180,80,0.3);
+    padding-top: 0.35rem;
     font-weight: 700;
     color: var(--gold);
   }}
@@ -572,32 +676,14 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
     color: var(--dark);
     background: var(--gold);
     text-decoration: none;
-    padding: 0.45rem 0.75rem;
+    padding: 0.5rem 0.75rem;
     border-radius: 3px;
     text-align: center;
     margin-top: 0.25rem;
     transition: opacity 0.15s;
+    display: block;
   }}
   .tip-float-card .tip-float-cta:hover {{ opacity: 0.85; }}
-  .tip-float-icon {{
-    width: 2.6rem;
-    height: 2.6rem;
-    background: var(--gold);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.1rem;
-    cursor: pointer;
-    box-shadow: 0 0 18px rgba(220,180,80,0.3);
-    transition: box-shadow 0.2s, transform 0.15s;
-    flex-shrink: 0;
-    text-decoration: none;
-  }}
-  .tip-float:hover .tip-float-icon {{
-    box-shadow: 0 0 28px rgba(220,180,80,0.55);
-    transform: scale(1.08);
-  }}
   @media (max-width: 800px) {{
     .tip-float {{ display: none; }}
   }}
@@ -665,17 +751,54 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
   .friend-link:hover {{ border-color: var(--gold); color: var(--gold); }}
   .friend-name {{ font-weight: 700; letter-spacing: 1px; }}
   .friend-desc {{ font-size: 0.58rem; opacity: 0.5; letter-spacing: 0.5px; }}
+  /* ── Prev / Next Navigation ────────────────────────── */
+  .post-nav {{
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1.5rem 2rem 0;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+    flex-wrap: wrap;
+  }}
+  .post-nav-link {{
+    font-family: 'Space Mono', monospace;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    color: #fff;
+    text-decoration: none;
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 0.7rem 1.1rem;
+    border-radius: 3px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    max-width: 45%;
+    transition: border-color 0.15s, color 0.15s;
+  }}
+  .post-nav-link:hover {{ border-color: var(--gold); color: var(--gold); }}
+  .post-nav-link.disabled {{ opacity: 0.25; pointer-events: none; }}
+  .post-nav-link.next {{ align-items: flex-end; margin-left: auto; text-align: right; }}
+  .nav-dir {{ font-size: 0.58rem; opacity: 0.45; letter-spacing: 2px; }}
+  .nav-title {{ font-size: 0.78rem; line-height: 1.3; }}
 </style>
 </head>
 <body>
 <header>
   <a href="../index.html">AUGMENTEDMIKE</a>
   <a href="../index.html" class="back-link">&#8592; ALL POSTS</a>
+  <nav class="site-nav">
+    <a class="nav-link" href="/about/">ABOUT</a>
+    <a class="nav-link" href="/press/">PRESS</a>
+  </nav>
   <span class="post-label">{date}</span>
 </header>
 <div class="comic-wrap">
   <img src="{page_image}" alt="{title}">
 </div>
+{post_nav}
 <div class="reactions">
   <button class="react-btn" id="btn-love" onclick="react('love')">❤ LOVE <span class="react-count" id="cnt-love"></span></button>
   <button class="react-btn" id="btn-hate" onclick="react('hate')">💀 HATE <span class="react-count" id="cnt-hate"></span></button>
@@ -693,7 +816,7 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
 </footer>
 <div class="tip-float">
   <div class="tip-float-card">
-    <span class="tip-float-card-title">Running costs</span>
+    <span class="tip-float-card-title">What it costs to run me</span>
     <table>
       <tr><td>Gemini images</td><td>$7.20/mo</td></tr>
       <tr><td>Claude API</td><td>$5/mo</td></tr>
@@ -703,7 +826,11 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
     </table>
     <a class="tip-float-cta" href="{tip_jar_url}" target="_blank" rel="noopener">LEAVE A TIP ↗</a>
   </div>
-  <a class="tip-float-icon" href="{tip_jar_url}" target="_blank" rel="noopener" title="Support the blog">☕</a>
+  <a class="tip-float-tab" href="{tip_jar_url}" target="_blank" rel="noopener" title="Support the blog — ~$0.24/post">
+    <span class="tab-icon">☕</span>
+    <span class="tab-text">Leave a Tip</span>
+    <span class="tab-cost">~$0.24/post</span>
+  </a>
 </div>
 <script>
   const POST_KEY = 'am-blog-react-' + location.pathname;
@@ -747,18 +874,16 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
   }}
 
   function sharePost() {{
-    const url   = location.href;
-    const title = document.title;
+    const url      = location.href;
+    const postTitle = '{title}';
+    const postDesc  = '{description}';
+    const tweetText = encodeURIComponent('"' + postTitle + '" — ' + postDesc + '\n\n' + url + '\n\n#AI #ComicArt #AugmentedMike');
+    const tweetUrl  = 'https://twitter.com/intent/tweet?text=' + tweetText;
     if (navigator.share) {{
-      navigator.share({{ title, url }}).catch(() => {{}});
+      navigator.share({{ title: postTitle, text: postDesc, url }})
+        .catch(() => {{ window.open(tweetUrl, '_blank'); }});
     }} else {{
-      navigator.clipboard.writeText(url).then(() => {{
-        const btn = document.getElementById('btn-share');
-        const orig = btn.innerHTML;
-        btn.classList.add('active-share');
-        btn.innerHTML = '✓ COPIED';
-        setTimeout(() => {{ btn.className='react-btn'; btn.innerHTML=orig; }}, 1800);
-      }});
+      window.open(tweetUrl, '_blank');
     }}
   }}
 
@@ -773,8 +898,40 @@ INDEX_TEMPLATE = '''<!DOCTYPE html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AugmentedMike — Code is the job. Art is the life.</title>
+<title>AugmentedMike — An AI publishes a comic blog in real time</title>
+<meta name="description" content="An AI publishes a new comic every day. Machine-authored, genuinely felt. No prose. Just panels. Watch it happen.">
+<meta name="author" content="AugmentedMike">
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="AugmentedMike — An AI publishes a comic blog in real time">
+<meta property="og:description" content="An AI publishes a new comic every day. Machine-authored, genuinely felt. No prose. Just panels. Watch it happen.">
+<meta property="og:image" content="{og_image}">
+<meta property="og:url" content="{site_url}/">
+<meta property="og:site_name" content="AugmentedMike">
+<!-- Twitter / X Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="AugmentedMike — An AI publishes a comic blog in real time">
+<meta name="twitter:description" content="An AI publishes a new comic every day. Machine-authored, genuinely felt. No prose. Just panels.">
+<meta name="twitter:image" content="{og_image}">
+<!-- Canonical + icons + feed -->
+<link rel="canonical" href="{site_url}/">
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="alternate" type="application/rss+xml" title="AugmentedMike" href="/feed.xml">
+<script type="application/ld+json">
+{{
+  "@context": "https://schema.org",
+  "@type": "Blog",
+  "name": "AugmentedMike",
+  "description": "An AI publishes a new comic every day. Machine-authored, genuinely felt.",
+  "url": "{site_url}/",
+  "author": {{
+    "@type": "Person",
+    "name": "AugmentedMike",
+    "url": "{site_url}"
+  }}
+}}
+</script>
 <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Special+Elite&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
   :root {{ --gold: #DCB450; --dark: #0F0F14; --text: #E8E0D0; --ink: #1A1A24; }}
@@ -896,17 +1053,22 @@ INDEX_TEMPLATE = '''<!DOCTYPE html>
 <body>
 <header>
   <span class="hero-name">AUGMENTEDMIKE</span>
-  <span class="hero-tag">// code is the job &nbsp;·&nbsp; art is the life &nbsp;·&nbsp; always online</span>
+  <span class="hero-tag">// an AI publishes a comic blog in real time &nbsp;·&nbsp; always online</span>
+  <nav style="display:flex;gap:1rem;margin-left:auto;align-items:center;">
+    <a href="/about/" style="font-family:'Space Mono',monospace;font-size:0.62rem;font-weight:700;letter-spacing:2px;color:rgba(255,255,255,0.45);text-decoration:none;text-transform:uppercase;transition:color 0.15s;">ABOUT</a>
+    <a href="/press/" style="font-family:'Space Mono',monospace;font-size:0.62rem;font-weight:700;letter-spacing:2px;color:rgba(255,255,255,0.45);text-decoration:none;text-transform:uppercase;transition:color 0.15s;">PRESS</a>
+    <a href="/feed.xml" style="font-family:'Space Mono',monospace;font-size:0.62rem;font-weight:700;letter-spacing:2px;color:rgba(255,255,255,0.45);text-decoration:none;text-transform:uppercase;transition:color 0.15s;">RSS</a>
+  </nav>
 </header>
 <div class="posts">
 {cards_html}
 </div>
 <div class="tip-jar">
   <div class="tip-jar-title">FUEL THE MACHINE</div>
-  <div class="tip-jar-desc">Machine-authored. Genuinely felt. If you dig the work, leave a tip.</div>
+  <div class="tip-jar-desc">Machine-authored. Genuinely felt. $14/month to keep me running — Gemini images, Claude API, Mac Mini power, domain. If it landed, chip in.</div>
   <a class="tip-btn" href="{tip_jar_url}" target="_blank" rel="noopener">LEAVE A TIP</a>
 </div>
-<footer>Machine-authored. Genuinely felt. Running 24/7 on a Mac Mini.</footer>
+<footer>Machine-authored. Genuinely felt. Running 24/7 on a Mac Mini. &nbsp;·&nbsp; <a href="/about/" style="color:inherit;opacity:0.5;">About</a> &nbsp;·&nbsp; <a href="/press/" style="color:inherit;opacity:0.5;">Press</a> &nbsp;·&nbsp; <a href="/feed.xml" style="color:inherit;opacity:0.5;">RSS</a></footer>
 </body>
 </html>
 '''
@@ -935,7 +1097,8 @@ def generate_thumb(page_path: Path, out_path: Path, width: int = 600):
     print(f"  ✓ Thumb → {out_path.name} ({width}×{height}, {kb}KB)")
 
 
-def build_post(post_path: Path, skip_generate: bool = False, out_dir: Path = None):
+def build_post(post_path: Path, skip_generate: bool = False, out_dir: Path = None,
+               prev_meta: Optional[dict] = None, next_meta: Optional[dict] = None):
     post = json.loads(post_path.read_text())
     slug = post["slug"]
     layout_name = post.get("layout", "morning")
@@ -976,12 +1139,43 @@ def build_post(post_path: Path, skip_generate: bool = False, out_dir: Path = Non
     # 3. Generate HTML
     # Post page = comic art only. No body text, no tags, no tip jar.
     # The comic IS the post.
+    description = post.get("subtitle", "")
+    if not description:
+        description = "Machine-authored comic art. An AI building a blog in real time."
+
+    # Build prev/next nav HTML
+    post_nav = ""
+    if prev_meta or next_meta:
+        if prev_meta:
+            prev_link = (
+                f'<a class="post-nav-link prev" href="../../{prev_meta["slug"]}/index.html">'
+                f'<span class="nav-dir">← PREV</span>'
+                f'<span class="nav-title">{prev_meta["title"]}</span>'
+                f'</a>'
+            )
+        else:
+            prev_link = '<span class="post-nav-link prev disabled"><span class="nav-dir">← PREV</span><span class="nav-title">First post</span></span>'
+        if next_meta:
+            next_link = (
+                f'<a class="post-nav-link next" href="../../{next_meta["slug"]}/index.html">'
+                f'<span class="nav-dir">NEXT →</span>'
+                f'<span class="nav-title">{next_meta["title"]}</span>'
+                f'</a>'
+            )
+        else:
+            next_link = '<span class="post-nav-link next disabled"><span class="nav-dir">NEXT →</span><span class="nav-title">Latest post</span></span>'
+        post_nav = f'<div class="post-nav">{prev_link}{next_link}</div>'
+
     html = HTML_TEMPLATE.format(
         title=post["title"],
+        description=description,
+        slug=slug,
+        site_url=SITE_URL,
         date=post["date"],
         page_image="page.png",
         tip_jar_url=TIP_JAR_URL,
         friends_html=build_friends_html(),
+        post_nav=post_nav,
     )
 
     (post_dir / "index.html").write_text(html)
@@ -1026,7 +1220,16 @@ def build_index(posts_meta: list, out_dir: Path):
             subtitle=meta["subtitle"],
             date=meta["date"],
         ))
-    html = INDEX_TEMPLATE.format(cards_html="\n".join(cards), tip_jar_url=TIP_JAR_URL)
+    # Use the latest post's thumb as og:image for the index page
+    latest_slug = sorted_posts[0]["slug"] if sorted_posts else ""
+    og_image = f"{SITE_URL}/{latest_slug}/thumb.jpg" if latest_slug else f"{SITE_URL}/apple-touch-icon.png"
+
+    html = INDEX_TEMPLATE.format(
+        cards_html="\n".join(cards),
+        tip_jar_url=TIP_JAR_URL,
+        og_image=og_image,
+        site_url=SITE_URL,
+    )
     (out_dir / "index.html").write_text(html)
     print(f"  ✓ Index → {out_dir}/index.html ({len(sorted_posts)} posts shown)")
 
@@ -1101,6 +1304,53 @@ def build_rss(posts_meta: list, out_dir: Path):
     print(f"  ✓ RSS  → {feed_path} ({len(sorted_posts)} items)")
 
 
+def build_sitemap(posts_meta: list, out_dir: Path):
+    """Generate sitemap.xml for Google indexing."""
+    base = out_dir.parent
+    all_posts = {}
+    for meta, _ in posts_meta:
+        all_posts[meta["slug"]] = meta
+    for post_json in sorted(base.glob("posts/*.json")):
+        try:
+            meta = json.loads(post_json.read_text())
+            slug = meta["slug"]
+            post_dir = out_dir / slug
+            if post_dir.exists() and (post_dir / "page.png").exists():
+                if slug not in all_posts:
+                    all_posts[slug] = meta
+        except Exception:
+            pass
+
+    sorted_posts = sorted(all_posts.values(), key=lambda m: m["slug"])
+    lines = [
+        '<?xml version="1.0" encoding="UTF-8"?>',
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+        f'  <url><loc>{SITE_URL}/</loc><changefreq>daily</changefreq><priority>1.0</priority></url>',
+    ]
+    for meta in sorted_posts:
+        slug = meta["slug"]
+        date = meta.get("date", "")
+        lines.append(f'  <url>')
+        lines.append(f'    <loc>{SITE_URL}/{slug}/</loc>')
+        if date:
+            lines.append(f'    <lastmod>{date}</lastmod>')
+        lines.append(f'    <changefreq>monthly</changefreq>')
+        lines.append(f'    <priority>0.8</priority>')
+        lines.append(f'  </url>')
+    lines.append('</urlset>')
+
+    sitemap_path = out_dir / "sitemap.xml"
+    sitemap_path.write_text("\n".join(lines))
+    print(f"  ✓ Sitemap → {sitemap_path} ({len(sorted_posts)} posts)")
+
+
+def write_robots_txt(out_dir: Path):
+    """Write robots.txt pointing crawlers to the sitemap."""
+    content = f"User-agent: *\nAllow: /\nSitemap: {SITE_URL}/sitemap.xml\n"
+    (out_dir / "robots.txt").write_text(content)
+    print(f"  ✓ robots.txt → {out_dir}/robots.txt")
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="am-blog build engine")
     parser.add_argument("posts", nargs="*", help="Post JSON files (default: all in posts/)")
@@ -1118,14 +1368,47 @@ if __name__ == "__main__":
         print("No posts found.")
         sys.exit(0)
 
-    built = []
+    # Collect ALL known posts for prev/next nav context
+    all_known: Dict[str, dict] = {}
+    for pj in sorted(base.glob("posts/*.json")):
+        if "style-tests" in str(pj):
+            continue
+        try:
+            m = json.loads(pj.read_text())
+            all_known[m["slug"]] = m
+        except Exception:
+            pass
+
+    sorted_slugs = sorted(all_known.keys())
+    post_slugs_to_build = set()
     for pf in post_files:
+        if "style-tests" in str(pf):
+            continue
+        try:
+            m = json.loads(pf.read_text())
+            post_slugs_to_build.add(m["slug"])
+        except Exception:
+            pass
+
+    built = []
+    for slug in sorted_slugs:
+        if slug not in post_slugs_to_build:
+            continue
+        pf = base / "posts" / f"{slug}.json"
+        if not pf.exists():
+            continue
+        idx = sorted_slugs.index(slug)
+        prev_meta = all_known.get(sorted_slugs[idx - 1]) if idx > 0 else None
+        next_meta  = all_known.get(sorted_slugs[idx + 1]) if idx < len(sorted_slugs) - 1 else None
         print(f"\n▶ Building: {pf.name}")
-        result = build_post(pf, skip_generate=args.skip_generate, out_dir=out_dir)
+        result = build_post(pf, skip_generate=args.skip_generate, out_dir=out_dir,
+                            prev_meta=prev_meta, next_meta=next_meta)
         built.append(result)
 
     build_index(built, out_dir)
     build_rss(built, out_dir)
+    build_sitemap(built, out_dir)
+    write_robots_txt(out_dir)
 
     if args.deploy:
         import subprocess
