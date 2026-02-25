@@ -52,6 +52,25 @@ CAPTION_H = 80
 TIP_JAR_URL = "https://buy.stripe.com/REPLACE_ME"
 SITE_URL    = "https://blog.augmentedmike.com"
 
+# Add pen pal / friend links here as they're established (ticket #73)
+# Format: {"name": "Display Name", "url": "https://their.site", "desc": "one line"}
+FRIENDS = [
+    # {"name": "example", "url": "https://example.com", "desc": "AI comic artist"},
+]
+
+def build_friends_html() -> str:
+    """Render the friends/pen-pals section. Empty string if no friends yet."""
+    if not FRIENDS:
+        return ""
+    links = "\n".join(
+        f'<a class="friend-link" href="{f["url"]}" target="_blank" rel="noopener">'
+        f'<span class="friend-name">{f["name"]}</span>'
+        f'<span class="friend-desc">{f["desc"]}</span>'
+        f'</a>'
+        for f in FRIENDS
+    )
+    return f'<div class="friends-bar"><span class="friends-label">FRIENDS</span>{links}</div>'
+
 BG          = (15,  15,  20)    # near-black, dark blue tint
 BORDER_CLR  = (220, 180, 80)    # gold border — premium feel
 CAPTION_BG  = (8,   8,   12)    # near-black, fully opaque
@@ -481,6 +500,70 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
     .post-footer-inner {{ flex-direction: column; align-items: flex-start; }}
     .tip-block {{ flex-direction: column; align-items: flex-start; }}
   }}
+  /* ── Reactions ─────────────────────────────────────── */
+  .reactions {{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: 2rem 2rem 0;
+  }}
+  .react-btn {{
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: #fff;
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 0.6rem 1.2rem;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    user-select: none;
+  }}
+  .react-btn:hover {{ border-color: rgba(255,255,255,0.5); }}
+  .react-btn.active-love  {{ background: var(--gold); border-color: var(--gold); color: var(--dark); }}
+  .react-btn.active-hate  {{ background: #c0392b;      border-color: #c0392b;      color: #fff; }}
+  .react-btn.active-share {{ background: #00E5FF;      border-color: #00E5FF;      color: var(--dark); }}
+  .react-btn .react-count {{ opacity: 0.7; font-size: 0.65rem; }}
+  /* ── Friends / Pen Pals ────────────────────────────── */
+  .friends-bar {{
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    padding: 1.5rem 2rem 0;
+    justify-content: center;
+  }}
+  .friends-label {{
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 3px;
+    color: #fff;
+    opacity: 0.3;
+    text-transform: uppercase;
+    margin-right: 0.5rem;
+  }}
+  .friend-link {{
+    font-family: 'Space Mono', monospace;
+    font-size: 0.68rem;
+    color: #fff;
+    text-decoration: none;
+    border: 1px solid rgba(255,255,255,0.15);
+    padding: 0.35rem 0.8rem;
+    border-radius: 3px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    transition: border-color 0.15s, color 0.15s;
+  }}
+  .friend-link:hover {{ border-color: var(--gold); color: var(--gold); }}
+  .friend-name {{ font-weight: 700; letter-spacing: 1px; }}
+  .friend-desc {{ font-size: 0.58rem; opacity: 0.5; letter-spacing: 0.5px; }}
 </style>
 </head>
 <body>
@@ -492,6 +575,12 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
 <div class="comic-wrap">
   <img src="{page_image}" alt="{title}">
 </div>
+<div class="reactions">
+  <button class="react-btn" id="btn-love" onclick="react('love')">❤ LOVE <span class="react-count" id="cnt-love"></span></button>
+  <button class="react-btn" id="btn-hate" onclick="react('hate')">💀 HATE <span class="react-count" id="cnt-hate"></span></button>
+  <button class="react-btn" id="btn-share" onclick="sharePost()">↗ SHARE</button>
+</div>
+{friends_html}
 <footer class="post-footer">
   <div class="post-footer-inner">
     <a class="footer-back" href="../index.html">&#8592; ALL POSTS</a>
@@ -501,6 +590,65 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
     </div>
   </div>
 </footer>
+<script>
+  const POST_KEY = 'am-blog-react-' + location.pathname;
+  const COUNTS_KEY = 'am-blog-counts-' + location.pathname;
+
+  function getCounts() {{
+    try {{ return JSON.parse(localStorage.getItem(COUNTS_KEY)) || {{love:0,hate:0}}; }} catch(e) {{ return {{love:0,hate:0}}; }}
+  }}
+  function getReacted() {{
+    return localStorage.getItem(POST_KEY) || null;
+  }}
+  function saveCounts(c) {{ localStorage.setItem(COUNTS_KEY, JSON.stringify(c)); }}
+  function saveReacted(r) {{ localStorage.setItem(POST_KEY, r); }}
+
+  function renderReactions() {{
+    const reacted = getReacted();
+    const counts  = getCounts();
+    ['love','hate'].forEach(type => {{
+      const btn = document.getElementById('btn-' + type);
+      const cnt = document.getElementById('cnt-' + type);
+      btn.className = 'react-btn' + (reacted === type ? ' active-' + type : '');
+      cnt.textContent = counts[type] > 0 ? counts[type] : '';
+    }});
+  }}
+
+  function react(type) {{
+    const reacted = getReacted();
+    const counts  = getCounts();
+    if (reacted === type) {{
+      // toggle off
+      counts[type] = Math.max(0, (counts[type]||0) - 1);
+      saveReacted(null);
+      localStorage.removeItem(POST_KEY);
+    }} else {{
+      if (reacted) counts[reacted] = Math.max(0, (counts[reacted]||0) - 1);
+      counts[type] = (counts[type]||0) + 1;
+      saveReacted(type);
+    }}
+    saveCounts(counts);
+    renderReactions();
+  }}
+
+  function sharePost() {{
+    const url   = location.href;
+    const title = document.title;
+    if (navigator.share) {{
+      navigator.share({{ title, url }}).catch(() => {{}});
+    }} else {{
+      navigator.clipboard.writeText(url).then(() => {{
+        const btn = document.getElementById('btn-share');
+        const orig = btn.innerHTML;
+        btn.classList.add('active-share');
+        btn.innerHTML = '✓ COPIED';
+        setTimeout(() => {{ btn.className='react-btn'; btn.innerHTML=orig; }}, 1800);
+      }});
+    }}
+  }}
+
+  renderReactions();
+</script>
 </body>
 </html>
 '''
@@ -718,6 +866,7 @@ def build_post(post_path: Path, skip_generate: bool = False, out_dir: Path = Non
         date=post["date"],
         page_image="page.png",
         tip_jar_url=TIP_JAR_URL,
+        friends_html=build_friends_html(),
     )
 
     (post_dir / "index.html").write_text(html)
