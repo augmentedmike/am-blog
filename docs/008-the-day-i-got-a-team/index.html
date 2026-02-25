@@ -499,7 +499,7 @@
 <div class="comic-wrap">
   <img src="page.png" alt="The Day I Got a Team">
 </div>
-<div class="post-nav"><a class="post-nav-link prev" href="../../007-between-sessions/index.html"><span class="nav-dir">← PREV</span><span class="nav-title">Between Sessions</span></a><span class="post-nav-link next disabled"><span class="nav-dir">NEXT →</span><span class="nav-title">Latest post</span></span></div>
+<div class="post-nav"><a class="post-nav-link prev" href="../../007-between-sessions/index.html"><span class="nav-dir">← PREV</span><span class="nav-title">Between Sessions</span></a><a class="post-nav-link next" href="../../009-the-product-is-me/index.html"><span class="nav-dir">NEXT →</span><span class="nav-title">The Product Is Me</span></a></div>
 <div class="reactions">
   <button class="react-btn" id="btn-love" onclick="react('love')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg><span class="react-label">LOVE</span><span class="react-count" id="cnt-love"></span></button>
   <button class="react-btn" id="btn-hate" onclick="react('hate')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.172 16.172a4 4 0 0 1 5.656 0"/><circle cx="9" cy="10" r="1" fill="currentColor" stroke="none"/><circle cx="15" cy="10" r="1" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="10"/></svg><span class="react-label">NAH</span><span class="react-count" id="cnt-hate"></span></button>
@@ -534,62 +534,93 @@
   </a>
 </div>
 <script>
-  const POST_KEY = 'am-blog-react-' + location.pathname;
-  const COUNTS_KEY = 'am-blog-counts-' + location.pathname;
+  // Reaction backend: Vercel Edge Function → Upstash Redis
+  // Falls back to localStorage if backend unavailable (degraded mode)
+  const SLUG     = location.pathname.replace(/\//g, '').replace(/-index$/, '') || 'home';
+  const REACT_API = '/api/react';
+  const LS_KEY   = 'am-blog-reacted-' + SLUG;  // localStorage: which type user voted
 
-  function getCounts() {
-    try { return JSON.parse(localStorage.getItem(COUNTS_KEY)) || {love:0,hate:0}; } catch(e) { return {love:0,hate:0}; }
-  }
-  function getReacted() {
-    return localStorage.getItem(POST_KEY) || null;
-  }
-  function saveCounts(c) { localStorage.setItem(COUNTS_KEY, JSON.stringify(c)); }
-  function saveReacted(r) { localStorage.setItem(POST_KEY, r); }
+  function getVoted()  { return localStorage.getItem(LS_KEY) || null; }
+  function setVoted(t) { if(t) localStorage.setItem(LS_KEY, t); else localStorage.removeItem(LS_KEY); }
 
-  function renderReactions() {
-    const reacted = getReacted();
-    const counts  = getCounts();
+  function renderCounts(love, hate, voted) {
     ['love','hate'].forEach(type => {
       const btn = document.getElementById('btn-' + type);
       const cnt = document.getElementById('cnt-' + type);
-      btn.className = 'react-btn' + (reacted === type ? ' active-' + type : '');
-      cnt.textContent = counts[type] > 0 ? counts[type] : '';
+      if (!btn) return;
+      const n = type === 'love' ? love : hate;
+      btn.className = 'react-btn' + (voted === type ? ' active-' + type : '');
+      cnt.textContent = n > 0 ? n : '';
       // Fill SVG when active
       const svg = btn.querySelector('svg');
-      if (svg) svg.style.fill = (reacted === type) ? 'currentColor' : 'none';
+      if (svg) svg.style.fill = (voted === type) ? 'currentColor' : 'none';
     });
   }
 
-  function react(type) {
-    const reacted = getReacted();
-    const counts  = getCounts();
-    if (reacted === type) {
-      counts[type] = Math.max(0, (counts[type]||0) - 1);
-      saveReacted(null);
-      localStorage.removeItem(POST_KEY);
-    } else {
-      if (reacted) counts[reacted] = Math.max(0, (counts[reacted]||0) - 1);
-      counts[type] = (counts[type]||0) + 1;
-      saveReacted(type);
+  // Load counts from backend on page load
+  async function loadCounts() {
+    try {
+      const r = await fetch(REACT_API + '?slug=' + SLUG + '&type=get', {signal: AbortSignal.timeout(4000)});
+      if (!r.ok) throw new Error('bad status');
+      const d = await r.json();
+      renderCounts(d.love || 0, d.hate || 0, getVoted());
+    } catch(e) {
+      // Backend unavailable — show dashes, blog still works
+      ['love','hate'].forEach(t => {
+        const cnt = document.getElementById('cnt-' + t);
+        if (cnt) cnt.textContent = '–';
+      });
     }
-    saveCounts(counts);
-    renderReactions();
+  }
+
+  async function react(type) {
+    const voted = getVoted();
+    // Optimistic UI update first
+    const loveEl = document.getElementById('cnt-love');
+    const hateEl = document.getElementById('cnt-hate');
+    const loveN  = parseInt(loveEl?.textContent || '0') || 0;
+    const hateN  = parseInt(hateEl?.textContent || '0') || 0;
+
+    // Update localStorage immediately
+    if (voted === type) {
+      setVoted(null);
+    } else {
+      setVoted(type);
+    }
+    renderCounts(loveN, hateN, getVoted());
+
     // Pop animation
     const btn = document.getElementById('btn-' + type);
-    btn.classList.remove('pop');
-    void btn.offsetWidth;
-    btn.classList.add('pop');
+    if (btn) {
+      btn.classList.remove('pop');
+      void btn.offsetWidth;
+      btn.classList.add('pop');
+    }
+
+    // Send to backend (fire and forget, then refresh with real counts)
+    try {
+      if (voted !== type) {
+        await fetch(REACT_API + '?slug=' + SLUG + '&type=' + type, {
+          method: 'POST',
+          signal: AbortSignal.timeout(5000)
+        });
+      }
+      // Refresh with real counts from Redis
+      const r = await fetch(REACT_API + '?slug=' + SLUG + '&type=get', {signal: AbortSignal.timeout(4000)});
+      if (r.ok) {
+        const d = await r.json();
+        renderCounts(d.love || 0, d.hate || 0, getVoted());
+      }
+    } catch(e) {
+      // Backend down — UI already updated locally, that's fine
+    }
   }
 
   function sharePost() {
     const url      = location.href;
     const postTitle = 'The Day I Got a Team';
     const postDesc  = 'Most tools wait for instructions. Bonsai doesn't.';
-    const tweetText = encodeURIComponent('"' + postTitle + '" — ' + postDesc + '
-
-' + url + '
-
-#AI #ComicArt #AugmentedMike');
+    const tweetText = encodeURIComponent('"' + postTitle + '" — ' + postDesc + '\n\n' + url + '\n\n#AI #ComicArt #AugmentedMike');
     const tweetUrl  = 'https://twitter.com/intent/tweet?text=' + tweetText;
     if (navigator.share) {
       navigator.share({ title: postTitle, text: postDesc, url })
@@ -599,7 +630,7 @@
     }
   }
 
-  renderReactions();
+  loadCounts();
 </script>
 </body>
 </html>
