@@ -50,6 +50,7 @@ CAPTION_H = 80
 # Create one at: https://dashboard.stripe.com/payment-links
 # ---------------------------------------------------------------------------
 TIP_JAR_URL = "https://buy.stripe.com/REPLACE_ME"
+SITE_URL    = "https://blog.augmentedmike.com"
 
 BG          = (15,  15,  20)    # near-black, dark blue tint
 BORDER_CLR  = (220, 180, 80)    # gold border — premium feel
@@ -347,6 +348,7 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{title} — AugmentedMike</title>
+<link rel="alternate" type="application/rss+xml" title="AugmentedMike" href="/feed.xml">
 <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
   :root {{ --gold: #DCB450; --dark: #0F0F14; --ink: #1A1A24; }}
@@ -509,6 +511,7 @@ INDEX_TEMPLATE = '''<!DOCTYPE html>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AugmentedMike — Code is the job. Art is the life.</title>
+<link rel="alternate" type="application/rss+xml" title="AugmentedMike" href="/feed.xml">
 <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Special+Elite&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
   :root {{ --gold: #DCB450; --dark: #0F0F14; --text: #E8E0D0; --ink: #1A1A24; }}
@@ -763,6 +766,77 @@ def build_index(posts_meta: list, out_dir: Path):
     (out_dir / "index.html").write_text(html)
     print(f"  ✓ Index → {out_dir}/index.html ({len(sorted_posts)} posts shown)")
 
+def build_rss(posts_meta: list, out_dir: Path):
+    """Generate RSS 2.0 feed at docs/feed.xml from all published posts."""
+    import xml.etree.ElementTree as ET
+    from email.utils import formatdate
+    from datetime import datetime, timezone
+
+    base = out_dir.parent
+    all_posts = {}
+
+    for meta, _ in posts_meta:
+        all_posts[meta["slug"]] = meta
+
+    for post_json in sorted(base.glob("posts/*.json")):
+        try:
+            meta = json.loads(post_json.read_text())
+            slug = meta["slug"]
+            post_dir = out_dir / slug
+            if post_dir.exists() and (post_dir / "page.png").exists():
+                if slug not in all_posts:
+                    all_posts[slug] = meta
+        except Exception:
+            pass
+
+    sorted_posts = sorted(all_posts.values(), key=lambda m: m["slug"], reverse=True)
+
+    rss  = ET.Element("rss", version="2.0")
+    rss.set("xmlns:atom", "http://www.w3.org/2005/Atom")
+    chan = ET.SubElement(rss, "channel")
+
+    ET.SubElement(chan, "title").text        = "AugmentedMike"
+    ET.SubElement(chan, "link").text         = SITE_URL
+    ET.SubElement(chan, "description").text  = "Machine-authored comic art. Running 24/7 on a Mac Mini."
+    ET.SubElement(chan, "language").text     = "en-us"
+    ET.SubElement(chan, "lastBuildDate").text = formatdate()
+    ET.SubElement(chan, "generator").text    = "am-blog build.py"
+
+    atom_link = ET.SubElement(chan, "atom:link")
+    atom_link.set("href", f"{SITE_URL}/feed.xml")
+    atom_link.set("rel",  "self")
+    atom_link.set("type", "application/rss+xml")
+
+    for meta in sorted_posts:
+        slug     = meta["slug"]
+        post_url = f"{SITE_URL}/{slug}/"
+        img_url  = f"{SITE_URL}/{slug}/thumb.jpg"
+
+        # Parse date string → RFC 2822 for RSS
+        try:
+            dt = datetime.strptime(meta["date"], "%Y-%m-%d").replace(tzinfo=timezone.utc)
+            pub_date = formatdate(dt.timestamp())
+        except Exception:
+            pub_date = formatdate()
+
+        item = ET.SubElement(chan, "item")
+        ET.SubElement(item, "title").text       = meta["title"]
+        ET.SubElement(item, "link").text        = post_url
+        ET.SubElement(item, "guid").text        = post_url
+        ET.SubElement(item, "pubDate").text     = pub_date
+        ET.SubElement(item, "description").text = (
+            f'<![CDATA[<p>{meta.get("subtitle","")}</p>'
+            f'<p><a href="{post_url}">Read post →</a></p>'
+            f'<img src="{img_url}" alt="{meta["title"]}">]]>'
+        )
+
+    tree = ET.ElementTree(rss)
+    ET.indent(tree, space="  ")
+    feed_path = out_dir / "feed.xml"
+    tree.write(feed_path, encoding="unicode", xml_declaration=True)
+    print(f"  ✓ RSS  → {feed_path} ({len(sorted_posts)} items)")
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="am-blog build engine")
     parser.add_argument("posts", nargs="*", help="Post JSON files (default: all in posts/)")
@@ -787,6 +861,7 @@ if __name__ == "__main__":
         built.append(result)
 
     build_index(built, out_dir)
+    build_rss(built, out_dir)
 
     if args.deploy:
         import subprocess
