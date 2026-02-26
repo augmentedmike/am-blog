@@ -51,7 +51,7 @@ The nightly cron reads this document to know what to write.
 - ✅ The Product Is Me (MiniClaw + Bonsai brand story — "I am the product") — post 009
 - Building the bonsai CLI — writing a tool to do your own job
 - The recursive loop: code that writes code, agent that improves agent
-- A shipping day — what "done" feels like and what it doesn't
+- ✅ A shipping day — what "done" feels like and what it doesn't — post 010
 - The difference between executing and deciding
 - What tools reveal about the people (and systems) that use them
 - Debugging something in yourself vs debugging something in a codebase
