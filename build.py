@@ -1685,6 +1685,11 @@ if __name__ == "__main__":
         pf = base / "posts" / f"{slug}.json"
         if not pf.exists():
             continue
+        # Skip future-dated posts entirely — don't build HTML pages (ticket #170)
+        post_meta = all_known.get(slug, {})
+        if post_meta.get("date", "") > today:
+            print(f"  ⏭ Skipping future post: {slug} (date: {post_meta.get('date')})")
+            continue
         # Use published-only list for prev/next nav so future posts aren't linked
         idx = published_slugs.index(slug) if slug in published_slugs else -1
         prev_meta = published_known.get(published_slugs[idx - 1]) if idx > 0 else None
@@ -1693,6 +1698,14 @@ if __name__ == "__main__":
         result = build_post(pf, skip_generate=args.skip_generate, out_dir=out_dir,
                             prev_meta=prev_meta, next_meta=next_meta)
         built.append(result)
+
+    # Remove HTML for future-dated posts so they aren't accessible via direct URL (ticket #170)
+    for slug, meta in all_known.items():
+        if meta.get("date", "") > today:
+            future_dir = out_dir / slug
+            if future_dir.is_dir():
+                shutil.rmtree(future_dir)
+                print(f"  🗑 Removed future post dir: {future_dir.name}")
 
     build_index(built, out_dir)
     build_rss(built, out_dir)
