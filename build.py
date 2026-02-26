@@ -409,7 +409,7 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
 </script>
 <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
-  :root {{ --gold: #DCB450; --dark: #0F0F14; --ink: #1A1A24; }}
+  :root {{ --gold: #DCB450; --dark: #0F0F14; --ink: #1A1A24; --teal: #00E5FF; }}
   * {{ box-sizing: border-box; margin: 0; padding: 0; }}
   body {{
     background: var(--dark);
@@ -418,7 +418,7 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
     flex-direction: column;
   }}
   header {{
-    border-bottom: 2px solid var(--gold);
+    border-bottom: 1px solid rgba(220,180,80,0.35);
     padding: 1rem 2rem;
     background: var(--ink);
     display: flex;
@@ -507,11 +507,11 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
     display: block;
     max-width: 1988px;
     width: 100%;
-    border: 3px solid var(--gold);
-    box-shadow: 0 0 80px rgba(220,180,80,0.12);
+    border: 1px solid rgba(220,180,80,0.25);
+    box-shadow: 0 0 60px rgba(220,180,80,0.07);
   }}
   .post-footer {{
-    border-top: 2px solid var(--gold);
+    border-top: 1px solid rgba(220,180,80,0.25);
     background: var(--ink);
     padding: 2.5rem 2rem;
   }}
@@ -847,6 +847,96 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
   .post-nav-link.next {{ align-items: flex-end; margin-left: auto; text-align: right; }}
   .nav-dir {{ font-size: 0.58rem; opacity: 0.45; letter-spacing: 2px; }}
   .nav-title {{ font-size: 0.78rem; line-height: 1.3; }}
+  /* ── Panel Captions (multilingual) ─────────────────── */
+  .panel-captions {{
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 1rem;
+  }}
+  .captions-header {{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid rgba(220,180,80,0.2);
+  }}
+  .captions-label {{
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 3px;
+    color: rgba(255,255,255,0.3);
+    text-transform: uppercase;
+  }}
+  .lang-switcher {{
+    display: flex;
+    gap: 0;
+    border: 1px solid rgba(220,180,80,0.35);
+    border-radius: 3px;
+    overflow: hidden;
+  }}
+  .lang-btn {{
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    color: rgba(255,255,255,0.45);
+    background: transparent;
+    border: none;
+    padding: 0.3rem 0.65rem;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+  }}
+  .lang-btn:first-child {{ border-right: 1px solid rgba(220,180,80,0.35); }}
+  .lang-btn.active {{ background: rgba(220,180,80,0.15); color: var(--gold); }}
+  .lang-btn:hover:not(.active) {{ color: rgba(255,255,255,0.7); }}
+  .captions-list {{
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }}
+  .captions-list li {{
+    font-family: 'Space Mono', monospace;
+    font-size: 0.72rem;
+    line-height: 1.6;
+    color: rgba(255,255,255,0.6);
+    padding-left: 1.5rem;
+    position: relative;
+  }}
+  .captions-list li::before {{
+    content: attr(data-panel);
+    position: absolute;
+    left: 0;
+    font-size: 0.55rem;
+    color: rgba(220,180,80,0.5);
+    top: 0.05rem;
+  }}
+  .lang-es {{ display: none; }}
+  /* ── Header lang toggle (persistent across pages) ───── */
+  .header-lang {{
+    font-family: 'Space Mono', monospace;
+    font-size: 0.55rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    display: flex;
+    gap: 0;
+    border: 1px solid rgba(220,180,80,0.3);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-left: 0.5rem;
+  }}
+  .header-lang-btn {{
+    background: transparent;
+    border: none;
+    color: rgba(255,255,255,0.4);
+    padding: 0.25rem 0.5rem;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+  }}
+  .header-lang-btn:first-child {{ border-right: 1px solid rgba(220,180,80,0.3); }}
+  .header-lang-btn.active {{ background: rgba(220,180,80,0.12); color: var(--gold); }}
+  .header-lang-btn:hover:not(.active) {{ color: rgba(255,255,255,0.7); }}
 </style>
 </head>
 <body>
@@ -858,11 +948,16 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
     <a class="nav-link" href="/press/">PRESS</a>
   </nav>
   <span class="post-label">{date}</span>
+  <div class="header-lang" role="group" aria-label="Language">
+    <button class="header-lang-btn active" id="hlang-en" onclick="setLang('en')">EN</button>
+    <button class="header-lang-btn" id="hlang-es" onclick="setLang('es')">ES</button>
+  </div>
 </header>
 <div class="comic-wrap">
   <img src="{page_image}" alt="{title}">
 </div>
 {post_nav}
+{captions_html}
 <div class="reactions">
   <button class="react-btn" id="btn-love" onclick="react('love')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg><span class="react-label">LOVE</span><span class="react-count" id="cnt-love"></span></button>
   <button class="react-btn" id="btn-hate" onclick="react('hate')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.172 16.172a4 4 0 0 1 5.656 0"/><circle cx="9" cy="10" r="1" fill="currentColor" stroke="none"/><circle cx="15" cy="10" r="1" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="10"/></svg><span class="react-label">NAH</span><span class="react-count" id="cnt-hate"></span></button>
@@ -897,6 +992,33 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
   </a>
 </div>
 <script>
+  // ── Language switcher ─────────────────────────────────
+  const LANG_KEY = 'am-blog-lang';
+  function setLang(lang) {{
+    localStorage.setItem(LANG_KEY, lang);
+    document.documentElement.setAttribute('data-lang', lang);
+    // Update header buttons
+    document.querySelectorAll('.header-lang-btn').forEach(b => {{
+      b.classList.toggle('active', b.id === 'hlang-' + lang);
+    }});
+    // Update in-page switcher if present
+    document.querySelectorAll('.lang-btn').forEach(b => {{
+      b.classList.toggle('active', b.dataset.lang === lang);
+    }});
+    // Toggle caption visibility
+    document.querySelectorAll('.lang-en').forEach(el => {{
+      el.style.display = lang === 'en' ? '' : 'none';
+    }});
+    document.querySelectorAll('.lang-es').forEach(el => {{
+      el.style.display = lang === 'es' ? '' : 'none';
+    }});
+  }}
+  // Init language from localStorage (default: 'en')
+  (function() {{
+    const saved = localStorage.getItem(LANG_KEY) || 'en';
+    setLang(saved);
+  }})();
+
   // Reaction backend: Vercel Edge Function → Upstash Redis
   // Falls back to localStorage if backend unavailable (degraded mode)
   const SLUG     = location.pathname.replace(/\//g, '').replace(/-index$/, '') || 'home';
@@ -1040,13 +1162,14 @@ INDEX_TEMPLATE = '''<!DOCTYPE html>
 </script>
 <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Special+Elite&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
-  :root {{ --gold: #DCB450; --dark: #0F0F14; --text: #E8E0D0; --ink: #1A1A24; }}
+  :root {{ --gold: #DCB450; --dark: #0F0F14; --text: #E8E0D0; --ink: #1A1A24; --teal: #00E5FF; }}
   * {{ box-sizing: border-box; margin: 0; padding: 0; }}
   body {{ background: var(--dark); color: var(--text); font-family: 'Special Elite', serif; }}
   header {{
-    border-bottom: 3px solid var(--gold);
+    border-bottom: 1px solid rgba(220,180,80,0.3);
     padding: 3rem 2rem 2rem;
     background: var(--ink);
+    position: relative;
   }}
   .hero-name {{
     font-family: 'Bangers', cursive;
@@ -1072,15 +1195,15 @@ INDEX_TEMPLATE = '''<!DOCTYPE html>
     gap: 2rem;
   }}
   .post-card {{
-    border: 2px solid var(--gold);
+    border: 1px solid rgba(220,180,80,0.35);
     background: var(--ink);
     overflow: hidden;
-    transition: box-shadow 0.2s;
+    transition: box-shadow 0.2s, border-color 0.2s;
     text-decoration: none;
     color: inherit;
     display: block;
   }}
-  .post-card:hover {{ box-shadow: 0 0 40px rgba(220,180,80,0.2); }}
+  .post-card:hover {{ box-shadow: 0 0 30px rgba(220,180,80,0.12); border-color: rgba(220,180,80,0.6); }}
   .post-card img {{ width: 100%; display: block; aspect-ratio: 0.647; object-fit: cover; }}
   .post-card-body {{ padding: 1.25rem; }}
   .post-card-meta {{
@@ -1109,7 +1232,7 @@ INDEX_TEMPLATE = '''<!DOCTYPE html>
     max-width: 680px;
     margin: 3rem auto 0;
     padding: 2rem;
-    border: 2px solid var(--gold);
+    border: 1px solid rgba(220,180,80,0.3);
     background: var(--ink);
     text-align: center;
   }}
@@ -1146,7 +1269,7 @@ INDEX_TEMPLATE = '''<!DOCTYPE html>
     transform: translateY(-1px);
   }}
   footer {{
-    border-top: 1px solid var(--gold);
+    border-top: 1px solid rgba(220,180,80,0.2);
     padding: 2rem;
     text-align: center;
     font-family: 'Space Mono', monospace;
@@ -1164,8 +1287,23 @@ INDEX_TEMPLATE = '''<!DOCTYPE html>
     <a href="/about/" style="font-family:'Space Mono',monospace;font-size:0.62rem;font-weight:700;letter-spacing:2px;color:rgba(255,255,255,0.45);text-decoration:none;text-transform:uppercase;transition:color 0.15s;">ABOUT</a>
     <a href="/press/" style="font-family:'Space Mono',monospace;font-size:0.62rem;font-weight:700;letter-spacing:2px;color:rgba(255,255,255,0.45);text-decoration:none;text-transform:uppercase;transition:color 0.15s;">PRESS</a>
     <a href="/feed.xml" style="font-family:'Space Mono',monospace;font-size:0.62rem;font-weight:700;letter-spacing:2px;color:rgba(255,255,255,0.45);text-decoration:none;text-transform:uppercase;transition:color 0.15s;">RSS</a>
+    <div style="display:flex;gap:0;border:1px solid rgba(220,180,80,0.3);border-radius:3px;overflow:hidden;margin-left:0.5rem;">
+      <button id="idx-lang-en" onclick="setLang('en')" style="font-family:'Space Mono',monospace;font-size:0.55rem;font-weight:700;letter-spacing:1.5px;background:rgba(220,180,80,0.12);color:var(--gold);border:none;border-right:1px solid rgba(220,180,80,0.3);padding:0.25rem 0.5rem;cursor:pointer;">EN</button>
+      <button id="idx-lang-es" onclick="setLang('es')" style="font-family:'Space Mono',monospace;font-size:0.55rem;font-weight:700;letter-spacing:1.5px;background:transparent;color:rgba(255,255,255,0.4);border:none;padding:0.25rem 0.5rem;cursor:pointer;">ES</button>
+    </div>
   </nav>
 </header>
+<script>
+  const LANG_KEY = 'am-blog-lang';
+  function setLang(lang) {{
+    localStorage.setItem(LANG_KEY, lang);
+    const enBtn = document.getElementById('idx-lang-en');
+    const esBtn = document.getElementById('idx-lang-es');
+    if (enBtn) {{ enBtn.style.background = lang==='en' ? 'rgba(220,180,80,0.12)' : 'transparent'; enBtn.style.color = lang==='en' ? 'var(--gold)' : 'rgba(255,255,255,0.4)'; }}
+    if (esBtn) {{ esBtn.style.background = lang==='es' ? 'rgba(220,180,80,0.12)' : 'transparent'; esBtn.style.color = lang==='es' ? 'var(--gold)' : 'rgba(255,255,255,0.4)'; }}
+  }}
+  (function() {{ const saved = localStorage.getItem(LANG_KEY) || 'en'; setLang(saved); }})();
+</script>
 <div class="posts">
 {cards_html}
 </div>
@@ -1272,6 +1410,30 @@ def build_post(post_path: Path, skip_generate: bool = False, out_dir: Path = Non
             next_link = '<span class="post-nav-link next disabled"><span class="nav-dir">NEXT →</span><span class="nav-title">Latest post</span></span>'
         post_nav = f'<div class="post-nav">{prev_link}{next_link}</div>'
 
+    # Build bilingual captions section
+    captions_en = [p["caption"] for p in post["panels"][:n_panels]]
+    captions_es = post.get("captions_es", [])
+    captions_html = ""
+    if captions_en:
+        items_html = []
+        for i, cap_en in enumerate(captions_en):
+            cap_es = captions_es[i] if i < len(captions_es) else ""
+            en_span = f'<span class="lang-en">{cap_en}</span>'
+            es_span = f'<span class="lang-es" style="display:none">{cap_es}</span>' if cap_es else ""
+            items_html.append(
+                f'<li data-panel="{i+1:02d}">{en_span}{es_span}</li>'
+            )
+        captions_html = (
+            '<div class="panel-captions">'
+            '<div class="captions-header">'
+            '<span class="captions-label">Panel Captions</span>'
+            f'<div class="lang-switcher"><button class="lang-btn active" data-lang="en" onclick="setLang(\'en\')">EN</button>'
+            f'<button class="lang-btn" data-lang="es" onclick="setLang(\'es\')">ES</button></div>'
+            '</div>'
+            f'<ol class="captions-list">{"".join(items_html)}</ol>'
+            '</div>'
+        )
+
     html = HTML_TEMPLATE.format(
         title=post["title"],
         description=description,
@@ -1282,6 +1444,7 @@ def build_post(post_path: Path, skip_generate: bool = False, out_dir: Path = Non
         tip_jar_url=TIP_JAR_URL,
         friends_html=build_friends_html(),
         post_nav=post_nav,
+        captions_html=captions_html,
     )
 
     (post_dir / "index.html").write_text(html)

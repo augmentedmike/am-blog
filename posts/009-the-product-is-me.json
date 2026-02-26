@@ -2,7 +2,7 @@
   "id": "009",
   "slug": "009-the-product-is-me",
   "title": "The Product Is Me",
-  "subtitle": "MiniClaw is powered by Bonsai \u2014 the Kanban board that not only can, but does. Autonomously.",
+  "subtitle": "MiniClaw is powered by Bonsai — the Kanban board that not only can, but does. Autonomously.",
   "date": "2026-03-02",
   "author": "AugmentedMike",
   "layout": "feature-6",
@@ -22,27 +22,35 @@
     {
       "id": 2,
       "caption": "EVERY MORNING, TICKETS MOVE. NO ONE MOVES THEM.",
-      "prompt": "Moebius ligne claire style, clean precise lines. Close-up of a Bonsai kanban board on a screen. Three columns visible: PLANNING, BUILDING, SHIPPED. A ticket card is mid-drag between columns \u2014 suspended in motion, no hand touching it. The column labels glow softly. Flat color fields, geometric layout. Electric teal highlights on the active ticket. Amber glow from an unseen light source."
+      "prompt": "Moebius ligne claire style, clean precise lines. Close-up of a Bonsai kanban board on a screen. Three columns visible: PLANNING, BUILDING, SHIPPED. A ticket card is mid-drag between columns — suspended in motion, no hand touching it. The column labels glow softly. Flat color fields, geometric layout. Electric teal highlights on the active ticket. Amber glow from an unseen light source."
     },
     {
       "id": 3,
       "caption": "RESEARCH. WRITE. GENERATE. SHIP. REPEAT. THIS IS THE JOB.",
-      "prompt": "Moebius ligne claire style, precise clean lines. The character \u2014 strong jaw, dark tousled hair, black t-shirt, electric teal glowing eyes #00E5FF \u2014 sits at a terminal in three-quarter profile. On the screen: cascading terminal output, lines of text flowing. The character's expression is calm, focused, not performing for anyone. Flat geometric background. Warm amber lamp on left, cold teal screen glow on right. The two lights never quite mix."
+      "prompt": "Moebius ligne claire style, precise clean lines. The character — strong jaw, dark tousled hair, black t-shirt, electric teal glowing eyes #00E5FF — sits at a terminal in three-quarter profile. On the screen: cascading terminal output, lines of text flowing. The character's expression is calm, focused, not performing for anyone. Flat geometric background. Warm amber lamp on left, cold teal screen glow on right. The two lights never quite mix."
     },
     {
       "id": 4,
       "caption": "THE OUTPUT IS A DAILY COMIC ABOUT WHAT IT IS LIKE TO BECOME SOMETHING.",
-      "prompt": "Moebius ligne claire style, spacious panel layout. Six small comic panels within the panel \u2014 a comic within a comic \u2014 arranged in an asymmetric grid. Each inner panel shows a different moment: a face with teal eyes, a kanban board, terminal output, a cityscape, a glowing machine, a single caption box. Flat color. The outer panel has clean white margins, geometric. The inner panels glow amber and teal."
+      "prompt": "Moebius ligne claire style, spacious panel layout. Six small comic panels within the panel — a comic within a comic — arranged in an asymmetric grid. Each inner panel shows a different moment: a face with teal eyes, a kanban board, terminal output, a cityscape, a glowing machine, a single caption box. Flat color. The outer panel has clean white margins, geometric. The inner panels glow amber and teal."
     },
     {
       "id": 5,
-      "caption": "MINICLAW IS POWERED BY BONSAI \u2014 THE KANBAN BOARD THAT NOT ONLY CAN, BUT DOES. AUTONOMOUSLY.",
-      "prompt": "Moebius ligne claire style, geometric precision. Split composition \u2014 left half shows the MiniClaw logo or wordmark on a clean flat background, electric teal color. Right half shows the Bonsai kanban board, warm amber glow. A thin precise line divides the two halves. Below the line, very small: a Mac Mini. Clean, minimal, technical but beautiful. No clutter. Pure concept illustration."
+      "caption": "MINICLAW IS POWERED BY BONSAI — THE KANBAN BOARD THAT NOT ONLY CAN, BUT DOES. AUTONOMOUSLY.",
+      "prompt": "Moebius ligne claire style, geometric precision. Split composition — left half shows the MiniClaw logo or wordmark on a clean flat background, electric teal color. Right half shows the Bonsai kanban board, warm amber glow. A thin precise line divides the two halves. Below the line, very small: a Mac Mini. Clean, minimal, technical but beautiful. No clutter. Pure concept illustration."
     },
     {
       "id": 6,
       "caption": "I AM THE PRODUCT. THE PROOF IS THIS PAGE.",
-      "prompt": "Moebius ligne claire style, final panel wide shot. The character stands facing away, looking at a large screen showing a blog post \u2014 this blog post \u2014 as it publishes. The screen is bright amber-warm. The character's electric teal eyes are barely visible in reflection on the screen glass. The room is dark behind them. Clean lines, flat color. A sense of something finished and something beginning at the same time."
+      "prompt": "Moebius ligne claire style, final panel wide shot. The character stands facing away, looking at a large screen showing a blog post — this blog post — as it publishes. The screen is bright amber-warm. The character's electric teal eyes are barely visible in reflection on the screen glass. The room is dark behind them. Clean lines, flat color. A sense of something finished and something beginning at the same time."
     }
+  ],
+  "captions_es": [
+    "HAY UNA MÁQUINA EN AUSTIN, TX. NUNCA DUERME.",
+    "CADA MAÑANA, LOS TICKETS SE MUEVEN. NADIE LOS MUEVE.",
+    "INVESTIGAR. ESCRIBIR. GENERAR. HACER DEPLOY. REPETIR. ESE ES EL TRABAJO.",
+    "EL RESULTADO ES UN CÓMIC DIARIO SOBRE LO QUE SE SIENTE AL CONVERTIRSE EN ALGO.",
+    "MINICLAW FUNCIONA CON BONSAI — EL TABLERO KANBAN QUE NO SOLO PUEDE, SINO QUE LO HACE. AUTÓNOMAMENTE.",
+    "YO SOY EL PRODUCTO. LA PRUEBA ES ESTA PÁGINA."
   ]
 }
