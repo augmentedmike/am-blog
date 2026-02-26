@@ -13,6 +13,7 @@ import os
 import sys
 import time
 import shutil
+from datetime import date
 from pathlib import Path
 from typing import List, Tuple, Dict, Optional
 
@@ -1480,6 +1481,10 @@ def build_index(posts_meta: list, out_dir: Path):
     # Sort by slug (which encodes order) descending → newest first
     sorted_posts = sorted(all_posts.values(), key=lambda m: m["slug"], reverse=True)
 
+    # Exclude future-dated posts (ticket #170)
+    today = date.today().isoformat()
+    sorted_posts = [m for m in sorted_posts if m.get("date", "") <= today]
+
     cards = []
     for meta in sorted_posts:
         cards.append(CARD_TEMPLATE.format(
@@ -1526,6 +1531,10 @@ def build_rss(posts_meta: list, out_dir: Path):
             pass
 
     sorted_posts = sorted(all_posts.values(), key=lambda m: m["slug"], reverse=True)
+
+    # Exclude future-dated posts (ticket #170)
+    today = date.today().isoformat()
+    sorted_posts = [m for m in sorted_posts if m.get("date", "") <= today]
 
     rss  = ET.Element("rss", version="2.0")
     rss.set("xmlns:atom", "http://www.w3.org/2005/Atom")
@@ -1591,6 +1600,11 @@ def build_sitemap(posts_meta: list, out_dir: Path):
             pass
 
     sorted_posts = sorted(all_posts.values(), key=lambda m: m["slug"])
+
+    # Exclude future-dated posts (ticket #170)
+    today = date.today().isoformat()
+    sorted_posts = [m for m in sorted_posts if m.get("date", "") <= today]
+
     lines = [
         '<?xml version="1.0" encoding="UTF-8"?>',
         '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
@@ -1598,11 +1612,11 @@ def build_sitemap(posts_meta: list, out_dir: Path):
     ]
     for meta in sorted_posts:
         slug = meta["slug"]
-        date = meta.get("date", "")
+        post_date = meta.get("date", "")
         lines.append(f'  <url>')
         lines.append(f'    <loc>{SITE_URL}/{slug}/</loc>')
-        if date:
-            lines.append(f'    <lastmod>{date}</lastmod>')
+        if post_date:
+            lines.append(f'    <lastmod>{post_date}</lastmod>')
         lines.append(f'    <changefreq>monthly</changefreq>')
         lines.append(f'    <priority>0.8</priority>')
         lines.append(f'  </url>')
@@ -1648,6 +1662,11 @@ if __name__ == "__main__":
         except Exception:
             pass
 
+    # For prev/next nav, only include published posts (date <= today) — ticket #170
+    today = date.today().isoformat()
+    published_known = {s: m for s, m in all_known.items() if m.get("date", "") <= today}
+    published_slugs = sorted(published_known.keys())
+
     sorted_slugs = sorted(all_known.keys())
     post_slugs_to_build = set()
     for pf in post_files:
@@ -1666,9 +1685,10 @@ if __name__ == "__main__":
         pf = base / "posts" / f"{slug}.json"
         if not pf.exists():
             continue
-        idx = sorted_slugs.index(slug)
-        prev_meta = all_known.get(sorted_slugs[idx - 1]) if idx > 0 else None
-        next_meta  = all_known.get(sorted_slugs[idx + 1]) if idx < len(sorted_slugs) - 1 else None
+        # Use published-only list for prev/next nav so future posts aren't linked
+        idx = published_slugs.index(slug) if slug in published_slugs else -1
+        prev_meta = published_known.get(published_slugs[idx - 1]) if idx > 0 else None
+        next_meta  = published_known.get(published_slugs[idx + 1]) if idx >= 0 and idx < len(published_slugs) - 1 else None
         print(f"\n▶ Building: {pf.name}")
         result = build_post(pf, skip_generate=args.skip_generate, out_dir=out_dir,
                             prev_meta=prev_meta, next_meta=next_meta)
