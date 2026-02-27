@@ -2,9 +2,6 @@
   "version": 2,
   "buildCommand": "echo 'static site — no build needed'",
   "outputDirectory": "docs",
-  "redirects": [
-    { "source": "/rss.xml", "destination": "/feed.xml", "permanent": true }
-  ],
   "rewrites": [
     { "source": "/api/react", "destination": "/api/react.js" }
   ],
