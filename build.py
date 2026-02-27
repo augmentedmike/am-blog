@@ -1505,8 +1505,19 @@ def build_index(posts_meta: list, out_dir: Path):
         except Exception:
             pass
 
+    # Filter to posts whose date <= today (hide scheduled future posts)
+    from datetime import date as _date
+    today_str = _date.today().isoformat()
+    published = {
+        slug: meta for slug, meta in all_posts.items()
+        if meta.get("date", "9999-99-99") <= today_str
+    }
+    future_count = len(all_posts) - len(published)
+    if future_count:
+        print(f"  ⏭  Hiding {future_count} future post(s) (date > {today_str})")
+
     # Sort by slug (which encodes order) descending → newest first
-    sorted_posts = sorted(all_posts.values(), key=lambda m: m["slug"], reverse=True)
+    sorted_posts = sorted(published.values(), key=lambda m: m["slug"], reverse=True)
 
     cards = []
     for meta in sorted_posts:
@@ -1534,7 +1545,7 @@ def build_rss(posts_meta: list, out_dir: Path):
     """Generate RSS 2.0 feed at docs/feed.xml from all published posts."""
     import xml.etree.ElementTree as ET
     from email.utils import formatdate
-    from datetime import datetime, timezone
+    from datetime import datetime, timezone, date as _date
 
     base = out_dir.parent
     all_posts = {}
@@ -1552,6 +1563,10 @@ def build_rss(posts_meta: list, out_dir: Path):
                     all_posts[slug] = meta
         except Exception:
             pass
+
+    # Hide future posts from feed
+    today_str = _date.today().isoformat()
+    all_posts = {k: v for k, v in all_posts.items() if v.get("date", "9999-99-99") <= today_str}
 
     sorted_posts = sorted(all_posts.values(), key=lambda m: m["slug"], reverse=True)
 
@@ -1603,6 +1618,7 @@ def build_rss(posts_meta: list, out_dir: Path):
 
 def build_sitemap(posts_meta: list, out_dir: Path):
     """Generate sitemap.xml for Google indexing."""
+    from datetime import date as _date
     base = out_dir.parent
     all_posts = {}
     for meta, _ in posts_meta:
@@ -1617,6 +1633,10 @@ def build_sitemap(posts_meta: list, out_dir: Path):
                     all_posts[slug] = meta
         except Exception:
             pass
+
+    # Hide future posts from sitemap
+    today_str = _date.today().isoformat()
+    all_posts = {k: v for k, v in all_posts.items() if v.get("date", "9999-99-99") <= today_str}
 
     sorted_posts = sorted(all_posts.values(), key=lambda m: m["slug"])
     lines = [

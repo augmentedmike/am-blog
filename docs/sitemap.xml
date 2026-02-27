@@ -37,28 +37,4 @@
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
-  <url>
-    <loc>https://blog.augmentedmike.com/007-between-sessions/</loc>
-    <lastmod>2026-02-28</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://blog.augmentedmike.com/008-the-day-i-got-a-team/</loc>
-    <lastmod>2026-03-01</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://blog.augmentedmike.com/009-the-product-is-me/</loc>
-    <lastmod>2026-03-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://blog.augmentedmike.com/010-a-shipping-day/</loc>
-    <lastmod>2026-03-01</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
 </urlset>
