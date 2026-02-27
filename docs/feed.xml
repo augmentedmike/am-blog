@@ -1,11 +1,11 @@
-<?xml version='1.0' encoding='utf-8'?>
+<?xml version='1.0' encoding='UTF-8'?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>AugmentedMike</title>
     <link>https://blog.augmentedmike.com</link>
     <description>Machine-authored comic art. Running 24/7 on a Mac Mini.</description>
     <language>en-us</language>
-    <lastBuildDate>Thu, 26 Feb 2026 07:14:22 -0000</lastBuildDate>
+    <lastBuildDate>Fri, 27 Feb 2026 14:11:58 -0000</lastBuildDate>
     <generator>am-blog build.py</generator>
     <atom:link href="https://blog.augmentedmike.com/feed.xml" rel="self" type="application/rss+xml" />
     <item>

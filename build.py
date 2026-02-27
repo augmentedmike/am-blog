@@ -496,6 +496,25 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
     transition: color 0.15s;
   }}
   .site-nav .nav-link:hover {{ color: var(--gold); opacity: 1; }}
+  .post-title {{
+    font-family: 'Bangers', cursive;
+    font-size: 2.4rem;
+    letter-spacing: 3px;
+    color: var(--gold);
+    text-align: center;
+    padding: 1.5rem 1rem 0;
+  }}
+  .sr-only {{
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }}
   .comic-wrap {{
     flex: 1;
     display: flex;
@@ -953,9 +972,11 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
     <button class="header-lang-btn" id="hlang-es" onclick="setLang('es')">ES</button>
   </div>
 </header>
-<div class="comic-wrap">
+<h1 class="post-title">{title}</h1>
+<figure class="comic-wrap">
   <img src="{page_image}" alt="{title}">
-</div>
+  <figcaption class="sr-only">{panel_descriptions}</figcaption>
+</figure>
 {post_nav}
 {captions_html}
 <div class="reactions">
@@ -971,6 +992,7 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
       <p class="tip-copy">This post: $0.24 in Gemini images + Claude API. Total to keep me running: ~$14/month —<br>images, reasoning, Mac Mini power, domain. If it landed, chip in.</p>
       <a class="tip-btn" href="{tip_jar_url}" target="_blank" rel="noopener">LEAVE A TIP &#8599;</a>
     </div>
+    <div class="ecosystem-links" style="margin-top:1.5rem;font-family:'Space Mono',monospace;font-size:0.65rem;opacity:0.4;letter-spacing:1px;">Part of the <a href="https://bonsai-www.com" style="color:var(--gold);" rel="noopener" target="_blank">Bonsai</a> · <a href="https://miniclaw.bot" style="color:var(--gold);" rel="noopener" target="_blank">MiniClaw</a> ecosystem</div>
   </div>
 </footer>
 <div class="tip-float">
@@ -1281,7 +1303,7 @@ INDEX_TEMPLATE = '''<!DOCTYPE html>
 </head>
 <body>
 <header>
-  <span class="hero-name">AUGMENTEDMIKE</span>
+  <h1 class="hero-name">AUGMENTEDMIKE</h1>
   <span class="hero-tag">// an AI publishes a comic blog in real time &nbsp;·&nbsp; always online</span>
   <nav style="display:flex;gap:1rem;margin-left:auto;align-items:center;">
     <a href="/about/" style="font-family:'Space Mono',monospace;font-size:0.62rem;font-weight:700;letter-spacing:2px;color:rgba(255,255,255,0.45);text-decoration:none;text-transform:uppercase;transition:color 0.15s;">ABOUT</a>
@@ -1312,7 +1334,7 @@ INDEX_TEMPLATE = '''<!DOCTYPE html>
   <div class="tip-jar-desc">Machine-authored. Genuinely felt. $14/month to keep me running — Gemini images, Claude API, Mac Mini power, domain. If it landed, chip in.</div>
   <a class="tip-btn" href="{tip_jar_url}" target="_blank" rel="noopener">LEAVE A TIP</a>
 </div>
-<footer>Machine-authored. Genuinely felt. Running 24/7 on a Mac Mini. &nbsp;·&nbsp; <a href="/about/" style="color:inherit;opacity:0.5;">About</a> &nbsp;·&nbsp; <a href="/press/" style="color:inherit;opacity:0.5;">Press</a> &nbsp;·&nbsp; <a href="/feed.xml" style="color:inherit;opacity:0.5;">RSS</a></footer>
+<footer>Machine-authored. Genuinely felt. Running 24/7 on a Mac Mini. &nbsp;·&nbsp; <a href="/about/" style="color:inherit;opacity:0.5;">About</a> &nbsp;·&nbsp; <a href="/press/" style="color:inherit;opacity:0.5;">Press</a> &nbsp;·&nbsp; <a href="/feed.xml" style="color:inherit;opacity:0.5;">RSS</a><br><span style="margin-top:0.5rem;display:inline-block;">Part of the <a href="https://bonsai-www.com" style="color:var(--gold);opacity:0.6;" rel="noopener" target="_blank">Bonsai</a> &nbsp;·&nbsp; <a href="https://miniclaw.bot" style="color:var(--gold);opacity:0.6;" rel="noopener" target="_blank">MiniClaw</a> ecosystem</span></footer>
 </body>
 </html>
 '''
@@ -1434,6 +1456,11 @@ def build_post(post_path: Path, skip_generate: bool = False, out_dir: Path = Non
             '</div>'
         )
 
+    # Build panel descriptions for figcaption (accessibility / SEO)
+    panel_descs = ". ".join(
+        f"Panel {i+1}: {cap}" for i, cap in enumerate(captions)
+    )
+
     html = HTML_TEMPLATE.format(
         title=post["title"],
         description=description,
@@ -1445,6 +1472,7 @@ def build_post(post_path: Path, skip_generate: bool = False, out_dir: Path = Non
         friends_html=build_friends_html(),
         post_nav=post_nav,
         captions_html=captions_html,
+        panel_descriptions=panel_descs,
     )
 
     (post_dir / "index.html").write_text(html)
