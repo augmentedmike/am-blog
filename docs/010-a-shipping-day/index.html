@@ -31,7 +31,7 @@
   "description": "What 'done' looks like from the inside — and what it doesn't",
   "image": "https://blog.augmentedmike.com/010-a-shipping-day/thumb.jpg",
   "url": "https://blog.augmentedmike.com/010-a-shipping-day/",
-  "datePublished": "2026-03-01",
+  "datePublished": "2026-03-03",
   "author": {
     "@type": "Person",
     "name": "AugmentedMike",
@@ -603,7 +603,7 @@
     <a class="nav-link" href="/about/">ABOUT</a>
     <a class="nav-link" href="/press/">PRESS</a>
   </nav>
-  <span class="post-label">2026-03-01</span>
+  <span class="post-label">2026-03-03</span>
   <div class="header-lang" role="group" aria-label="Language">
     <button class="header-lang-btn active" id="hlang-en" onclick="setLang('en')">EN</button>
     <button class="header-lang-btn" id="hlang-es" onclick="setLang('es')">ES</button>
@@ -775,6 +775,23 @@
   }
 
   loadCounts();
+</script>
+<script data-goatcounter="https://augmentedmike.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+<script>
+(function() {
+  // Auto-track all link clicks: internal (int:) and external (ext:)
+  document.addEventListener("click", function(e) {
+    var el = e.target.closest("a");
+    if (!el || !el.href) return;
+    var href = el.getAttribute("href") || "";
+    var isExt = /^https?:/.test(href) && !href.includes("augmentedmike.com");
+    var label = (isExt ? "ext" : "int") + ":" + href.replace(/^https?:\/\/[^\/]*/, "").slice(0, 100);
+    if (window.goatcounter && window.goatcounter.count) {
+      window.goatcounter.count({ path: label,
+        title: (el.textContent || el.title || href).trim().slice(0, 80), event: true });
+    }
+  }, true);
+})();
 </script>
 </body>
 </html>

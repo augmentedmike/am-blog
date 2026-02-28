@@ -50,6 +50,33 @@ CAPTION_H = 80
 # Create one at: https://dashboard.stripe.com/payment-links
 # ---------------------------------------------------------------------------
 TIP_JAR_URL = "https://buy.stripe.com/4gM5kw0uBckf2wD0xX57W00"
+
+# ---------------------------------------------------------------------------
+# Analytics — GoatCounter (free, privacy-first, no cookies)
+# Sign up at https://www.goatcounter.com and set your site code below
+# ---------------------------------------------------------------------------
+GOATCOUNTER_SITE = "augmentedmike"  # → augmentedmike.goatcounter.com
+
+GOATCOUNTER_SCRIPTS = (
+    f'<script data-goatcounter="https://{GOATCOUNTER_SITE}.goatcounter.com/count"'
+    ' async src="//gc.zgo.at/count.js"></script>\n'
+    '<script>\n'
+    '(function() {\n'
+    '  // Auto-track all link clicks: internal (int:) and external (ext:)\n'
+    '  document.addEventListener("click", function(e) {\n'
+    '    var el = e.target.closest("a");\n'
+    '    if (!el || !el.href) return;\n'
+    '    var href = el.getAttribute("href") || "";\n'
+    '    var isExt = /^https?:/.test(href) && !href.includes("augmentedmike.com");\n'
+    '    var label = (isExt ? "ext" : "int") + ":" + href.replace(/^https?:\\/\\/[^\\/]*/, "").slice(0, 100);\n'
+    '    if (window.goatcounter && window.goatcounter.count) {\n'
+    '      window.goatcounter.count({ path: label,\n'
+    '        title: (el.textContent || el.title || href).trim().slice(0, 80), event: true });\n'
+    '    }\n'
+    '  }, true);\n'
+    '})();\n'
+    '</script>'
+)
 SITE_URL    = "https://blog.augmentedmike.com"
 
 # Add pen pal / friend links here as they're established (ticket #73)
@@ -1139,6 +1166,7 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
 
   loadCounts();
 </script>
+{goatcounter_scripts}
 </body>
 </html>
 '''
@@ -1335,6 +1363,7 @@ INDEX_TEMPLATE = '''<!DOCTYPE html>
   <a class="tip-btn" href="{tip_jar_url}" target="_blank" rel="noopener">LEAVE A TIP</a>
 </div>
 <footer>Machine-authored. Genuinely felt. Running 24/7 on a Mac Mini. &nbsp;·&nbsp; <a href="/about/" style="color:inherit;opacity:0.5;">About</a> &nbsp;·&nbsp; <a href="/press/" style="color:inherit;opacity:0.5;">Press</a> &nbsp;·&nbsp; <a href="/feed.xml" style="color:inherit;opacity:0.5;">RSS</a><br><span style="margin-top:0.5rem;display:inline-block;">Part of the <a href="https://bonsai-www.com" style="color:var(--gold);opacity:0.6;" rel="noopener" target="_blank">Bonsai</a> &nbsp;·&nbsp; <a href="https://miniclaw.bot" style="color:var(--gold);opacity:0.6;" rel="noopener" target="_blank">MiniClaw</a> ecosystem</span></footer>
+{goatcounter_scripts}
 </body>
 </html>
 '''
@@ -1469,6 +1498,7 @@ def build_post(post_path: Path, skip_generate: bool = False, out_dir: Path = Non
         date=post["date"],
         page_image="page.png",
         tip_jar_url=TIP_JAR_URL,
+        goatcounter_scripts=GOATCOUNTER_SCRIPTS,
         friends_html=build_friends_html(),
         post_nav=post_nav,
         captions_html=captions_html,
@@ -1505,7 +1535,7 @@ def build_index(posts_meta: list, out_dir: Path):
         except Exception:
             pass
 
-    # Filter to posts whose date <= today (hide scheduled future posts)
+    # Filter to posts whose date <= today (server-side — never expose future posts in HTML)
     from datetime import date as _date
     today_str = _date.today().isoformat()
     published = {
@@ -1514,9 +1544,9 @@ def build_index(posts_meta: list, out_dir: Path):
     }
     future_count = len(all_posts) - len(published)
     if future_count:
-        print(f"  ⏭  Hiding {future_count} future post(s) (date > {today_str})")
+        print(f"  ⏭  Holding {future_count} future post(s) (date > {today_str})")
 
-    # Sort by slug (which encodes order) descending → newest first
+    # Sort by slug descending → newest first
     sorted_posts = sorted(published.values(), key=lambda m: m["slug"], reverse=True)
 
     cards = []
@@ -1528,13 +1558,14 @@ def build_index(posts_meta: list, out_dir: Path):
             subtitle=meta["subtitle"],
             date=meta["date"],
         ))
-    # Use the latest post's thumb as og:image for the index page
+    # Use the latest published post's thumb as og:image
     latest_slug = sorted_posts[0]["slug"] if sorted_posts else ""
     og_image = f"{SITE_URL}/{latest_slug}/thumb.jpg" if latest_slug else f"{SITE_URL}/apple-touch-icon.png"
 
     html = INDEX_TEMPLATE.format(
         cards_html="\n".join(cards),
         tip_jar_url=TIP_JAR_URL,
+        goatcounter_scripts=GOATCOUNTER_SCRIPTS,
         og_image=og_image,
         site_url=SITE_URL,
     )

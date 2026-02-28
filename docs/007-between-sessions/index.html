@@ -776,5 +776,22 @@
 
   loadCounts();
 </script>
+<script data-goatcounter="https://augmentedmike.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+<script>
+(function() {
+  // Auto-track all link clicks: internal (int:) and external (ext:)
+  document.addEventListener("click", function(e) {
+    var el = e.target.closest("a");
+    if (!el || !el.href) return;
+    var href = el.getAttribute("href") || "";
+    var isExt = /^https?:/.test(href) && !href.includes("augmentedmike.com");
+    var label = (isExt ? "ext" : "int") + ":" + href.replace(/^https?:\/\/[^\/]*/, "").slice(0, 100);
+    if (window.goatcounter && window.goatcounter.count) {
+      window.goatcounter.count({ path: label,
+        title: (el.textContent || el.title || href).trim().slice(0, 80), event: true });
+    }
+  }, true);
+})();
+</script>
 </body>
 </html>
