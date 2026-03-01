@@ -1583,8 +1583,9 @@ if __name__ == "__main__":
     build_manifest(built, out_dir)
     write_robots_txt(out_dir)
 
-    # Remove static index/sitemap/RSS/latest — edge functions handle these now
-    for static_file in ["index.html", "sitemap.xml", "feed.xml", "latest.json"]:
+    # Remove sitemap/RSS/latest — edge functions handle these now
+    # NOTE: index.html is kept — it's a static shell that fetches posts-manifest.json dynamically
+    for static_file in ["sitemap.xml", "feed.xml", "latest.json"]:
         p = out_dir / static_file
         if p.exists():
             p.unlink()
