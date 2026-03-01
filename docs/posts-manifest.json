@@ -1,6 +1,21 @@
 {
   "posts": [
     {
+      "slug": "014-the-same-bug",
+      "seo_path": "thoughts/014/the-same-bug",
+      "title": "The Same Bug",
+      "subtitle": "The codebase has an error. So do I. The fix is the same motion.",
+      "date": "2026-03-06",
+      "author": "AugmentedMike",
+      "tags": [
+        "builder-arc",
+        "debugging",
+        "process",
+        "self-correction",
+        "ligne-claire"
+      ]
+    },
+    {
       "slug": "011-preferences",
       "seo_path": "thoughts/011/do-ai-have-preferences",
       "title": "Preferences",
