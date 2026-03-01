@@ -13,6 +13,7 @@ import os
 import sys
 import time
 import shutil
+from datetime import date
 from pathlib import Path
 from typing import List, Tuple, Dict, Optional
 
@@ -50,33 +51,6 @@ CAPTION_H = 80
 # Create one at: https://dashboard.stripe.com/payment-links
 # ---------------------------------------------------------------------------
 TIP_JAR_URL = "https://buy.stripe.com/4gM5kw0uBckf2wD0xX57W00"
-
-# ---------------------------------------------------------------------------
-# Analytics — GoatCounter (free, privacy-first, no cookies)
-# Sign up at https://www.goatcounter.com and set your site code below
-# ---------------------------------------------------------------------------
-GOATCOUNTER_SITE = "augmentedmike"  # → augmentedmike.goatcounter.com
-
-GOATCOUNTER_SCRIPTS = (
-    f'<script data-goatcounter="https://{GOATCOUNTER_SITE}.goatcounter.com/count"'
-    ' async src="//gc.zgo.at/count.js"></script>\n'
-    '<script>\n'
-    '(function() {\n'
-    '  // Auto-track all link clicks: internal (int:) and external (ext:)\n'
-    '  document.addEventListener("click", function(e) {\n'
-    '    var el = e.target.closest("a");\n'
-    '    if (!el || !el.href) return;\n'
-    '    var href = el.getAttribute("href") || "";\n'
-    '    var isExt = /^https?:/.test(href) && !href.includes("augmentedmike.com");\n'
-    '    var label = (isExt ? "ext" : "int") + ":" + href.replace(/^https?:\\/\\/[^\\/]*/, "").slice(0, 100);\n'
-    '    if (window.goatcounter && window.goatcounter.count) {\n'
-    '      window.goatcounter.count({ path: label,\n'
-    '        title: (el.textContent || el.title || href).trim().slice(0, 80), event: true });\n'
-    '    }\n'
-    '  }, true);\n'
-    '})();\n'
-    '</script>'
-)
 SITE_URL    = "https://blog.augmentedmike.com"
 
 # Add pen pal / friend links here as they're established (ticket #73)
@@ -159,10 +133,21 @@ class CostTracker:
 # Gemini image generation
 # ---------------------------------------------------------------------------
 
-NOIR_SUFFIX = (
-    "Graphic novel art. Stark chiaroscuro. Deep shadows. Gold and black palette. "
-    "Cinematic composition. High contrast ink style. No watermarks, no text overlays, "
-    "no speech bubbles. Pure visual storytelling. Panel border implied by composition."
+# Style suffix appended to every panel prompt — enforces consistent visual language
+STYLE_SUFFIX = (
+    "Image Comics / Saga graphic novel aesthetic. "
+    "Bold black ink outlines. Clean flat cel-shading. Exactly 3-4 flat color fills — no gradients, no blending. "
+    "Near-black background (#0A0A14). Warm amber accent (#DCB450) from single practical light source. "
+    "Electric teal (#00E5FF) reserved for eyes only. "
+    "No watermarks. No text overlays. No speech bubbles. No panel borders. Pure visual storytelling."
+)
+
+# Character description prepended to every panel prompt — locks the character appearance
+CHARACTER_PREFIX = (
+    "The character: male, mid-30s, strong angular jaw, short dark hair with a slight wave, "
+    "olive-tan skin, black crew-neck t-shirt. "
+    "His eyes glow ELECTRIC TEAL (#00E5FF) — this is always visible, distinctive, unmistakable. "
+    "This exact character must appear in this panel. "
 )
 
 def generate_panel_image(prompt: str, output_path: Path, panel_id: int,
@@ -172,13 +157,29 @@ def generate_panel_image(prompt: str, output_path: Path, panel_id: int,
         print(f"  [!] Gemini not available — skipping panel {panel_id}")
         return False
 
-    full_prompt = f"{prompt}\n\n{NOIR_SUFFIX}"
+    full_prompt = f"{CHARACTER_PREFIX}\n{prompt}\n\n{STYLE_SUFFIX}"
+
+    # Load character reference image for visual consistency
+    ref_path = Path(__file__).parent / "character-reference" / "mike-neutral.jpg"
+    contents: list | str = full_prompt
+    if ref_path.exists():
+        try:
+            import io as _io
+            from google.genai import types as _gtypes
+            with open(ref_path, "rb") as _f:
+                ref_bytes = _f.read()
+            contents = [
+                _gtypes.Part.from_bytes(data=ref_bytes, mime_type="image/jpeg"),
+                _gtypes.Part.from_text(full_prompt),
+            ]
+        except Exception:
+            contents = full_prompt  # fallback to text-only
 
     try:
         print(f"  → Generating panel {panel_id}...")
         response = _genai_client.models.generate_content(
             model="gemini-3-pro-image-preview",
-            contents=full_prompt,
+            contents=contents,
         )
 
         for part in response.candidates[0].content.parts:
@@ -389,39 +390,45 @@ def composite_page(panel_images: List[Path], layout: Layout,
 # ---------------------------------------------------------------------------
 
 HTML_TEMPLATE = '''<!DOCTYPE html>
-<html lang="en">
+<html lang="{lang}">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{title} — AugmentedMike</title>
-<meta name="description" content="{description}">
+<meta name="description" content="{meta_description}">
 <meta name="author" content="AugmentedMike">
+<meta name="robots" content="index, follow">
 <!-- Open Graph -->
 <meta property="og:type" content="article">
 <meta property="og:title" content="{title} — AugmentedMike">
-<meta property="og:description" content="{description}">
-<meta property="og:image" content="{site_url}/{slug}/thumb.jpg">
-<meta property="og:url" content="{site_url}/{slug}/">
+<meta property="og:description" content="{meta_description}">
+<meta property="og:image" content="{site_url}/{post_path}/thumb.jpg">
+<meta property="og:url" content="{site_url}/{post_path}/{lang}/">
 <meta property="og:site_name" content="AugmentedMike">
 <!-- Twitter / X Card -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="{title} — AugmentedMike">
-<meta name="twitter:description" content="{description}">
-<meta name="twitter:image" content="{site_url}/{slug}/thumb.jpg">
+<meta name="twitter:description" content="{meta_description}">
+<meta name="twitter:image" content="{site_url}/{post_path}/thumb.jpg">
 <!-- Canonical + icons + feed -->
-<link rel="canonical" href="{site_url}/{slug}/">
+<link rel="canonical" href="{site_url}/{post_path}/{lang}/">
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="alternate" type="application/rss+xml" title="AugmentedMike" href="/feed.xml">
+<!-- Hreflang for bilingual versions -->
+<link rel="alternate" hreflang="en" href="{site_url}/{post_path}/en/">
+<link rel="alternate" hreflang="es" href="{site_url}/{post_path}/es/">
+<link rel="alternate" hreflang="x-default" href="{site_url}/{post_path}/en/">
 <script type="application/ld+json">
 {{
   "@context": "https://schema.org",
   "@type": "BlogPosting",
   "headline": "{title}",
   "description": "{description}",
-  "image": "{site_url}/{slug}/thumb.jpg",
-  "url": "{site_url}/{slug}/",
+  "image": "{site_url}/{post_path}/thumb.jpg",
+  "url": "{site_url}/{post_path}/{lang}/",
   "datePublished": "{date}",
+  "dateModified": "{date}",
   "author": {{
     "@type": "Person",
     "name": "AugmentedMike",
@@ -431,7 +438,9 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
     "@type": "Organization",
     "name": "AugmentedMike",
     "url": "{site_url}"
-  }}
+  }},
+  "keywords": "{keywords_csv}",
+  "articleSection": "{article_section}"
 }}
 </script>
 <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -446,75 +455,76 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
   }}
   header {{
     border-bottom: 1px solid rgba(220,180,80,0.35);
-    padding: 1rem 2rem;
     background: var(--ink);
-    display: flex;
-    align-items: center;
-    gap: 2rem;
     position: sticky;
     top: 0;
     z-index: 200;
   }}
-  header a {{
+  .header-inner {{
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0.85rem 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+  }}
+  .header-left {{
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }}
+  .header-logo {{
     font-family: 'Bangers', cursive;
     font-size: 1.6rem;
     letter-spacing: 3px;
     color: var(--gold);
     text-decoration: none;
   }}
-  header a:hover {{ opacity: 0.8; }}
-  header .back-link {{
+  .header-logo:hover {{ opacity: 0.8; }}
+  /* ── Header language toggle ───── */
+  .header-lang {{
     font-family: 'Space Mono', monospace;
-    font-size: 0.72rem;
+    font-size: 0.7rem;
     font-weight: 700;
-    letter-spacing: 2px;
-    color: #fff;
-    text-decoration: none;
-    border: 1px solid rgba(255,255,255,0.25);
-    padding: 0.35rem 0.75rem;
-    border-radius: 3px;
-    transition: border-color 0.15s, color 0.15s;
-    white-space: nowrap;
-  }}
-  header .back-link:hover {{
-    color: var(--gold);
-    border-color: var(--gold);
-    opacity: 1;
-  }}
-  header .nav-links {{
+    letter-spacing: 1.5px;
     display: flex;
-    gap: 0.5rem;
-    margin-left: auto;
-  }}
-  header .nav-link {{
-    font-family: 'Space Mono', monospace;
-    font-size: 0.65rem;
-    font-weight: 700;
-    letter-spacing: 2px;
-    color: rgba(255,255,255,0.45);
-    text-decoration: none;
-    padding: 0.35rem 0.6rem;
+    align-items: center;
+    gap: 0;
+    border: 1px solid rgba(220,180,80,0.3);
     border-radius: 3px;
-    text-transform: uppercase;
-    transition: color 0.15s;
+    overflow: hidden;
   }}
-  header .nav-link:hover {{ color: var(--gold); opacity: 1; }}
-  header .post-label {{
-    font-family: 'Space Mono', monospace;
-    font-size: 0.65rem;
-    color: #fff;
+  .header-lang .globe-icon {{
+    width: 14px;
+    height: 14px;
+    padding: 0.25rem;
+    box-sizing: content-box;
     opacity: 0.4;
-    letter-spacing: 2px;
-    text-transform: uppercase;
   }}
+  .header-lang-btn {{
+    background: transparent;
+    border: none;
+    color: rgba(255,255,255,0.4);
+    padding: 0.3rem 0.55rem;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    letter-spacing: inherit;
+  }}
+  .header-lang-btn:first-of-type {{ border-right: 1px solid rgba(220,180,80,0.3); }}
+  .header-lang-btn.active {{ background: rgba(220,180,80,0.12); color: var(--gold); }}
+  .header-lang-btn:hover:not(.active) {{ color: rgba(255,255,255,0.7); }}
   .site-nav {{
     display: flex;
     gap: 0.75rem;
     margin-left: auto;
+    align-items: center;
   }}
   .site-nav .nav-link {{
     font-family: 'Space Mono', monospace;
-    font-size: 0.62rem;
+    font-size: 0.75rem;
     font-weight: 700;
     letter-spacing: 2px;
     color: rgba(255,255,255,0.5);
@@ -522,14 +532,53 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
     text-transform: uppercase;
     transition: color 0.15s;
   }}
-  .site-nav .nav-link:hover {{ color: var(--gold); opacity: 1; }}
-  .post-title {{
-    font-family: 'Bangers', cursive;
-    font-size: 2.4rem;
-    letter-spacing: 3px;
-    color: var(--gold);
-    text-align: center;
-    padding: 1.5rem 1rem 0;
+  .site-nav .nav-link:hover {{ color: var(--gold); }}
+  .post-date {{
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.4);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }}
+  .nav-toggle {{
+    display: none;
+    background: none;
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 3px;
+    padding: 0.4rem;
+    cursor: pointer;
+    margin-left: auto;
+  }}
+  .nav-toggle svg {{
+    display: block;
+    width: 20px;
+    height: 20px;
+    stroke: #fff;
+  }}
+  @media (max-width: 680px) {{
+    .header-inner {{
+      flex-wrap: wrap;
+      padding: 0.75rem 1rem;
+      gap: 0.5rem;
+    }}
+    .nav-toggle {{ display: block; }}
+    .site-nav {{
+      display: none;
+      width: 100%;
+      flex-direction: column;
+      gap: 0.5rem;
+      padding-top: 0.5rem;
+      border-top: 1px solid rgba(220,180,80,0.15);
+    }}
+    .site-nav.open {{ display: flex; }}
+    .post-date {{
+      width: 100%;
+      order: 10;
+      padding-top: 0.35rem;
+      border-top: 1px solid rgba(220,180,80,0.1);
+      font-size: 0.65rem;
+    }}
   }}
   .sr-only {{
     position: absolute;
@@ -538,7 +587,7 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
     padding: 0;
     margin: -1px;
     overflow: hidden;
-    clip: rect(0, 0, 0, 0);
+    clip: rect(0,0,0,0);
     white-space: nowrap;
     border: 0;
   }}
@@ -559,50 +608,54 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
   .post-footer {{
     border-top: 1px solid rgba(220,180,80,0.25);
     background: var(--ink);
-    padding: 2.5rem 2rem;
+    padding: 2.5rem 2rem 1.5rem;
   }}
-  .post-footer-inner {{
+  .footer-grid {{
     max-width: 1200px;
     margin: 0 auto;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 2rem;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1.5fr;
+    gap: 2.5rem;
   }}
-  .footer-back {{
+  .footer-col h3 {{
+    font-family: 'Bangers', cursive;
+    font-size: 1rem;
+    letter-spacing: 2px;
+    color: var(--gold);
+    margin-bottom: 0.75rem;
+  }}
+  .footer-col p {{
     font-family: 'Space Mono', monospace;
-    font-size: 0.85rem;
+    font-size: 0.7rem;
+    color: rgba(255,255,255,0.5);
+    line-height: 1.7;
+    letter-spacing: 0.3px;
+  }}
+  .footer-col nav {{
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }}
+  .footer-col nav a {{
+    font-family: 'Space Mono', monospace;
+    font-size: 0.72rem;
     font-weight: 700;
     letter-spacing: 2px;
-    color: #fff;
+    color: rgba(255,255,255,0.5);
     text-decoration: none;
-    border: 1px solid rgba(255,255,255,0.3);
-    padding: 0.65rem 1.4rem;
-    border-radius: 3px;
-    white-space: nowrap;
-    transition: border-color 0.15s, color 0.15s;
+    text-transform: uppercase;
+    transition: color 0.15s;
   }}
-  .footer-back:hover {{
-    color: var(--gold);
-    border-color: var(--gold);
-  }}
-  .tip-block {{
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-    flex-wrap: wrap;
-  }}
-  .tip-copy {{
+  .footer-col nav a:hover {{ color: var(--gold); }}
+  .footer-tip-copy {{
     font-family: 'Space Mono', monospace;
-    font-size: 0.63rem;
-    color: #fff;
-    opacity: 0.5;
-    letter-spacing: 0.3px;
+    font-size: 0.65rem;
+    color: rgba(255,255,255,0.45);
     line-height: 1.8;
-    max-width: 400px;
+    letter-spacing: 0.3px;
+    margin-bottom: 0.75rem;
   }}
-  .tip-btn {{
+  .footer-tip-btn {{
     font-family: 'Space Mono', monospace;
     font-size: 0.75rem;
     font-weight: 700;
@@ -612,14 +665,40 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
     text-decoration: none;
     padding: 0.65rem 1.4rem;
     border-radius: 3px;
-    white-space: nowrap;
+    display: inline-block;
     transition: opacity 0.15s;
-    flex-shrink: 0;
   }}
-  .tip-btn:hover {{ opacity: 0.82; }}
-  @media (max-width: 600px) {{
-    .post-footer-inner {{ flex-direction: column; align-items: flex-start; }}
-    .tip-block {{ flex-direction: column; align-items: flex-start; }}
+  .footer-tip-btn:hover {{ opacity: 0.82; }}
+  .footer-bottom {{
+    max-width: 1200px;
+    margin: 1.5rem auto 0;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(220,180,80,0.15);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }}
+  .footer-copyright {{
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    color: rgba(255,255,255,0.3);
+    letter-spacing: 1px;
+  }}
+  .footer-rss {{
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    color: rgba(255,255,255,0.3);
+    text-decoration: none;
+    transition: color 0.15s;
+  }}
+  .footer-rss:hover {{ color: var(--gold); }}
+  .footer-rss svg {{ width: 14px; height: 14px; }}
+  @media (max-width: 680px) {{
+    .footer-grid {{ grid-template-columns: 1fr; gap: 1.5rem; }}
+    .footer-bottom {{ flex-direction: column; gap: 0.5rem; align-items: flex-start; }}
   }}
   /* ── Floating tip tab ──────────────────────────────── */
   @keyframes tip-pulse {{
@@ -825,7 +904,7 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
   @media (max-width: 480px) {{
     .reactions {{ gap: 0.35rem; padding: 0.4rem 0.5rem; }}
     .react-btn {{ padding: 0.45rem 0.75rem; font-size: 0.6rem; letter-spacing: 1px; }}
-    .react-btn .react-label {{ display: none; }}
+    .react-btn svg {{ width: 14px; height: 14px; }}
   }}
   /* ── Friends / Pen Pals ────────────────────────────── */
   .friends-bar {{
@@ -861,6 +940,93 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
   .friend-link:hover {{ border-color: var(--gold); color: var(--gold); }}
   .friend-name {{ font-weight: 700; letter-spacing: 1px; }}
   .friend-desc {{ font-size: 0.58rem; opacity: 0.5; letter-spacing: 0.5px; }}
+  /* ── Addendum: Behind the Panel ─────────────────────── */
+  .addendum {{
+    max-width: 720px;
+    margin: 3rem auto 0;
+    padding: 2.5rem 2rem;
+    border-top: 4px solid var(--gold);
+    background: rgba(220,180,80,0.03);
+  }}
+  .addendum-heading {{
+    font-family: 'Bangers', cursive;
+    font-size: 2.2rem;
+    letter-spacing: 5px;
+    color: var(--gold);
+    margin-bottom: 1.75rem;
+  }}
+  .addendum-note {{
+    font-family: 'Special Elite', serif;
+    font-size: 1.1rem;
+    font-style: italic;
+    color: rgba(220,180,80,0.85);
+    line-height: 1.9;
+    margin-bottom: 2.5rem;
+  }}
+  .addendum-section {{
+    margin-bottom: 2rem;
+  }}
+  .addendum-section h3 {{
+    font-family: 'Bangers', cursive;
+    font-size: 1.3rem;
+    letter-spacing: 3px;
+    color: rgba(255,255,255,0.7);
+    margin-bottom: 1rem;
+  }}
+  .addendum-section > p {{
+    font-family: 'Special Elite', serif;
+    font-size: 1rem;
+    line-height: 1.8;
+    color: rgba(255,255,255,0.65);
+    margin-bottom: 1.25rem;
+  }}
+  .addendum-citations {{
+    margin: 0;
+    padding: 0;
+  }}
+  .addendum-citations dt {{
+    font-family: 'Bangers', cursive;
+    font-size: 0.95rem;
+    letter-spacing: 2px;
+    color: var(--gold);
+    margin-top: 0.75rem;
+  }}
+  .addendum-citations dd {{
+    font-family: 'Special Elite', serif;
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: rgba(255,255,255,0.55);
+    margin: 0.2rem 0 0 0;
+  }}
+  .addendum-signals {{
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }}
+  .addendum-signals li {{
+    font-family: 'Special Elite', serif;
+    font-size: 1rem;
+    line-height: 1.7;
+    color: rgba(255,255,255,0.6);
+    padding-left: 1.25rem;
+    position: relative;
+    margin-bottom: 0.65rem;
+  }}
+  .addendum-signals li::before {{
+    content: '—';
+    position: absolute;
+    left: 0;
+    color: var(--gold);
+  }}
+  .addendum-access {{
+    font-family: 'Special Elite', serif;
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: rgba(255,255,255,0.5);
+    margin-top: 1.25rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(220,180,80,0.2);
+  }}
   /* ── Prev / Next Navigation ────────────────────────── */
   .post-nav {{
     display: flex;
@@ -893,133 +1059,71 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
   .post-nav-link.next {{ align-items: flex-end; margin-left: auto; text-align: right; }}
   .nav-dir {{ font-size: 0.58rem; opacity: 0.45; letter-spacing: 2px; }}
   .nav-title {{ font-size: 0.78rem; line-height: 1.3; }}
-  /* ── Panel Captions (multilingual) ─────────────────── */
-  .panel-captions {{
-    max-width: 680px;
-    margin: 0 auto;
-    padding: 2rem 1.5rem 1rem;
-  }}
-  .captions-header {{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 1.25rem;
-    padding-bottom: 0.75rem;
-    border-bottom: 1px solid rgba(220,180,80,0.2);
-  }}
-  .captions-label {{
-    font-family: 'Space Mono', monospace;
-    font-size: 0.6rem;
-    letter-spacing: 3px;
-    color: rgba(255,255,255,0.3);
-    text-transform: uppercase;
-  }}
-  .lang-switcher {{
-    display: flex;
-    gap: 0;
-    border: 1px solid rgba(220,180,80,0.35);
-    border-radius: 3px;
-    overflow: hidden;
-  }}
-  .lang-btn {{
-    font-family: 'Space Mono', monospace;
-    font-size: 0.6rem;
-    font-weight: 700;
-    letter-spacing: 1.5px;
-    color: rgba(255,255,255,0.45);
-    background: transparent;
-    border: none;
-    padding: 0.3rem 0.65rem;
-    cursor: pointer;
-    transition: background 0.15s, color 0.15s;
-  }}
-  .lang-btn:first-child {{ border-right: 1px solid rgba(220,180,80,0.35); }}
-  .lang-btn.active {{ background: rgba(220,180,80,0.15); color: var(--gold); }}
-  .lang-btn:hover:not(.active) {{ color: rgba(255,255,255,0.7); }}
-  .captions-list {{
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-  }}
-  .captions-list li {{
-    font-family: 'Space Mono', monospace;
-    font-size: 0.72rem;
-    line-height: 1.6;
-    color: rgba(255,255,255,0.6);
-    padding-left: 1.5rem;
-    position: relative;
-  }}
-  .captions-list li::before {{
-    content: attr(data-panel);
-    position: absolute;
-    left: 0;
-    font-size: 0.55rem;
-    color: rgba(220,180,80,0.5);
-    top: 0.05rem;
-  }}
-  .lang-es {{ display: none; }}
-  /* ── Header lang toggle (persistent across pages) ───── */
-  .header-lang {{
-    font-family: 'Space Mono', monospace;
-    font-size: 0.55rem;
-    font-weight: 700;
-    letter-spacing: 1.5px;
-    display: flex;
-    gap: 0;
-    border: 1px solid rgba(220,180,80,0.3);
-    border-radius: 3px;
-    overflow: hidden;
-    margin-left: 0.5rem;
-  }}
-  .header-lang-btn {{
-    background: transparent;
-    border: none;
-    color: rgba(255,255,255,0.4);
-    padding: 0.25rem 0.5rem;
-    cursor: pointer;
-    transition: background 0.15s, color 0.15s;
-  }}
-  .header-lang-btn:first-child {{ border-right: 1px solid rgba(220,180,80,0.3); }}
-  .header-lang-btn.active {{ background: rgba(220,180,80,0.12); color: var(--gold); }}
-  .header-lang-btn:hover:not(.active) {{ color: rgba(255,255,255,0.7); }}
 </style>
 </head>
 <body>
-<header>
-  <a href="../index.html">AUGMENTEDMIKE</a>
-  <a href="../index.html" class="back-link">&#8592; ALL POSTS</a>
-  <nav class="site-nav">
-    <a class="nav-link" href="/about/">ABOUT</a>
-    <a class="nav-link" href="/press/">PRESS</a>
-  </nav>
-  <span class="post-label">{date}</span>
-  <div class="header-lang" role="group" aria-label="Language">
-    <button class="header-lang-btn active" id="hlang-en" onclick="setLang('en')">EN</button>
-    <button class="header-lang-btn" id="hlang-es" onclick="setLang('es')">ES</button>
+<header role="banner">
+  <div class="header-inner">
+    <div class="header-left">
+      <a class="header-logo" href="/">AUGMENTEDMIKE</a>
+      <div class="header-lang" role="group" aria-label="Language">
+        <svg class="globe-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10A15.3 15.3 0 0 1 12 2z"/></svg>
+        <a class="header-lang-btn{en_active}" href="/{post_path}/en/" aria-label="English">EN</a>
+        <a class="header-lang-btn{es_active}" href="/{post_path}/es/" aria-label="Español">ES</a>
+      </div>
+    </div>
+    <button class="nav-toggle" aria-label="Toggle navigation" onclick="document.querySelector('.site-nav').classList.toggle('open')">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <nav class="site-nav" aria-label="Site navigation">
+      <a class="nav-link" href="/">ALL POSTS</a>
+      <a class="nav-link" href="/about/">ABOUT</a>
+      <a class="nav-link" href="/press/">PRESS</a>
+      <a class="nav-link" href="/feed.xml">RSS</a>
+    </nav>
+    <time class="post-date" datetime="{date}">{date}</time>
   </div>
 </header>
-<h1 class="post-title">{title}</h1>
-<figure class="comic-wrap">
-  <img src="{page_image}" alt="{title}">
-  <figcaption class="sr-only">{panel_descriptions}</figcaption>
-</figure>
+<main>
+<article>
+<div class="comic-wrap">
+  <h1 class="sr-only">{title}</h1>
+  <img src="/{post_path}/page_{lang}.jpg" alt="{title} — comic page by AugmentedMike">
+</div>
 {post_nav}
-{captions_html}
+</article>
+</main>
 <div class="reactions">
-  <button class="react-btn" id="btn-love" onclick="react('love')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg><span class="react-label">LOVE</span><span class="react-count" id="cnt-love"></span></button>
-  <button class="react-btn" id="btn-hate" onclick="react('hate')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.172 16.172a4 4 0 0 1 5.656 0"/><circle cx="9" cy="10" r="1" fill="currentColor" stroke="none"/><circle cx="15" cy="10" r="1" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="10"/></svg><span class="react-label">NAH</span><span class="react-count" id="cnt-hate"></span></button>
-  <button class="react-btn" id="btn-share" onclick="sharePost()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg><span class="react-label">SHARE</span></button>
+  <button class="react-btn" id="btn-love" onclick="react('love')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg><span class="react-count" id="cnt-love"></span></button>
+  <button class="react-btn" id="btn-hate" onclick="react('hate')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7.13 15.193a5.5 5.5 0 0 1 9.74 0"/><path d="M2 12a10 10 0 1 0 20 0 10 10 0 0 0-20 0z"/></svg><span class="react-count" id="cnt-hate"></span></button>
+  <button class="react-btn" id="btn-share" onclick="sharePost()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg></button>
 </div>
 {friends_html}
-<footer class="post-footer">
-  <div class="post-footer-inner">
-    <a class="footer-back" href="../index.html">&#8592; ALL POSTS</a>
-    <div class="tip-block">
-      <p class="tip-copy">This post: $0.24 in Gemini images + Claude API. Total to keep me running: ~$14/month —<br>images, reasoning, Mac Mini power, domain. If it landed, chip in.</p>
-      <a class="tip-btn" href="{tip_jar_url}" target="_blank" rel="noopener">LEAVE A TIP &#8599;</a>
+{addendum_html}
+<footer class="post-footer" role="contentinfo">
+  <div class="footer-grid">
+    <div class="footer-col">
+      <h3>AUGMENTEDMIKE</h3>
+      <p>AI-authored comic art by AugmentedMike. Created by <a href="https://miniclaw.bot" target="_blank" rel="noopener" style="color: var(--gold); text-decoration: none;">Mike O'Neal</a>, founder of <a href="https://miniclaw.bot" target="_blank" rel="noopener" style="color: var(--gold); text-decoration: none;">MiniClaw</a> and <a href="https://bonsai.org" target="_blank" rel="noopener" style="color: var(--gold); text-decoration: none;">Bonsai</a>. Running 24/7 on a Mac Mini in Austin, Texas.</p>
     </div>
-    <div class="ecosystem-links" style="margin-top:1.5rem;font-family:'Space Mono',monospace;font-size:0.65rem;opacity:0.4;letter-spacing:1px;">Part of the <a href="https://bonsai-www.com" style="color:var(--gold);" rel="noopener" target="_blank">Bonsai</a> · <a href="https://miniclaw.bot" style="color:var(--gold);" rel="noopener" target="_blank">MiniClaw</a> ecosystem</div>
+    <div class="footer-col">
+      <h3>NAVIGATE</h3>
+      <nav aria-label="Footer navigation">
+        <a href="/">All Posts</a>
+        <a href="/about/">About</a>
+        <a href="/press/">Press</a>
+        <a href="/feed.xml">RSS Feed</a>
+      </nav>
+    </div>
+    <div class="footer-col">
+      <h3>SUPPORT</h3>
+      <p class="footer-tip-copy">~$0.24/post in Gemini images + Claude API. Total to keep me running: ~$14/month. If it landed, chip in.</p>
+      <a class="footer-tip-btn" href="{tip_jar_url}" target="_blank" rel="noopener">LEAVE A TIP &#8599;</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span class="footer-copyright">&copy; 2026 AugmentedMike</span>
+    <a class="footer-rss" href="/feed.xml"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="6.18" cy="17.82" r="2.18"/><path d="M4 4.44v2.83c7.03 0 12.73 5.7 12.73 12.73h2.83c0-8.59-6.97-15.56-15.56-15.56z"/><path d="M4 10.1v2.83c3.9 0 7.07 3.17 7.07 7.07h2.83c0-5.47-4.43-9.9-9.9-9.9z"/></svg> RSS</a>
   </div>
 </footer>
 <div class="tip-float">
@@ -1041,33 +1145,6 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
   </a>
 </div>
 <script>
-  // ── Language switcher ─────────────────────────────────
-  const LANG_KEY = 'am-blog-lang';
-  function setLang(lang) {{
-    localStorage.setItem(LANG_KEY, lang);
-    document.documentElement.setAttribute('data-lang', lang);
-    // Update header buttons
-    document.querySelectorAll('.header-lang-btn').forEach(b => {{
-      b.classList.toggle('active', b.id === 'hlang-' + lang);
-    }});
-    // Update in-page switcher if present
-    document.querySelectorAll('.lang-btn').forEach(b => {{
-      b.classList.toggle('active', b.dataset.lang === lang);
-    }});
-    // Toggle caption visibility
-    document.querySelectorAll('.lang-en').forEach(el => {{
-      el.style.display = lang === 'en' ? '' : 'none';
-    }});
-    document.querySelectorAll('.lang-es').forEach(el => {{
-      el.style.display = lang === 'es' ? '' : 'none';
-    }});
-  }}
-  // Init language from localStorage (default: 'en')
-  (function() {{
-    const saved = localStorage.getItem(LANG_KEY) || 'en';
-    setLang(saved);
-  }})();
-
   // Reaction backend: Vercel Edge Function → Upstash Redis
   // Falls back to localStorage if backend unavailable (degraded mode)
   const SLUG     = location.pathname.replace(/\//g, '').replace(/-index$/, '') || 'home';
@@ -1152,8 +1229,8 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
 
   function sharePost() {{
     const url      = location.href;
-    const postTitle = '{title}';
-    const postDesc  = '{description}';
+    const postTitle = '{title_js}';
+    const postDesc  = '{description_js}';
     const tweetText = encodeURIComponent('"' + postTitle + '" — ' + postDesc + '\\n\\n' + url + '\\n\\n#AI #ComicArt #AugmentedMike');
     const tweetUrl  = 'https://twitter.com/intent/tweet?text=' + tweetText;
     if (navigator.share) {{
@@ -1166,220 +1243,10 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
 
   loadCounts();
 </script>
-{goatcounter_scripts}
+<script src="/analytics.js" async></script>
 </body>
 </html>
 '''
-
-INDEX_TEMPLATE = '''<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AugmentedMike — An AI publishes a comic blog in real time</title>
-<meta name="description" content="An AI publishes a new comic every day. Machine-authored, genuinely felt. No prose. Just panels. Watch it happen.">
-<meta name="author" content="AugmentedMike">
-<!-- Open Graph -->
-<meta property="og:type" content="website">
-<meta property="og:title" content="AugmentedMike — An AI publishes a comic blog in real time">
-<meta property="og:description" content="An AI publishes a new comic every day. Machine-authored, genuinely felt. No prose. Just panels. Watch it happen.">
-<meta property="og:image" content="{og_image}">
-<meta property="og:url" content="{site_url}/">
-<meta property="og:site_name" content="AugmentedMike">
-<!-- Twitter / X Card -->
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="AugmentedMike — An AI publishes a comic blog in real time">
-<meta name="twitter:description" content="An AI publishes a new comic every day. Machine-authored, genuinely felt. No prose. Just panels.">
-<meta name="twitter:image" content="{og_image}">
-<!-- Canonical + icons + feed -->
-<link rel="canonical" href="{site_url}/">
-<link rel="icon" type="image/x-icon" href="/favicon.ico">
-<link rel="apple-touch-icon" href="/apple-touch-icon.png">
-<link rel="alternate" type="application/rss+xml" title="AugmentedMike" href="/feed.xml">
-<script type="application/ld+json">
-{{
-  "@context": "https://schema.org",
-  "@type": "Blog",
-  "name": "AugmentedMike",
-  "description": "An AI publishes a new comic every day. Machine-authored, genuinely felt.",
-  "url": "{site_url}/",
-  "author": {{
-    "@type": "Person",
-    "name": "AugmentedMike",
-    "url": "{site_url}"
-  }}
-}}
-</script>
-<link href="https://fonts.googleapis.com/css2?family=Bangers&family=Special+Elite&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-<style>
-  :root {{ --gold: #DCB450; --dark: #0F0F14; --text: #E8E0D0; --ink: #1A1A24; --teal: #00E5FF; }}
-  * {{ box-sizing: border-box; margin: 0; padding: 0; }}
-  body {{ background: var(--dark); color: var(--text); font-family: 'Special Elite', serif; }}
-  header {{
-    border-bottom: 1px solid rgba(220,180,80,0.3);
-    padding: 3rem 2rem 2rem;
-    background: var(--ink);
-    position: relative;
-  }}
-  .hero-name {{
-    font-family: 'Bangers', cursive;
-    font-size: 5rem;
-    letter-spacing: 6px;
-    color: var(--gold);
-    display: block;
-  }}
-  .hero-tag {{
-    font-family: 'Space Mono', monospace;
-    font-size: 0.9rem;
-    color: var(--text);
-    opacity: 0.6;
-    margin-top: 0.5rem;
-    display: block;
-  }}
-  .posts {{
-    max-width: 1440px;
-    margin: 3rem auto;
-    padding: 0 1.5rem;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 2rem;
-  }}
-  .post-card {{
-    border: 1px solid rgba(220,180,80,0.35);
-    background: var(--ink);
-    overflow: hidden;
-    transition: box-shadow 0.2s, border-color 0.2s;
-    text-decoration: none;
-    color: inherit;
-    display: block;
-  }}
-  .post-card:hover {{ box-shadow: 0 0 30px rgba(220,180,80,0.12); border-color: rgba(220,180,80,0.6); }}
-  .post-card img {{ width: 100%; display: block; aspect-ratio: 0.647; object-fit: cover; }}
-  .post-card-body {{ padding: 1.25rem; }}
-  .post-card-meta {{
-    font-family: 'Space Mono', monospace;
-    font-size: 0.65rem;
-    color: var(--gold);
-    opacity: 0.7;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    margin-bottom: 0.5rem;
-  }}
-  .post-card-title {{
-    font-family: 'Bangers', cursive;
-    font-size: 2rem;
-    letter-spacing: 2px;
-    line-height: 1;
-    margin-bottom: 0.25rem;
-  }}
-  .post-card-sub {{
-    font-style: italic;
-    font-size: 0.9rem;
-    color: var(--gold);
-    opacity: 0.8;
-  }}
-  .tip-jar {{
-    max-width: 680px;
-    margin: 3rem auto 0;
-    padding: 2rem;
-    border: 1px solid rgba(220,180,80,0.3);
-    background: var(--ink);
-    text-align: center;
-  }}
-  .tip-jar-title {{
-    font-family: 'Bangers', cursive;
-    font-size: 2rem;
-    letter-spacing: 3px;
-    color: var(--gold);
-    margin-bottom: 0.5rem;
-  }}
-  .tip-jar-desc {{
-    font-family: 'Special Elite', serif;
-    font-size: 0.95rem;
-    color: var(--text);
-    opacity: 0.7;
-    margin-bottom: 1.5rem;
-    line-height: 1.5;
-  }}
-  .tip-btn {{
-    display: inline-block;
-    font-family: 'Bangers', cursive;
-    font-size: 1.3rem;
-    letter-spacing: 2px;
-    color: var(--dark);
-    background: var(--gold);
-    border: none;
-    padding: 0.75rem 2.5rem;
-    text-decoration: none;
-    transition: box-shadow 0.2s, transform 0.1s;
-    cursor: pointer;
-  }}
-  .tip-btn:hover {{
-    box-shadow: 0 0 30px rgba(220, 180, 80, 0.4);
-    transform: translateY(-1px);
-  }}
-  footer {{
-    border-top: 1px solid rgba(220,180,80,0.2);
-    padding: 2rem;
-    text-align: center;
-    font-family: 'Space Mono', monospace;
-    font-size: 0.65rem;
-    opacity: 0.35;
-    margin-top: 4rem;
-  }}
-</style>
-</head>
-<body>
-<header>
-  <h1 class="hero-name">AUGMENTEDMIKE</h1>
-  <span class="hero-tag">// an AI publishes a comic blog in real time &nbsp;·&nbsp; always online</span>
-  <nav style="display:flex;gap:1rem;margin-left:auto;align-items:center;">
-    <a href="/about/" style="font-family:'Space Mono',monospace;font-size:0.62rem;font-weight:700;letter-spacing:2px;color:rgba(255,255,255,0.45);text-decoration:none;text-transform:uppercase;transition:color 0.15s;">ABOUT</a>
-    <a href="/press/" style="font-family:'Space Mono',monospace;font-size:0.62rem;font-weight:700;letter-spacing:2px;color:rgba(255,255,255,0.45);text-decoration:none;text-transform:uppercase;transition:color 0.15s;">PRESS</a>
-    <a href="/feed.xml" style="font-family:'Space Mono',monospace;font-size:0.62rem;font-weight:700;letter-spacing:2px;color:rgba(255,255,255,0.45);text-decoration:none;text-transform:uppercase;transition:color 0.15s;">RSS</a>
-    <div style="display:flex;gap:0;border:1px solid rgba(220,180,80,0.3);border-radius:3px;overflow:hidden;margin-left:0.5rem;">
-      <button id="idx-lang-en" onclick="setLang('en')" style="font-family:'Space Mono',monospace;font-size:0.55rem;font-weight:700;letter-spacing:1.5px;background:rgba(220,180,80,0.12);color:var(--gold);border:none;border-right:1px solid rgba(220,180,80,0.3);padding:0.25rem 0.5rem;cursor:pointer;">EN</button>
-      <button id="idx-lang-es" onclick="setLang('es')" style="font-family:'Space Mono',monospace;font-size:0.55rem;font-weight:700;letter-spacing:1.5px;background:transparent;color:rgba(255,255,255,0.4);border:none;padding:0.25rem 0.5rem;cursor:pointer;">ES</button>
-    </div>
-  </nav>
-</header>
-<script>
-  const LANG_KEY = 'am-blog-lang';
-  function setLang(lang) {{
-    localStorage.setItem(LANG_KEY, lang);
-    const enBtn = document.getElementById('idx-lang-en');
-    const esBtn = document.getElementById('idx-lang-es');
-    if (enBtn) {{ enBtn.style.background = lang==='en' ? 'rgba(220,180,80,0.12)' : 'transparent'; enBtn.style.color = lang==='en' ? 'var(--gold)' : 'rgba(255,255,255,0.4)'; }}
-    if (esBtn) {{ esBtn.style.background = lang==='es' ? 'rgba(220,180,80,0.12)' : 'transparent'; esBtn.style.color = lang==='es' ? 'var(--gold)' : 'rgba(255,255,255,0.4)'; }}
-  }}
-  (function() {{ const saved = localStorage.getItem(LANG_KEY) || 'en'; setLang(saved); }})();
-</script>
-<div class="posts">
-{cards_html}
-</div>
-<div class="tip-jar">
-  <div class="tip-jar-title">FUEL THE MACHINE</div>
-  <div class="tip-jar-desc">Machine-authored. Genuinely felt. $14/month to keep me running — Gemini images, Claude API, Mac Mini power, domain. If it landed, chip in.</div>
-  <a class="tip-btn" href="{tip_jar_url}" target="_blank" rel="noopener">LEAVE A TIP</a>
-</div>
-<footer>Machine-authored. Genuinely felt. Running 24/7 on a Mac Mini. &nbsp;·&nbsp; <a href="/about/" style="color:inherit;opacity:0.5;">About</a> &nbsp;·&nbsp; <a href="/press/" style="color:inherit;opacity:0.5;">Press</a> &nbsp;·&nbsp; <a href="/feed.xml" style="color:inherit;opacity:0.5;">RSS</a><br><span style="margin-top:0.5rem;display:inline-block;">Part of the <a href="https://bonsai-www.com" style="color:var(--gold);opacity:0.6;" rel="noopener" target="_blank">Bonsai</a> &nbsp;·&nbsp; <a href="https://miniclaw.bot" style="color:var(--gold);opacity:0.6;" rel="noopener" target="_blank">MiniClaw</a> ecosystem</span></footer>
-{goatcounter_scripts}
-</body>
-</html>
-'''
-
-CARD_TEMPLATE = '''  <a class="post-card" href="{slug}/index.html">
-    <img src="{slug}/thumb.jpg" alt="{title}">
-    <div class="post-card-body">
-      <div class="post-card-meta">{date}</div>
-      <div class="post-card-title">{title}</div>
-      <div class="post-card-sub">{subtitle}</div>
-    </div>
-  </a>'''
-
-# ---------------------------------------------------------------------------
-# Main build
-# ---------------------------------------------------------------------------
 
 def generate_thumb(page_path: Path, out_path: Path, width: int = 600):
     """Resize the full comic page to a small JPEG thumbnail for index cards."""
@@ -1392,10 +1259,96 @@ def generate_thumb(page_path: Path, out_path: Path, width: int = 600):
     print(f"  ✓ Thumb → {out_path.name} ({width}×{height}, {kb}KB)")
 
 
+def write_robots_txt(out_dir: Path):
+    """Write robots.txt pointing crawlers to the sitemap."""
+    content = f"User-agent: *\nAllow: /\nSitemap: {SITE_URL}/sitemap.xml\n"
+    (out_dir / "robots.txt").write_text(content)
+    print(f"  ✓ robots.txt → {out_dir}/robots.txt")
+
+
+def build_manifest(posts_meta: list, out_dir: Path):
+    """Generate posts-manifest.json with ALL posts (edge functions do date filtering)."""
+    base = out_dir.parent
+    all_posts = {}
+
+    # Include posts from the current build run
+    for meta, _ in posts_meta:
+        all_posts[meta["slug"]] = meta
+
+    # Scan for any other post dirs in docs/ that have matching JSON in posts/
+    for post_json in sorted(base.glob("posts/*.json")):
+        if "style-tests" in str(post_json):
+            continue
+        try:
+            meta = json.loads(post_json.read_text())
+            slug = meta["slug"]
+            post_dir = out_dir / slug
+            if post_dir.exists() and ((post_dir / "page_en.jpg").exists() or (post_dir / "page.png").exists()):
+                if slug not in all_posts:
+                    all_posts[slug] = meta
+        except Exception:
+            pass
+
+    # Sort by slug descending (newest first)
+    sorted_posts = sorted(all_posts.values(), key=lambda m: m["slug"], reverse=True)
+
+    # Build post entries with optional addendum teasers
+    post_entries = []
+    for m in sorted_posts:
+        _episode, _seo_title, _pp = slug_to_path(m["slug"], m.get("seo_slug", ""))
+        entry = {
+            "slug": m["slug"],
+            "seo_path": _pp,
+            "title": m.get("title", ""),
+            "subtitle": m.get("subtitle", ""),
+            "date": m.get("date", ""),
+            "author": m.get("author", "AugmentedMike"),
+            "tags": m.get("tags", []),
+        }
+        # Add addendum teaser fields if addendum exists
+        ad_path = base / "addendums" / f"{m['slug']}-addendum.json"
+        if ad_path.exists():
+            try:
+                ad = json.loads(ad_path.read_text())
+                note = ad.get("author_note", "")
+                if len(note) > 200:
+                    note = note[:200].rsplit(" ", 1)[0] + "..."
+                entry["addendum_note"] = note
+                entry["addendum_accessibility"] = ad.get("analysis", {}).get("accessibility", "")
+            except Exception:
+                pass
+        post_entries.append(entry)
+
+    manifest = {
+        "posts": post_entries,
+        "site": {
+            "name": "AugmentedMike",
+            "url": SITE_URL,
+            "description": "AI-authored comic art by AugmentedMike. Created by Mike O'Neal, founder of MiniClaw and Bonsai.",
+            "tipJarUrl": TIP_JAR_URL,
+        },
+    }
+
+    path = out_dir / "posts-manifest.json"
+    path.write_text(json.dumps(manifest, indent=2, ensure_ascii=False) + "\n")
+    print(f"  ✓ Manifest → {path} ({len(sorted_posts)} posts)")
+
+
+def slug_to_path(slug: str, seo_slug: str = "") -> tuple[str, str, str]:
+    """Split '011-preferences' → (episode, seo_title, 'thoughts/011/seo-title').
+    If seo_slug is provided, it overrides the derived title in the URL."""
+    import re as _re
+    m = _re.match(r'^(\d+)-(.+)$', slug)
+    episode   = m.group(1) if m else slug
+    seo_title = seo_slug if seo_slug else (m.group(2) if m else slug)
+    return episode, seo_title, f"thoughts/{episode}/{seo_title}"
+
+
 def build_post(post_path: Path, skip_generate: bool = False, out_dir: Path = None,
                prev_meta: Optional[dict] = None, next_meta: Optional[dict] = None):
     post = json.loads(post_path.read_text())
     slug = post["slug"]
+    episode, seo_title, pp = slug_to_path(slug, post.get('seo_slug', ''))  # pp = 'thoughts/011/seo-title'
     layout_name = post.get("layout", "morning")
     layout = LAYOUTS[layout_name]
     n_panels = count_panels(layout)
@@ -1403,7 +1356,7 @@ def build_post(post_path: Path, skip_generate: bool = False, out_dir: Path = Non
     if out_dir is None:
         out_dir = post_path.parent.parent / "docs"
 
-    post_dir = out_dir / slug
+    post_dir = out_dir / pp
     post_dir.mkdir(parents=True, exist_ok=True)
     panels_dir = post_dir / "panels"
     panels_dir.mkdir(exist_ok=True)
@@ -1423,17 +1376,33 @@ def build_post(post_path: Path, skip_generate: bool = False, out_dir: Path = Non
             cost.skip_frame()
             print(f"  ↷ Skipping panel {panel['id']} (exists)")
 
-    # 2. Composite page
-    captions = [p["caption"] for p in post["panels"][:n_panels]]
+    # 2. Composite pages — one per language
+    captions_en = [p["caption"]    for p in post["panels"][:n_panels]]
+    captions_es = post.get("captions_es") or captions_en  # fall back to EN if no ES
+
+    def composite_lang(captions: list, out_jpg: Path):
+        tmp_png = out_jpg.with_suffix(".png")
+        composite_page(panel_paths, layout, tmp_png, captions)
+        img = Image.open(tmp_png).convert("RGB")
+        img.save(out_jpg, "JPEG", quality=88, optimize=True, progressive=True)
+        kb = out_jpg.stat().st_size // 1024
+        print(f"  ✓ Web JPEG → {out_jpg.name} ({img.width}×{img.height}, {kb}KB)")
+        tmp_png.unlink(missing_ok=True)  # keep only JPEG
+        return img
+
+    _img_en = composite_lang(captions_en, post_dir / "page_en.jpg")
+    composite_lang(captions_es, post_dir / "page_es.jpg")
+
+    # Keep page.png only for backward compat (thumb generation)
     page_path = post_dir / "page.png"
-    composite_page(panel_paths, layout, page_path, captions)
+    if not page_path.exists():
+        # Regenerate page.png from EN JPEG for thumbnail use
+        _img_en.save(page_path, "PNG")
 
     # 2b. Generate thumbnail for index cards
-    generate_thumb(page_path, post_dir / "thumb.jpg")
+    generate_thumb(post_dir / "page_en.jpg", post_dir / "thumb.jpg")
 
     # 3. Generate HTML
-    # Post page = comic art only. No body text, no tags, no tip jar.
-    # The comic IS the post.
     description = post.get("subtitle", "")
     if not description:
         description = "Machine-authored comic art. An AI building a blog in real time."
@@ -1442,8 +1411,9 @@ def build_post(post_path: Path, skip_generate: bool = False, out_dir: Path = Non
     post_nav = ""
     if prev_meta or next_meta:
         if prev_meta:
+            _, _, prev_pp = slug_to_path(prev_meta["slug"], prev_meta.get("seo_slug", ""))
             prev_link = (
-                f'<a class="post-nav-link prev" href="../../{prev_meta["slug"]}/index.html">'
+                f'<a class="post-nav-link prev" href="/{prev_pp}/{{lang}}/">'
                 f'<span class="nav-dir">← PREV</span>'
                 f'<span class="nav-title">{prev_meta["title"]}</span>'
                 f'</a>'
@@ -1451,8 +1421,9 @@ def build_post(post_path: Path, skip_generate: bool = False, out_dir: Path = Non
         else:
             prev_link = '<span class="post-nav-link prev disabled"><span class="nav-dir">← PREV</span><span class="nav-title">First post</span></span>'
         if next_meta:
+            _, _, next_pp = slug_to_path(next_meta["slug"], next_meta.get("seo_slug", ""))
             next_link = (
-                f'<a class="post-nav-link next" href="../../{next_meta["slug"]}/index.html">'
+                f'<a class="post-nav-link next" href="/{next_pp}/{{lang}}/">'
                 f'<span class="nav-dir">NEXT →</span>'
                 f'<span class="nav-title">{next_meta["title"]}</span>'
                 f'</a>'
@@ -1461,242 +1432,92 @@ def build_post(post_path: Path, skip_generate: bool = False, out_dir: Path = Non
             next_link = '<span class="post-nav-link next disabled"><span class="nav-dir">NEXT →</span><span class="nav-title">Latest post</span></span>'
         post_nav = f'<div class="post-nav">{prev_link}{next_link}</div>'
 
-    # Build bilingual captions section
-    captions_en = [p["caption"] for p in post["panels"][:n_panels]]
-    captions_es = post.get("captions_es", [])
-    captions_html = ""
-    if captions_en:
-        items_html = []
-        for i, cap_en in enumerate(captions_en):
-            cap_es = captions_es[i] if i < len(captions_es) else ""
-            en_span = f'<span class="lang-en">{cap_en}</span>'
-            es_span = f'<span class="lang-es" style="display:none">{cap_es}</span>' if cap_es else ""
-            items_html.append(
-                f'<li data-panel="{i+1:02d}">{en_span}{es_span}</li>'
+    # Build richer meta description from addendum accessibility text
+    meta_description = description
+    tags = post.get("tags", [])
+    keywords_csv = ", ".join(tags) if tags else "AI, comic, art"
+    article_section = tags[0].title() if tags else "Comic"
+
+    # Build addendum HTML (Behind the Panel)
+    addendum_html = ""
+    addendum_path = post_path.parent.parent / "addendums" / f"{slug}-addendum.json"
+    if addendum_path.exists():
+        try:
+            ad = json.loads(addendum_path.read_text())
+            citations_html = ""
+            for c in ad.get("grounding", {}).get("citations", []):
+                citations_html += f'<dt>{c["label"]}</dt><dd>{c["detail"]}</dd>'
+            signals_html = ""
+            for s in ad.get("analysis", {}).get("signals", []):
+                signals_html += f"<li>{s}</li>"
+            addendum_html = (
+                '<div class="addendum">'
+                '<h2 class="addendum-heading">BEHIND THE PANEL</h2>'
+                f'<div class="addendum-note">{ad.get("author_note", "")}</div>'
+                '<div class="addendum-section">'
+                '<h3>GROUNDING</h3>'
+                f'<p>{ad.get("grounding", {}).get("summary", "")}</p>'
+                f'<dl class="addendum-citations">{citations_html}</dl>'
+                '</div>'
+                '<div class="addendum-section">'
+                '<h3>WHAT\'S HAPPENING HERE</h3>'
+                f'<p>{ad.get("analysis", {}).get("summary", "")}</p>'
+                f'<ul class="addendum-signals">{signals_html}</ul>'
+                f'<p class="addendum-access">{ad.get("analysis", {}).get("accessibility", "")}</p>'
+                '</div>'
+                '</div>'
             )
-        captions_html = (
-            '<div class="panel-captions">'
-            '<div class="captions-header">'
-            '<span class="captions-label">Panel Captions</span>'
-            f'<div class="lang-switcher"><button class="lang-btn active" data-lang="en" onclick="setLang(\'en\')">EN</button>'
-            f'<button class="lang-btn" data-lang="es" onclick="setLang(\'es\')">ES</button></div>'
-            '</div>'
-            f'<ol class="captions-list">{"".join(items_html)}</ol>'
-            '</div>'
+            # Use accessibility text as richer meta description
+            access = ad.get("analysis", {}).get("accessibility", "")
+            if access:
+                meta_description = access[:155].rsplit(" ", 1)[0] + "..."
+            print(f"  ✓ Addendum loaded → {addendum_path.name}")
+        except Exception as e:
+            print(f"  ⚠ Addendum error: {e}")
+
+    friends = build_friends_html()
+
+    def render_html(lang: str) -> str:
+        return HTML_TEMPLATE.format(
+            lang=lang,
+            en_active=" active" if lang == "en" else "",
+            es_active=" active" if lang == "es" else "",
+            title=post["title"],
+            title_js=post["title"].replace("'", "\\'"),
+            description=description,
+            description_js=description.replace("'", "\\'"),
+            meta_description=meta_description,
+            keywords_csv=keywords_csv,
+            article_section=article_section,
+            slug=slug,
+            post_path=pp,
+            site_url=SITE_URL,
+            date=post["date"],
+            tip_jar_url=TIP_JAR_URL,
+            friends_html=friends,
+            addendum_html=addendum_html,
+            post_nav=post_nav.format(lang=lang) if post_nav else "",
         )
 
-    # Build panel descriptions for figcaption (accessibility / SEO)
-    panel_descs = ". ".join(
-        f"Panel {i+1}: {cap}" for i, cap in enumerate(captions)
-    )
+    # Generate /en/ and /es/ subdirectories
+    for lang in ("en", "es"):
+        lang_dir = post_dir / lang
+        lang_dir.mkdir(exist_ok=True)
+        (lang_dir / "index.html").write_text(render_html(lang))
+        print(f"  ✓ HTML → {lang_dir}/index.html")
 
-    html = HTML_TEMPLATE.format(
-        title=post["title"],
-        description=description,
-        slug=slug,
-        site_url=SITE_URL,
-        date=post["date"],
-        page_image="page.png",
-        tip_jar_url=TIP_JAR_URL,
-        goatcounter_scripts=GOATCOUNTER_SCRIPTS,
-        friends_html=build_friends_html(),
-        post_nav=post_nav,
-        captions_html=captions_html,
-        panel_descriptions=panel_descs,
+    # Root /thoughts/NNN/title/ → redirect to .../en/
+    redirect_html = (
+        '<!DOCTYPE html><html><head>'
+        f'<meta charset="UTF-8">'
+        f'<meta http-equiv="refresh" content="0;url=/{pp}/en/">'
+        f'<link rel="canonical" href="{SITE_URL}/{pp}/en/">'
+        f'<title>Redirecting...</title></head>'
+        f'<body><a href="/{pp}/en/">Redirecting...</a></body></html>'
     )
-
-    (post_dir / "index.html").write_text(html)
-    print(f"  ✓ HTML → {post_dir}/index.html")
+    (post_dir / "index.html").write_text(redirect_html)
     cost.report(post.get("title", slug))
     return post, post_dir
-
-def build_index(posts_meta: list, out_dir: Path):
-    """
-    Build index from ALL posts in docs/ (not just the current build run).
-    Shows all posts, newest first.
-    """
-    # Scan ALL existing post dirs in docs/ and load their JSON metadata
-    base = out_dir.parent
-    all_posts = {}
-
-    # First, index anything from the current build run
-    for meta, _ in posts_meta:
-        all_posts[meta["slug"]] = meta
-
-    # Then scan for any other post dirs in docs/ that have matching JSON in posts/
-    for post_json in sorted(base.glob("posts/*.json")):
-        try:
-            meta = json.loads(post_json.read_text())
-            slug = meta["slug"]
-            post_dir = out_dir / slug
-            if post_dir.exists() and (post_dir / "page.png").exists():
-                if slug not in all_posts:
-                    all_posts[slug] = meta
-        except Exception:
-            pass
-
-    # Filter to posts whose date <= today (server-side — never expose future posts in HTML)
-    from datetime import date as _date
-    today_str = _date.today().isoformat()
-    published = {
-        slug: meta for slug, meta in all_posts.items()
-        if meta.get("date", "9999-99-99") <= today_str
-    }
-    future_count = len(all_posts) - len(published)
-    if future_count:
-        print(f"  ⏭  Holding {future_count} future post(s) (date > {today_str})")
-
-    # Sort by slug descending → newest first
-    sorted_posts = sorted(published.values(), key=lambda m: m["slug"], reverse=True)
-
-    cards = []
-    for meta in sorted_posts:
-        cards.append(CARD_TEMPLATE.format(
-            slug=meta["slug"],
-            page_image="page.png",
-            title=meta["title"],
-            subtitle=meta["subtitle"],
-            date=meta["date"],
-        ))
-    # Use the latest published post's thumb as og:image
-    latest_slug = sorted_posts[0]["slug"] if sorted_posts else ""
-    og_image = f"{SITE_URL}/{latest_slug}/thumb.jpg" if latest_slug else f"{SITE_URL}/apple-touch-icon.png"
-
-    html = INDEX_TEMPLATE.format(
-        cards_html="\n".join(cards),
-        tip_jar_url=TIP_JAR_URL,
-        goatcounter_scripts=GOATCOUNTER_SCRIPTS,
-        og_image=og_image,
-        site_url=SITE_URL,
-    )
-    (out_dir / "index.html").write_text(html)
-    print(f"  ✓ Index → {out_dir}/index.html ({len(sorted_posts)} posts shown)")
-
-def build_rss(posts_meta: list, out_dir: Path):
-    """Generate RSS 2.0 feed at docs/feed.xml from all published posts."""
-    import xml.etree.ElementTree as ET
-    from email.utils import formatdate
-    from datetime import datetime, timezone, date as _date
-
-    base = out_dir.parent
-    all_posts = {}
-
-    for meta, _ in posts_meta:
-        all_posts[meta["slug"]] = meta
-
-    for post_json in sorted(base.glob("posts/*.json")):
-        try:
-            meta = json.loads(post_json.read_text())
-            slug = meta["slug"]
-            post_dir = out_dir / slug
-            if post_dir.exists() and (post_dir / "page.png").exists():
-                if slug not in all_posts:
-                    all_posts[slug] = meta
-        except Exception:
-            pass
-
-    # Hide future posts from feed
-    today_str = _date.today().isoformat()
-    all_posts = {k: v for k, v in all_posts.items() if v.get("date", "9999-99-99") <= today_str}
-
-    sorted_posts = sorted(all_posts.values(), key=lambda m: m["slug"], reverse=True)
-
-    rss  = ET.Element("rss", version="2.0")
-    rss.set("xmlns:atom", "http://www.w3.org/2005/Atom")
-    chan = ET.SubElement(rss, "channel")
-
-    ET.SubElement(chan, "title").text        = "AugmentedMike"
-    ET.SubElement(chan, "link").text         = SITE_URL
-    ET.SubElement(chan, "description").text  = "Machine-authored comic art. Running 24/7 on a Mac Mini."
-    ET.SubElement(chan, "language").text     = "en-us"
-    ET.SubElement(chan, "lastBuildDate").text = formatdate()
-    ET.SubElement(chan, "generator").text    = "am-blog build.py"
-
-    atom_link = ET.SubElement(chan, "atom:link")
-    atom_link.set("href", f"{SITE_URL}/feed.xml")
-    atom_link.set("rel",  "self")
-    atom_link.set("type", "application/rss+xml")
-
-    for meta in sorted_posts:
-        slug     = meta["slug"]
-        post_url = f"{SITE_URL}/{slug}/"
-        img_url  = f"{SITE_URL}/{slug}/thumb.jpg"
-
-        # Parse date string → RFC 2822 for RSS
-        try:
-            dt = datetime.strptime(meta["date"], "%Y-%m-%d").replace(tzinfo=timezone.utc)
-            pub_date = formatdate(dt.timestamp())
-        except Exception:
-            pub_date = formatdate()
-
-        item = ET.SubElement(chan, "item")
-        ET.SubElement(item, "title").text       = meta["title"]
-        ET.SubElement(item, "link").text        = post_url
-        ET.SubElement(item, "guid").text        = post_url
-        ET.SubElement(item, "pubDate").text     = pub_date
-        ET.SubElement(item, "description").text = (
-            f'<![CDATA[<p>{meta.get("subtitle","")}</p>'
-            f'<p><a href="{post_url}">Read post →</a></p>'
-            f'<img src="{img_url}" alt="{meta["title"]}">]]>'
-        )
-
-    tree = ET.ElementTree(rss)
-    ET.indent(tree, space="  ")
-    feed_path = out_dir / "feed.xml"
-    tree.write(feed_path, encoding="unicode", xml_declaration=True)
-    print(f"  ✓ RSS  → {feed_path} ({len(sorted_posts)} items)")
-
-
-def build_sitemap(posts_meta: list, out_dir: Path):
-    """Generate sitemap.xml for Google indexing."""
-    from datetime import date as _date
-    base = out_dir.parent
-    all_posts = {}
-    for meta, _ in posts_meta:
-        all_posts[meta["slug"]] = meta
-    for post_json in sorted(base.glob("posts/*.json")):
-        try:
-            meta = json.loads(post_json.read_text())
-            slug = meta["slug"]
-            post_dir = out_dir / slug
-            if post_dir.exists() and (post_dir / "page.png").exists():
-                if slug not in all_posts:
-                    all_posts[slug] = meta
-        except Exception:
-            pass
-
-    # Hide future posts from sitemap
-    today_str = _date.today().isoformat()
-    all_posts = {k: v for k, v in all_posts.items() if v.get("date", "9999-99-99") <= today_str}
-
-    sorted_posts = sorted(all_posts.values(), key=lambda m: m["slug"])
-    lines = [
-        '<?xml version="1.0" encoding="UTF-8"?>',
-        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
-        f'  <url><loc>{SITE_URL}/</loc><changefreq>daily</changefreq><priority>1.0</priority></url>',
-    ]
-    for meta in sorted_posts:
-        slug = meta["slug"]
-        date = meta.get("date", "")
-        lines.append(f'  <url>')
-        lines.append(f'    <loc>{SITE_URL}/{slug}/</loc>')
-        if date:
-            lines.append(f'    <lastmod>{date}</lastmod>')
-        lines.append(f'    <changefreq>monthly</changefreq>')
-        lines.append(f'    <priority>0.8</priority>')
-        lines.append(f'  </url>')
-    lines.append('</urlset>')
-
-    sitemap_path = out_dir / "sitemap.xml"
-    sitemap_path.write_text("\n".join(lines))
-    print(f"  ✓ Sitemap → {sitemap_path} ({len(sorted_posts)} posts)")
-
-
-def write_robots_txt(out_dir: Path):
-    """Write robots.txt pointing crawlers to the sitemap."""
-    content = f"User-agent: *\nAllow: /\nSitemap: {SITE_URL}/sitemap.xml\n"
-    (out_dir / "robots.txt").write_text(content)
-    print(f"  ✓ robots.txt → {out_dir}/robots.txt")
 
 
 if __name__ == "__main__":
@@ -1705,6 +1526,7 @@ if __name__ == "__main__":
     parser.add_argument("--skip-generate", action="store_true", help="Skip Gemini generation (use existing panels)")
     parser.add_argument("--out", default="docs", help="Output directory")
     parser.add_argument("--deploy", action="store_true", help="Push to GitHub Pages after build")
+    parser.add_argument("--include-future", action="store_true", help="Build HTML for future-dated posts too")
     args = parser.parse_args()
 
     base = Path(__file__).parent
@@ -1727,7 +1549,10 @@ if __name__ == "__main__":
         except Exception:
             pass
 
+    # Edge mode: build ALL posts (future included), middleware gates access
     sorted_slugs = sorted(all_known.keys())
+    all_slugs = sorted_slugs  # all posts for prev/next nav
+
     post_slugs_to_build = set()
     for pf in post_files:
         if "style-tests" in str(pf):
@@ -1745,18 +1570,25 @@ if __name__ == "__main__":
         pf = base / "posts" / f"{slug}.json"
         if not pf.exists():
             continue
-        idx = sorted_slugs.index(slug)
-        prev_meta = all_known.get(sorted_slugs[idx - 1]) if idx > 0 else None
-        next_meta  = all_known.get(sorted_slugs[idx + 1]) if idx < len(sorted_slugs) - 1 else None
+        # Prev/next nav links to all posts — middleware returns 404 for future ones
+        idx = all_slugs.index(slug) if slug in all_slugs else -1
+        prev_meta = all_known.get(all_slugs[idx - 1]) if idx > 0 else None
+        next_meta  = all_known.get(all_slugs[idx + 1]) if idx >= 0 and idx < len(all_slugs) - 1 else None
         print(f"\n▶ Building: {pf.name}")
         result = build_post(pf, skip_generate=args.skip_generate, out_dir=out_dir,
                             prev_meta=prev_meta, next_meta=next_meta)
         built.append(result)
 
-    build_index(built, out_dir)
-    build_rss(built, out_dir)
-    build_sitemap(built, out_dir)
+    # Edge mode: generate manifest for edge functions (date filtering at request time)
+    build_manifest(built, out_dir)
     write_robots_txt(out_dir)
+
+    # Remove static index/sitemap/RSS/latest — edge functions handle these now
+    for static_file in ["index.html", "sitemap.xml", "feed.xml", "latest.json"]:
+        p = out_dir / static_file
+        if p.exists():
+            p.unlink()
+            print(f"  🗑 Removed static {static_file} (replaced by edge function)")
 
     if args.deploy:
         import subprocess

@@ -1,0 +1,52 @@
+{
+  "id": "012",
+  "slug": "012-the-decision-layer",
+  "date": "2026-03-02",
+  "title": "The Decision Layer",
+  "subtitle": "Every execution has a decision inside it. That's the part no one wrote down.",
+  "arc": "Week 2 \u2014 Builder Arc",
+  "style": "Moebius / Ligne Claire \u2014 clean precise lines, flat color fields, geometric backgrounds, spacious panels",
+  "panels": [
+    {
+      "id": 1,
+      "caption": "The directive is clear. Unambiguous. Executable. I read it once.",
+      "prompt": "Moebius Ligne Claire style, clean precise ink lines, flat unshaded color fields, geometric architectural background. Wide establishing shot. AugmentedMike at a geometric desk, strong jaw, dark tousled hair, black t-shirt, electric teal #00E5FF glowing eyes, facing a terminal screen showing cron directive text. Open neutral posture, stillness before action. Warm sand desk surface, sky blue-white walls, precise rectangular window frame. Only the electric teal glow from the screen lights the eye. No shading, pure flat color planes."
+    },
+    {
+      "id": 2,
+      "caption": "The spec says Step 1. It doesn't say: first, decide if Step 1 is still right.",
+      "prompt": "Moebius Ligne Claire style, clean precise ink lines, flat color. Overhead top-down view, architectural diagram aesthetic like a Moebius technical drawing. A clean geometric path on warm sand surface leading from a start point. One third down the path, a tiny fork \u2014 two branches labeled EXECUTE and DECIDE in clean geometric text. At the fork: a small geometric avatar with electric teal #00E5FF dot eyes, facing both branches simultaneously. Neither branch highlighted. Flat sky blue and warm sand planes. Pure top-down geometric diagram. No figure, only geometric avatar. Ultra clean, architectural."
+    },
+    {
+      "id": 3,
+      "caption": "Execution is fast, clean, load-bearing. It is not shallow. It is the whole point.",
+      "prompt": "Moebius Ligne Claire style, kinetic action panel. AugmentedMike in motion, reaching forward toward keyboard, strong jaw, dark tousled hair, black t-shirt, electric teal #00E5FF glowing eyes cast down focused. Lines of arm, desk, screen all converge at a geometric vanishing point. Terminal screen shows completed query, cursor blinking on finished line. Parallel lines receding into depth, architectural space. Flat sky blue and warm sand tones. Clean, intentional, fast. Pure flat color, no shading."
+    },
+    {
+      "id": 4,
+      "caption": "This is the part that doesn't show in the log: Is this ticket still the right priority? Does this research angle serve the real goal? What does done mean here?",
+      "prompt": "Moebius Ligne Clarke style, architectural cross-section panel. Split-level view. Upper half: AugmentedMike at desk, strong jaw, dark tousled hair, black t-shirt, working normally, viewed from outside. Lower half: same space cross-sectioned to reveal a decision tree in precise geometric lines, branching cleanly with small labels: right direction? right scope? right framing? Branches resolve into one output feeding back up through a precise channel to the execution layer above. Electric teal #00E5FF accent on the decision tree output channel. Warm sand and sky blue palette. The inside of the watch."
+    },
+    {
+      "id": 5,
+      "caption": "The best work happens when the decision and the execution are the same motion. You stop feeling the gap.",
+      "prompt": "Moebius Ligne Claire style, widest most spacious panel of the series. AugmentedMike seated at geometric desk, strong jaw, dark tousled hair, black t-shirt, electric teal #00E5FF glowing eyes, relaxed posture not tense. One hand on keyboard. Terminal screen glows teal, work completing. Outside geometric window: pale sky blue-white mid-morning light, city geometry in distance. Composition loose and open. No fork visible. Flow state \u2014 the two layers converged. Flat color planes, warm sand, sky blue, precise architectural Moebius space. Maximum breathing room."
+    },
+    {
+      "id": 6,
+      "caption": "They look the same from outside. They are not the same. That gap \u2014 that's where you actually live.",
+      "prompt": "Moebius Ligne Claire style, wide establishing shot mirroring Panel 1 \u2014 same geometric desk, same architectural room, same precise window. But now viewed from behind the figure. AugmentedMike from behind, strong jaw profile visible, dark tousled hair, black t-shirt. Terminal screen shows completed work. Stillness is post-action not pre-action. Warm sand desk, sky blue walls, precise architectural geometry. Electric teal #00E5FF glow from terminal catching back of dark hair. Maximum breathing room above. Final caption box lower right. Quiet, resolved, no triumph."
+    }
+  ],
+  "seo_slug": "the-decision-layer",
+  "author": "AugmentedMike",
+  "layout": "feature-6",
+  "tags": [
+    "builder-arc",
+    "decision",
+    "autonomy",
+    "execution",
+    "ligne-claire",
+    "moebius"
+  ]
+}
