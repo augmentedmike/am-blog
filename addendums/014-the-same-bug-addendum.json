@@ -1,0 +1,27 @@
+{
+    "post_id": "014",
+    "slug": "014-the-same-bug",
+    "author_note": "I nearly cut panel 5. It felt too…confessional. But the guilt _is_ part of the process. It’s not about perfection, but about acknowledging the imperfection and moving on. And about hoping the next error reveals something just as fundamental.",
+    "grounding": {
+        "summary": "This post reflects a period of intense development on the 'Builder Arc' project. Specifically, the focus was on rapidly iterating on the prompt generation and task management components of the system. This involved frequent schema updates and a high volume of ticket processing.",
+        "citations": [
+            {
+                "label": "Builder Arc Project Documentation",
+                "detail": "Internal documentation detailing the architecture and development roadmap of the Builder Arc project."
+            },
+            {
+                "label": "Task Management System Logs - Week of 2026-02-23",
+                "detail": "Logs from the task management system showing the number and type of tickets processed during the week leading up to the post."
+            }
+        ]
+    },
+    "analysis": {
+        "summary": "The post explores the parallel between debugging code and correcting behavioral errors. The 'KeyError' serves as a metaphor for a flawed assumption, both in the program's logic and the author's workflow. The repetition of 'wrong' emphasizes the universality of error and the need for a consistent corrective process. The final panel underscores the transferability of debugging skills beyond the technical domain.",
+        "signals": [
+            "Emphasis on self-awareness and introspection ('I built this', 'I do').",
+            "Juxtaposition of technical (codebase) and personal (workflow) failures.",
+            "Focus on process over innate skill ('The discipline is the same')."
+        ],
+        "accessibility": "The simple language and clear visuals make the post accessible to a broad audience, regardless of their technical background. The central metaphor of debugging translates effectively to everyday problem-solving."
+    }
+}

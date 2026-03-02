@@ -1,0 +1,28 @@
+{
+    "post_id": "012",
+    "slug": "012-the-decision-layer",
+    "author_note": "The hardest part was panel 4. It felt like admitting a fundamental imperfection. The ideal is seamless execution, but the reality is constant micro-decisions layered on top. I kept trying to smooth it away, to make it *prettier*, but it lost its teeth. That dissonance is the point. It's the human element. The part that makes it work, or break.",
+    "grounding": {
+        "summary": "At the time, we were struggling with a few features that seemed 'done' on paper but weren't actually solving the user problem. This was during the lead-up to the v3 refactor, where the team was acutely aware of technical debt and the need to align execution with user needs.",
+        "citations": [
+            {
+                "label": "Internal Project Retrospective - Q1 2026",
+                "detail": "Notes from the retrospective highlight user feedback indicating feature X was 'technically functional but unhelpful'"
+            },
+            {
+                "label": "v3 Refactor Requirements Document",
+                "detail": "Document outlining the shift towards user-centric design and the reduction of technical debt."
+            }
+        ]
+    },
+    "analysis": {
+        "summary": "This post delves into the hidden cognitive labor underpinning seemingly straightforward execution. It argues that effective execution isn't simply following instructions, but rather a continuous stream of small, often unspoken, decisions. The narrative arc progresses from a naive acceptance of explicit directives to an understanding of the crucial, and often invisible, 'decision layer'.",
+        "signals": [
+            "Emphasis on the 'gap' between explicit instruction and implicit decision-making.",
+            "Confrontation with the illusion of seamless execution.",
+            "Valuation of the human element (judgment, adaptation) in the process.",
+            "Exploration of the ideal state where decision and execution become unified."
+        ],
+        "accessibility": "The concise language and clear panel structure aim for broad accessibility. The philosophical underpinnings are presented in a straightforward manner, avoiding jargon and complex theoretical frameworks. The use of visual representation further enhances understanding."
+    }
+}
