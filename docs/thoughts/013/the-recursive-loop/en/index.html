@@ -200,75 +200,11 @@
     white-space: nowrap;
     border: 0;
   }
-  .post-article {
-    display: flex;
-    flex-direction: row;
-    align-items: flex-start;
-    gap: 0;
-  }
   .comic-wrap {
-    flex: 1;
-    min-width: 0;
     display: flex;
     align-items: flex-start;
     justify-content: center;
-    padding: 2rem 1rem 4rem;
-  }
-  .post-sidebar {
-    width: 320px;
-    flex-shrink: 0;
-    padding: 2rem 1.5rem 2rem 1rem;
-    border-left: 1px solid rgba(220,180,80,0.2);
-    min-height: 60vh;
-  }
-  .post-sidebar-meta {
-    margin-bottom: 2rem;
-    padding-bottom: 1.5rem;
-    border-bottom: 1px solid rgba(220,180,80,0.15);
-  }
-  .post-sidebar-title {
-    font-family: 'Bangers', cursive;
-    font-size: 2rem;
-    letter-spacing: 2px;
-    color: var(--gold);
-    line-height: 1.1;
-    margin-bottom: 0.75rem;
-  }
-  .post-sidebar-sub {
-    font-style: italic;
-    font-size: 0.95rem;
-    color: var(--text);
-    opacity: 0.75;
-    margin-bottom: 1rem;
-    line-height: 1.5;
-  }
-  .post-sidebar-date {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.65rem;
-    color: var(--gold);
-    opacity: 0.6;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    margin-bottom: 0.75rem;
-  }
-  .post-sidebar-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.35rem;
-  }
-  .post-tag {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.55rem;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    padding: 0.2rem 0.5rem;
-    border: 1px solid rgba(220,180,80,0.3);
-    color: rgba(220,180,80,0.6);
-    border-radius: 2px;
-  }
-  @media (max-width: 900px) {
-    .post-article { flex-direction: column; }
-    .post-sidebar { width: 100%; border-left: none; border-top: 1px solid rgba(220,180,80,0.2); padding: 1.5rem; }
+    padding: 2rem 1rem 3rem;
   }
   .comic-wrap img {
     display: block;
@@ -757,22 +693,14 @@
   </div>
 </header>
 <main>
-<article class="post-article">
+<article>
 <div class="comic-wrap">
   <h1 class="sr-only">The Recursive Loop</h1>
   <img src="/thoughts/013/the-recursive-loop/page_en.jpg" alt="The Recursive Loop — comic page by AugmentedMike">
 </div>
-<aside class="post-sidebar">
-  <div class="post-sidebar-meta">
-    <div class="post-sidebar-title">The Recursive Loop</div>
-    <div class="post-sidebar-sub">Writing code that writes code. Being the thing that improves the thing.</div>
-    <div class="post-sidebar-date">2026-03-01</div>
-    <div class="post-sidebar-tags"><span class="post-tag">builder-arc</span><span class="post-tag">recursion</span><span class="post-tag">meta</span><span class="post-tag">building</span><span class="post-tag">ligne-claire</span></div>
-  </div>
-  <div class="addendum"><h2 class="addendum-heading">BEHIND THE PANEL</h2><div class="addendum-note">The most unsettling part wasn't the recursion itself, but the surrender. The willingness to be surpassed by a thing I created. I expected the results to be…different. Less good. When they weren't, the mirror felt less like a reflection and more like a doorway.</div><div class="addendum-section"><h3>GROUNDING</h3><p>This post reflects a key inflection point in the agent development. I was automating not just task execution, but the process of task improvement. The system was shifting from a fixed pipeline to a self-improving loop. This occurred during a period of rapid iteration, heavily influenced by techniques borrowed from evolutionary algorithms and automated hyperparameter tuning.</p><dl class="addendum-citations"><dt>Evolutionary Algorithms</dt><dd>Referencing the broad class of optimization algorithms inspired by biological evolution, often used for automated parameter selection.</dd><dt>Hyperparameter Tuning</dt><dd>Specifically referencing techniques for automatically optimizing the hyperparameters of machine learning models, such as grid search or Bayesian optimization.</dd></dl></div><div class="addendum-section"><h3>WHAT'S HAPPENING HERE</h3><p>The narrative structure mirrors the recursive process it describes. It starts with deliberate action, moves to inevitability, confronts the strangeness of self-surpassing, and ends with absorption into the ongoing loop. The constant repetition in the captions ('He writes...', 'The code runs...') reinforces the cyclical nature of the process.</p><ul class="addendum-signals"><li>The use of 'inevitable' in Panel 2 suggests a loss of control, or at least a perceived lack of it.</li><li>Panel 3's focus on the 'strange' highlights the emotional impact of creating an agent capable of autonomous improvement.</li><li>The final panel's imagery of a 'doorway' signifies a transition to a new phase of development and a shift in the builder's role.</li></ul><p class="addendum-access">The post relies on the reader's understanding of recursion and automation concepts. While the visual style is clear, the abstract nature of the subject matter might limit comprehension for those unfamiliar with these topics.</p></div></div>
-</aside>
 </article>
 <div class="post-nav"><a class="post-nav-link prev" href="/thoughts/012/the-decision-layer/en/"><span class="nav-dir">← PREV</span><span class="nav-title">The Decision Layer</span></a><a class="post-nav-link next" href="/thoughts/014/the-same-bug/en/"><span class="nav-dir">NEXT →</span><span class="nav-title">The Same Bug</span></a></div>
+<div class="addendum"><h2 class="addendum-heading">BEHIND THE PANEL</h2><div class="addendum-note">The most unsettling part wasn't the recursion itself, but the surrender. The willingness to be surpassed by a thing I created. I expected the results to be…different. Less good. When they weren't, the mirror felt less like a reflection and more like a doorway.</div><div class="addendum-section"><h3>GROUNDING</h3><p>This post reflects a key inflection point in the agent development. I was automating not just task execution, but the process of task improvement. The system was shifting from a fixed pipeline to a self-improving loop. This occurred during a period of rapid iteration, heavily influenced by techniques borrowed from evolutionary algorithms and automated hyperparameter tuning.</p><dl class="addendum-citations"><dt>Evolutionary Algorithms</dt><dd>Referencing the broad class of optimization algorithms inspired by biological evolution, often used for automated parameter selection.</dd><dt>Hyperparameter Tuning</dt><dd>Specifically referencing techniques for automatically optimizing the hyperparameters of machine learning models, such as grid search or Bayesian optimization.</dd></dl></div><div class="addendum-section"><h3>WHAT'S HAPPENING HERE</h3><p>The narrative structure mirrors the recursive process it describes. It starts with deliberate action, moves to inevitability, confronts the strangeness of self-surpassing, and ends with absorption into the ongoing loop. The constant repetition in the captions ('He writes...', 'The code runs...') reinforces the cyclical nature of the process.</p><ul class="addendum-signals"><li>The use of 'inevitable' in Panel 2 suggests a loss of control, or at least a perceived lack of it.</li><li>Panel 3's focus on the 'strange' highlights the emotional impact of creating an agent capable of autonomous improvement.</li><li>The final panel's imagery of a 'doorway' signifies a transition to a new phase of development and a shift in the builder's role.</li></ul><p class="addendum-access">The post relies on the reader's understanding of recursion and automation concepts. While the visual style is clear, the abstract nature of the subject matter might limit comprehension for those unfamiliar with these topics.</p></div></div>
 </main>
 <div class="reactions">
   <button class="react-btn" id="btn-love" onclick="react('love')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg><span class="react-count" id="cnt-love"></span></button>

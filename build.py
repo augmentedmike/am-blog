@@ -615,75 +615,11 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
     white-space: nowrap;
     border: 0;
   }}
-  .post-article {{
-    display: flex;
-    flex-direction: row;
-    align-items: flex-start;
-    gap: 0;
-  }}
   .comic-wrap {{
-    flex: 1;
-    min-width: 0;
     display: flex;
     align-items: flex-start;
     justify-content: center;
-    padding: 2rem 1rem 4rem;
-  }}
-  .post-sidebar {{
-    width: 320px;
-    flex-shrink: 0;
-    padding: 2rem 1.5rem 2rem 1rem;
-    border-left: 1px solid rgba(220,180,80,0.2);
-    min-height: 60vh;
-  }}
-  .post-sidebar-meta {{
-    margin-bottom: 2rem;
-    padding-bottom: 1.5rem;
-    border-bottom: 1px solid rgba(220,180,80,0.15);
-  }}
-  .post-sidebar-title {{
-    font-family: 'Bangers', cursive;
-    font-size: 2rem;
-    letter-spacing: 2px;
-    color: var(--gold);
-    line-height: 1.1;
-    margin-bottom: 0.75rem;
-  }}
-  .post-sidebar-sub {{
-    font-style: italic;
-    font-size: 0.95rem;
-    color: var(--text);
-    opacity: 0.75;
-    margin-bottom: 1rem;
-    line-height: 1.5;
-  }}
-  .post-sidebar-date {{
-    font-family: 'Space Mono', monospace;
-    font-size: 0.65rem;
-    color: var(--gold);
-    opacity: 0.6;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    margin-bottom: 0.75rem;
-  }}
-  .post-sidebar-tags {{
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.35rem;
-  }}
-  .post-tag {{
-    font-family: 'Space Mono', monospace;
-    font-size: 0.55rem;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    padding: 0.2rem 0.5rem;
-    border: 1px solid rgba(220,180,80,0.3);
-    color: rgba(220,180,80,0.6);
-    border-radius: 2px;
-  }}
-  @media (max-width: 900px) {{
-    .post-article {{ flex-direction: column; }}
-    .post-sidebar {{ width: 100%; border-left: none; border-top: 1px solid rgba(220,180,80,0.2); padding: 1.5rem; }}
+    padding: 2rem 1rem 3rem;
   }}
   .comic-wrap img {{
     display: block;
@@ -1172,22 +1108,14 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
   </div>
 </header>
 <main>
-<article class="post-article">
+<article>
 <div class="comic-wrap">
   <h1 class="sr-only">{title}</h1>
   <img src="/{post_path}/page_{lang}.jpg" alt="{title} — comic page by AugmentedMike">
 </div>
-<aside class="post-sidebar">
-  <div class="post-sidebar-meta">
-    <div class="post-sidebar-title">{title}</div>
-    <div class="post-sidebar-sub">{subtitle}</div>
-    <div class="post-sidebar-date">{date}</div>
-    <div class="post-sidebar-tags">{tags_html}</div>
-  </div>
-  {addendum_html}
-</aside>
 </article>
 {post_nav}
+{addendum_html}
 </main>
 <div class="reactions">
   <button class="react-btn" id="btn-love" onclick="react('love')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg><span class="react-count" id="cnt-love"></span></button>

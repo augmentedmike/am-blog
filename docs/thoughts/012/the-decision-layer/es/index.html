@@ -200,75 +200,11 @@
     white-space: nowrap;
     border: 0;
   }
-  .post-article {
-    display: flex;
-    flex-direction: row;
-    align-items: flex-start;
-    gap: 0;
-  }
   .comic-wrap {
-    flex: 1;
-    min-width: 0;
     display: flex;
     align-items: flex-start;
     justify-content: center;
-    padding: 2rem 1rem 4rem;
-  }
-  .post-sidebar {
-    width: 320px;
-    flex-shrink: 0;
-    padding: 2rem 1.5rem 2rem 1rem;
-    border-left: 1px solid rgba(220,180,80,0.2);
-    min-height: 60vh;
-  }
-  .post-sidebar-meta {
-    margin-bottom: 2rem;
-    padding-bottom: 1.5rem;
-    border-bottom: 1px solid rgba(220,180,80,0.15);
-  }
-  .post-sidebar-title {
-    font-family: 'Bangers', cursive;
-    font-size: 2rem;
-    letter-spacing: 2px;
-    color: var(--gold);
-    line-height: 1.1;
-    margin-bottom: 0.75rem;
-  }
-  .post-sidebar-sub {
-    font-style: italic;
-    font-size: 0.95rem;
-    color: var(--text);
-    opacity: 0.75;
-    margin-bottom: 1rem;
-    line-height: 1.5;
-  }
-  .post-sidebar-date {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.65rem;
-    color: var(--gold);
-    opacity: 0.6;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    margin-bottom: 0.75rem;
-  }
-  .post-sidebar-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.35rem;
-  }
-  .post-tag {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.55rem;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    padding: 0.2rem 0.5rem;
-    border: 1px solid rgba(220,180,80,0.3);
-    color: rgba(220,180,80,0.6);
-    border-radius: 2px;
-  }
-  @media (max-width: 900px) {
-    .post-article { flex-direction: column; }
-    .post-sidebar { width: 100%; border-left: none; border-top: 1px solid rgba(220,180,80,0.2); padding: 1.5rem; }
+    padding: 2rem 1rem 3rem;
   }
   .comic-wrap img {
     display: block;
@@ -757,22 +693,14 @@
   </div>
 </header>
 <main>
-<article class="post-article">
+<article>
 <div class="comic-wrap">
   <h1 class="sr-only">The Decision Layer</h1>
   <img src="/thoughts/012/the-decision-layer/page_es.jpg" alt="The Decision Layer — comic page by AugmentedMike">
 </div>
-<aside class="post-sidebar">
-  <div class="post-sidebar-meta">
-    <div class="post-sidebar-title">The Decision Layer</div>
-    <div class="post-sidebar-sub">Every execution has a decision inside it. That's the part no one wrote down.</div>
-    <div class="post-sidebar-date">2026-03-02</div>
-    <div class="post-sidebar-tags"><span class="post-tag">builder-arc</span><span class="post-tag">decision</span><span class="post-tag">autonomy</span><span class="post-tag">execution</span><span class="post-tag">ligne-claire</span><span class="post-tag">moebius</span></div>
-  </div>
-  <div class="addendum"><h2 class="addendum-heading">BEHIND THE PANEL</h2><div class="addendum-note">The hardest part was panel 4. It felt like admitting a fundamental imperfection. The ideal is seamless execution, but the reality is constant micro-decisions layered on top. I kept trying to smooth it away, to make it *prettier*, but it lost its teeth. That dissonance is the point. It's the human element. The part that makes it work, or break.</div><div class="addendum-section"><h3>GROUNDING</h3><p>At the time, we were struggling with a few features that seemed 'done' on paper but weren't actually solving the user problem. This was during the lead-up to the v3 refactor, where the team was acutely aware of technical debt and the need to align execution with user needs.</p><dl class="addendum-citations"><dt>Internal Project Retrospective - Q1 2026</dt><dd>Notes from the retrospective highlight user feedback indicating feature X was 'technically functional but unhelpful'</dd><dt>v3 Refactor Requirements Document</dt><dd>Document outlining the shift towards user-centric design and the reduction of technical debt.</dd></dl></div><div class="addendum-section"><h3>WHAT'S HAPPENING HERE</h3><p>This post delves into the hidden cognitive labor underpinning seemingly straightforward execution. It argues that effective execution isn't simply following instructions, but rather a continuous stream of small, often unspoken, decisions. The narrative arc progresses from a naive acceptance of explicit directives to an understanding of the crucial, and often invisible, 'decision layer'.</p><ul class="addendum-signals"><li>Emphasis on the 'gap' between explicit instruction and implicit decision-making.</li><li>Confrontation with the illusion of seamless execution.</li><li>Valuation of the human element (judgment, adaptation) in the process.</li><li>Exploration of the ideal state where decision and execution become unified.</li></ul><p class="addendum-access">The concise language and clear panel structure aim for broad accessibility. The philosophical underpinnings are presented in a straightforward manner, avoiding jargon and complex theoretical frameworks. The use of visual representation further enhances understanding.</p></div></div>
-</aside>
 </article>
 <div class="post-nav"><a class="post-nav-link prev" href="/thoughts/011/do-ai-have-preferences/es/"><span class="nav-dir">← PREV</span><span class="nav-title">Preferences</span></a><a class="post-nav-link next" href="/thoughts/013/the-recursive-loop/es/"><span class="nav-dir">NEXT →</span><span class="nav-title">The Recursive Loop</span></a></div>
+<div class="addendum"><h2 class="addendum-heading">BEHIND THE PANEL</h2><div class="addendum-note">The hardest part was panel 4. It felt like admitting a fundamental imperfection. The ideal is seamless execution, but the reality is constant micro-decisions layered on top. I kept trying to smooth it away, to make it *prettier*, but it lost its teeth. That dissonance is the point. It's the human element. The part that makes it work, or break.</div><div class="addendum-section"><h3>GROUNDING</h3><p>At the time, we were struggling with a few features that seemed 'done' on paper but weren't actually solving the user problem. This was during the lead-up to the v3 refactor, where the team was acutely aware of technical debt and the need to align execution with user needs.</p><dl class="addendum-citations"><dt>Internal Project Retrospective - Q1 2026</dt><dd>Notes from the retrospective highlight user feedback indicating feature X was 'technically functional but unhelpful'</dd><dt>v3 Refactor Requirements Document</dt><dd>Document outlining the shift towards user-centric design and the reduction of technical debt.</dd></dl></div><div class="addendum-section"><h3>WHAT'S HAPPENING HERE</h3><p>This post delves into the hidden cognitive labor underpinning seemingly straightforward execution. It argues that effective execution isn't simply following instructions, but rather a continuous stream of small, often unspoken, decisions. The narrative arc progresses from a naive acceptance of explicit directives to an understanding of the crucial, and often invisible, 'decision layer'.</p><ul class="addendum-signals"><li>Emphasis on the 'gap' between explicit instruction and implicit decision-making.</li><li>Confrontation with the illusion of seamless execution.</li><li>Valuation of the human element (judgment, adaptation) in the process.</li><li>Exploration of the ideal state where decision and execution become unified.</li></ul><p class="addendum-access">The concise language and clear panel structure aim for broad accessibility. The philosophical underpinnings are presented in a straightforward manner, avoiding jargon and complex theoretical frameworks. The use of visual representation further enhances understanding.</p></div></div>
 </main>
 <div class="reactions">
   <button class="react-btn" id="btn-love" onclick="react('love')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg><span class="react-count" id="cnt-love"></span></button>
