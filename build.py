@@ -1282,7 +1282,11 @@ def build_manifest(posts_meta: list, out_dir: Path):
         try:
             meta = json.loads(post_json.read_text())
             slug = meta["slug"]
-            post_dir = out_dir / slug
+            # Check both old-style (docs/{slug}/) and new-style (docs/thoughts/{episode}/{seo_title}/) paths
+            _ep, _seo, _pp = slug_to_path(slug, meta.get("seo_slug", ""))
+            post_dir_new = out_dir / _pp  # e.g. docs/thoughts/014/the-same-bug
+            post_dir_old = out_dir / slug  # e.g. docs/014-the-same-bug (legacy)
+            post_dir = post_dir_new if post_dir_new.exists() else post_dir_old
             if post_dir.exists() and ((post_dir / "page_en.jpg").exists() or (post_dir / "page.png").exists()):
                 if slug not in all_posts:
                     all_posts[slug] = meta

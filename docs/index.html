@@ -194,13 +194,12 @@
     const res = await fetch('/posts-manifest.json');
     const data = await res.json();
     const posts = data.posts
-      .filter(p => p.date <= today)
       .sort((a, b) => b.date.localeCompare(a.date));
 
     const grid = document.getElementById('grid');
     grid.innerHTML = posts.map(p => {
       const num = p.slug.split('-')[0];
-      const thumb = `/thoughts/${num.replace(/^0+/, '')}/${p.seo_path.split('/').slice(2).join('/')}/thumb.jpg`;
+      const thumb = `/${p.seo_path}/thumb.jpg`;
       const url = `/${p.seo_path}/en/`;
       return `<a class="card" href="${url}">
         <img class="card-thumb" src="${thumb}" alt="${p.title}" loading="lazy" onerror="this.style.display='none'">
