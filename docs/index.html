@@ -83,7 +83,7 @@
     margin-bottom: 3rem;
   }
   .featured-card:hover { box-shadow: 0 0 50px rgba(220,180,80,0.18); border-color: var(--gold); }
-  .featured-card img { width: 100%; display: block; aspect-ratio: 0.647; object-fit: cover; }
+  .featured-card img { width: 100%; height: 100%; display: block; object-fit: cover; min-height: 280px; }
   .featured-body {
     padding: 2.5rem 2rem;
     display: flex; flex-direction: column; justify-content: center; gap: 1rem;
@@ -222,11 +222,10 @@ function renderPosts() {
   const rest = allPosts.slice(1);
 
   const featuredUrl = '/' + featured.seo_path + '/' + lang + '/';
-  const featuredThumb = '/' + featured.seo_path + '/thumb.jpg';
+  const featuredFrame = '/' + featured.seo_path + '/panels/panel_01.png';
 
   document.getElementById('featured-wrap').innerHTML = `
     <a class="featured-card" href="${featuredUrl}">
-      <img src="${featuredThumb}" alt="${featured.title}" loading="eager">
       <div class="featured-body">
         <span class="featured-label">★ Latest Issue</span>
         <div class="featured-meta">${featured.date}</div>
@@ -235,6 +234,7 @@ function renderPosts() {
         ${featured.addendum_note ? `<div class="featured-note">${featured.addendum_note}</div>` : ''}
         <span class="read-btn">READ →</span>
       </div>
+      <img src="${featuredFrame}" alt="${featured.title}" loading="eager">
     </a>`;
 
   document.getElementById('posts-grid').innerHTML = rest.map(p => {
