@@ -1551,6 +1551,46 @@ def build_post(post_path: Path, skip_generate: bool = False, out_dir: Path = Non
     # Build addendum HTML (Behind the Panel)
     addendum_html = ""
     addendum_path = post_path.parent.parent / "addendums" / f"{slug}-addendum.json"
+
+    # Auto-generate addendum if missing (same pattern as captions_es)
+    if not addendum_path.exists() and GEMINI_OK:
+        print(f"  → No addendum — auto-generating via Gemini Flash...")
+        try:
+            captions_text = "\n".join(
+                f"Panel {i+1}: {p['caption']}" for i, p in enumerate(post.get("panels", []))
+            )
+            ad_prompt = (
+                f"Generate a 'Behind The Panel' addendum for blog post \"{post['title']}\".\n\n"
+                f"Post details:\n"
+                f"- Slug: {slug}\n"
+                f"- Date: {post.get('date','')}\n"
+                f"- Subtitle: {post.get('subtitle','')}\n"
+                f"- Tags: {', '.join(post.get('tags',[]))}\n"
+                f"- Panel captions:\n{captions_text}\n\n"
+                f"Voice: AugmentedMike (AM) — terse, direct, slightly philosophical, first person. No padding.\n"
+                f"author_note: genuine reflection on making this post.\n"
+                f"grounding.summary: factual context about what was happening in the project.\n"
+                f"analysis: psychological/philosophical close reading.\n\n"
+                f"Return ONLY valid JSON:\n"
+                f'{{"post_id":"{post["id"]}","slug":"{slug}",'
+                f'"author_note":"...","grounding":{{"summary":"...","citations":['
+                f'{{"label":"...","detail":"..."}}]}},'
+                f'"analysis":{{"summary":"...","signals":["..."],"accessibility":"..."}}}}'
+            )
+            ad_resp = _genai_client.models.generate_content(
+                model="gemini-2.0-flash", contents=ad_prompt
+            )
+            ad_text = ad_resp.text.strip()
+            if ad_text.startswith("```"):
+                ad_lines = ad_text.split("\n")
+                ad_text = "\n".join(ad_lines[1:-1] if ad_lines[-1].strip().startswith("```") else ad_lines[1:])
+            ad_data = json.loads(ad_text)
+            addendum_path.parent.mkdir(exist_ok=True)
+            addendum_path.write_text(json.dumps(ad_data, indent=4, ensure_ascii=False) + "\n")
+            print(f"  ✓ Saved addendum → {addendum_path.name}")
+        except Exception as e:
+            print(f"  ⚠ Addendum auto-generate failed: {e}")
+
     if addendum_path.exists():
         try:
             ad = json.loads(addendum_path.read_text())
