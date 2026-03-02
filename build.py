@@ -150,6 +150,30 @@ CHARACTER_PREFIX = (
     "This exact character must appear in this panel. "
 )
 
+def _auto_translate_captions(captions_en: list, title: str) -> list:
+    """Translate English captions to Spanish via Gemini Flash.
+    Saves cost: uses gemini-2.0-flash, not the image model."""
+    if not GEMINI_OK:
+        raise RuntimeError("Gemini unavailable — cannot auto-translate")
+    numbered = "\n".join(f"{i+1}. {c}" for i, c in enumerate(captions_en))
+    prompt = (
+        f"Post: {title}\n\n"
+        f"Translate these comic panel captions to Spanish. "
+        f"Keep the tone — terse, direct, slightly philosophical.\n"
+        f"{numbered}\n\n"
+        f"Return ONLY a JSON array like: [\"caption1\", \"caption2\", ...]"
+    )
+    resp = _genai_client.models.generate_content(model="gemini-2.0-flash", contents=prompt)
+    text = resp.text.strip()
+    if text.startswith("```"):
+        lines = text.split("\n")
+        text = "\n".join(lines[1:-1] if lines[-1].strip() == "```" else lines[1:])
+    result = json.loads(text)
+    if len(result) != len(captions_en):
+        raise ValueError(f"Expected {len(captions_en)} captions, got {len(result)}")
+    return result
+
+
 def generate_panel_image(prompt: str, output_path: Path, panel_id: int,
                          cost: "CostTracker | None" = None) -> bool:
     """Generate a single panel using Gemini. Returns True on success."""
@@ -1453,7 +1477,17 @@ def build_post(post_path: Path, skip_generate: bool = False, out_dir: Path = Non
 
     # 2. Composite pages — one per language
     captions_en = [p["caption"]    for p in post["panels"][:n_panels]]
-    captions_es = post.get("captions_es") or captions_en  # fall back to EN if no ES
+    if post.get("captions_es"):
+        captions_es = post["captions_es"]
+    elif GEMINI_OK:
+        print(f"  → No captions_es — auto-translating via Gemini Flash...")
+        captions_es = _auto_translate_captions(captions_en, post.get("title", slug))
+        post["captions_es"] = captions_es
+        post_path.write_text(json.dumps(post, indent=4, ensure_ascii=False) + "\n")
+        print(f"  ✓ Saved captions_es → {post_path.name}")
+    else:
+        print(f"  ⚠ WARNING: No captions_es and Gemini unavailable — ES page will use English captions!")
+        captions_es = captions_en
 
     def composite_lang(captions: list, out_jpg: Path):
         tmp_png = out_jpg.with_suffix(".png")
