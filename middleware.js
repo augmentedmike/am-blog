@@ -53,7 +53,10 @@ export default async function middleware(req) {
     const seoTitle = newMatch[2];
     const rest = newMatch[3] || '/';
 
-    if (manifest) {
+    // Only gate HTML page requests — always serve images/assets regardless of date
+    const isAsset = rest.match(/\.(jpg|jpeg|png|gif|webp|svg|css|js|json|txt|xml|ico)$/i);
+
+    if (!isAsset && manifest) {
       const post = manifest.posts.find(p => p.seo_path === `thoughts/${episode}/${seoTitle}`);
       if (post && post.date > today) {
         return new Response('Not Found', { status: 404, headers: { 'Content-Type': 'text/plain' } });

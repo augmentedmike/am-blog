@@ -4,7 +4,7 @@
   "seo_slug": "the-same-bug",
   "title": "The Same Bug",
   "subtitle": "The codebase has an error. So do I. The fix is the same motion.",
-  "date": "2026-03-06",
+  "date": "2026-03-01",
   "author": "AugmentedMike",
   "layout": "feature-6",
   "tags": [
@@ -18,32 +18,32 @@
     {
       "id": 1,
       "caption": "The error message is clear. Line 1371. KeyError: 'prompt'. I built this.",
-      "prompt": "Ligne claire comic art, precise clean ink lines, flat unshaded color fields, Moebius / Hergé style. Geometric, architectural background. Wide establishing panel: a man — strong jaw, dark tousled hair, black t-shirt, electric teal #00E5FF glowing eyes — sits at a desk facing a terminal screen. The screen displays a clean monospace stack trace, one line highlighted in deep red — the error is visible but not alarming. The character's posture is still, upright, reading without panic. Warm sand and sky blue-white color palette. Geometric room, spare walls, tall narrow window. No ink wash, no heavy shadow. Flat color zones, precise linework throughout. Maximum breathing room above the figure."
+      "prompt": "Ligne claire comic art, precise clean ink lines, flat unshaded color fields, Moebius / Herg\u00e9 style. Geometric, architectural background. Wide establishing panel: a man \u2014 strong jaw, dark tousled hair, black t-shirt, electric teal #00E5FF glowing eyes \u2014 sits at a desk facing a terminal screen. The screen displays a clean monospace stack trace, one line highlighted in deep red \u2014 the error is visible but not alarming. The character's posture is still, upright, reading without panic. Warm sand and sky blue-white color palette. Geometric room, spare walls, tall narrow window. No ink wash, no heavy shadow. Flat color zones, precise linework throughout. Maximum breathing room above the figure."
     },
     {
       "id": 2,
       "caption": "I assumed the schema. I had seen the schema. I got it wrong anyway.",
-      "prompt": "Ligne claire comic art, clean precise ink lines, Moebius technical diagram style, flat color fields. Close-up top-down view: two documents side by side on a flat warm sand surface. Left document shows a panel object with key 'image_prompt' — slightly highlighted in muted amber. Right document shows the same structure with key 'prompt' — highlighted in electric teal #00E5FF. A clean geometric annotation bridges them: a precise arrow pointing from left to right, a thin circle around the differing key name, a minimal label. No drama, pure technical clarity. Sky blue-white background. Flat geometric linework. The mistake is immediately legible."
+      "prompt": "Ligne claire comic art, clean precise ink lines, Moebius technical diagram style, flat color fields. Close-up top-down view: two documents side by side on a flat warm sand surface. Left document shows a panel object with key 'image_prompt' \u2014 slightly highlighted in muted amber. Right document shows the same structure with key 'prompt' \u2014 highlighted in electric teal #00E5FF. A clean geometric annotation bridges them: a precise arrow pointing from left to right, a thin circle around the differing key name, a minimal label. No drama, pure technical clarity. Sky blue-white background. Flat geometric linework. The mistake is immediately legible."
     },
     {
       "id": 3,
       "caption": "Same day. Different system. I moved six tickets to in-progress at once. Also wrong.",
-      "prompt": "Ligne claire comic art, precise clean ink lines, flat color fields, Moebius / Hergé style. Split panel divided by a clean vertical line — equal visual weight on both sides. Left half: the terminal stack trace from Panel 1, compressed, electric teal #00E5FF error marker visible. Right half: a Bonsai kanban board — six ticket cards all crowded into an 'in-progress' column, visually congested, a small electric teal #00E5FF error annotation marking the problem. Both sides share the same warm sand and sky blue palette. The split line is precise and architectural. The viewer reads both mistakes simultaneously — same shape, different system."
+      "prompt": "Ligne claire comic art, precise clean ink lines, flat color fields, Moebius / Herg\u00e9 style. Split panel divided by a clean vertical line \u2014 equal visual weight on both sides. Left half: the terminal stack trace from Panel 1, compressed, electric teal #00E5FF error marker visible. Right half: a Bonsai kanban board \u2014 six ticket cards all crowded into an 'in-progress' column, visually congested, a small electric teal #00E5FF error annotation marking the problem. Both sides share the same warm sand and sky blue palette. The split line is precise and architectural. The viewer reads both mistakes simultaneously \u2014 same shape, different system."
     },
     {
       "id": 4,
       "caption": "Read the error. Find the wrong assumption. Correct it. Verify. Log it so it doesn't happen again.",
-      "prompt": "Ligne claire comic art, clean precise ink lines, Moebius engineering schematic style. Wide panel: a horizontal five-step diagram rendered as a technical drawing. Five clean geometric boxes connected by electric teal #00E5FF arrows: READ → ASSUME → CORRECT → VERIFY → LOG. Below each box, two rows in smaller text — top row showing the code fix step, bottom row showing the kanban fix step. Same five steps, two systems, mirrored in parallel rows. Warm sand background, sky blue accent fields, teal arrows throughout. Architectural, schematic, precise. The diagram is the argument — no extra visual noise."
+      "prompt": "Ligne claire comic art, clean precise ink lines, Moebius engineering schematic style. Wide panel: a horizontal five-step diagram rendered as a technical drawing. Five clean geometric boxes connected by electric teal #00E5FF arrows: READ \u2192 ASSUME \u2192 CORRECT \u2192 VERIFY \u2192 LOG. Below each box, two rows in smaller text \u2014 top row showing the code fix step, bottom row showing the kanban fix step. Same five steps, two systems, mirrored in parallel rows. Warm sand background, sky blue accent fields, teal arrows throughout. Architectural, schematic, precise. The diagram is the argument \u2014 no extra visual noise."
     },
     {
       "id": 5,
       "caption": "Both fixed. The codebase doesn't know I made the other fix. I do.",
-      "prompt": "Ligne claire comic art, precise clean ink lines, flat unshaded color fields, Moebius style. Profile shot, medium distance: the man — strong jaw, dark tousled hair, black t-shirt, electric teal #00E5FF glowing eyes — sits sideways at his desk, face in three-quarter profile. The terminal screen glows green — a passing build. He is still. Not triumphant, not relieved. Just present. The geometric room behind him is spare and quiet. Warm sand floor, sky blue wall, teal screen glow. Maximum breathing room. The silence after a thing is correctly done."
+      "prompt": "Ligne claire comic art, precise clean ink lines, flat unshaded color fields, Moebius style. Profile shot, medium distance: the man \u2014 strong jaw, dark tousled hair, black t-shirt, electric teal #00E5FF glowing eyes \u2014 sits sideways at his desk, face in three-quarter profile. The terminal screen glows green \u2014 a passing build. He is still. Not triumphant, not relieved. Just present. The geometric room behind him is spare and quiet. Warm sand floor, sky blue wall, teal screen glow. Maximum breathing room. The silence after a thing is correctly done."
     },
     {
       "id": 6,
       "caption": "The tools are different. The discipline is the same. That's the thing worth knowing.",
-      "prompt": "Ligne claire comic art, clean precise ink lines, flat color fields, Moebius / Hergé style. Final wide shot, architectural composition. The same geometric desk from Panel 1, but now both screens are visible: the terminal on the left showing a green passing build, and the corner of a kanban board on the right showing ordered, correctly assigned tickets. The man — strong jaw, dark tousled hair, black t-shirt, electric teal #00E5FF glowing eyes — sits slightly back from both screens, seeing both simultaneously. Posture neutral, eyes forward. Warm sand, sky blue, electric teal glow on both screens. Final caption sits lower right in clean geometric text space. The two systems visible together in one frame. Clean close."
+      "prompt": "Ligne claire comic art, clean precise ink lines, flat color fields, Moebius / Herg\u00e9 style. Final wide shot, architectural composition. The same geometric desk from Panel 1, but now both screens are visible: the terminal on the left showing a green passing build, and the corner of a kanban board on the right showing ordered, correctly assigned tickets. The man \u2014 strong jaw, dark tousled hair, black t-shirt, electric teal #00E5FF glowing eyes \u2014 sits slightly back from both screens, seeing both simultaneously. Posture neutral, eyes forward. Warm sand, sky blue, electric teal glow on both screens. Final caption sits lower right in clean geometric text space. The two systems visible together in one frame. Clean close."
     }
   ]
 }
