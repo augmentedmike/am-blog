@@ -232,14 +232,15 @@ function renderPosts() {
   const rest = allPosts.slice(1);
 
   const featuredUrl = '/' + featured.seo_path + '/' + lang + '/';
-  const featuredPanel = '/' + featured.seo_path + '/panels/panel_01.png';
+  const featuredPage = '/' + featured.seo_path + '/page_' + lang + '.jpg';
   const featuredThumb = '/' + featured.seo_path + '/thumb.jpg';
+  const featuredPanel = '/' + featured.seo_path + '/panels/panel_01.png';
 
   document.getElementById('featured-wrap').innerHTML = `
     <a class="featured-card" href="${featuredUrl}">
       <div class="featured-img-wrap">
-        <img src="${featuredPanel}" alt="${featured.title}" loading="eager"
-             onerror="this.onerror=null;this.src='${featuredThumb}';">
+        <img src="${featuredPage}" alt="${featured.title}" loading="eager"
+             onerror="if(!this.dataset.fb){this.dataset.fb='1';this.src='${featuredThumb}';}else{this.onerror=null;this.src='${featuredPanel}';}">
       </div>
       <div class="featured-body">
         <span class="featured-label">★ Latest Issue</span>
