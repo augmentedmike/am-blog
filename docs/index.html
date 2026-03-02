@@ -228,7 +228,7 @@ function renderPosts() {
   const rest = allPosts.slice(1);
 
   const featuredUrl = '/' + featured.seo_path + '/' + lang + '/';
-  const featuredImg = '/' + featured.seo_path + '/thumb.jpg';
+  const featuredImg = '/' + featured.seo_path + '/page_' + lang + '.jpg';
 
   document.getElementById('featured-wrap').innerHTML = `
     <a class="featured-card" href="${featuredUrl}">
