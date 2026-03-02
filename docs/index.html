@@ -97,6 +97,7 @@
     letter-spacing: 3px; line-height: 1; color: var(--text);
   }
   .featured-sub { font-style: italic; font-size: 1.1rem; color: var(--gold); opacity: 0.9; }
+  .featured-note { font-size: 0.9rem; color: var(--text); opacity: 0.65; line-height: 1.6; border-left: 2px solid rgba(220,180,80,0.3); padding-left: 0.75rem; margin-top: 0.25rem; }
   .featured-meta {
     font-family: 'Space Mono', monospace; font-size: 0.65rem;
     color: var(--gold); opacity: 0.6; letter-spacing: 2px; text-transform: uppercase;
@@ -231,6 +232,7 @@ function renderPosts() {
         <div class="featured-meta">${featured.date}</div>
         <div class="featured-title">${featured.title}</div>
         <div class="featured-sub">${featured.subtitle || ''}</div>
+        ${featured.addendum_note ? `<div class="featured-note">${featured.addendum_note}</div>` : ''}
         <a class="read-btn" href="${featuredUrl}">READ →</a>
       </div>
     </a>`;
