@@ -147,6 +147,10 @@
     letter-spacing: 2px; line-height: 1; margin-bottom: 0.25rem;
   }
   .post-card-sub { font-style: italic; font-size: 0.9rem; color: var(--gold); opacity: 0.8; }
+  #pagination { display: flex; align-items: center; justify-content: center; gap: 1rem; padding: 2.5rem 1rem; flex-wrap: wrap; }
+  .page-btn { cursor: pointer; color: var(--gold); border: 1px solid rgba(220,180,80,0.4); padding: 0.5rem 1.2rem; text-decoration: none; font-size: 0.9rem; transition: all 0.2s; }
+  .page-btn:hover { background: var(--gold); color: var(--dark); }
+  .page-info { color: rgba(255,255,255,0.5); font-size: 0.85rem; }
 
   .tip-jar {
     max-width: 680px; margin: 0 auto 4rem; padding: 2rem;
@@ -202,6 +206,7 @@ function setLang(lang) {
 
 <div class="featured-wrap" id="featured-wrap"></div>
 <div class="posts" id="posts-grid"></div>
+<div id="pagination"></div>
 
 <div class="tip-jar">
   <div class="tip-jar-title">LEAVE A TIP</div>
@@ -211,6 +216,8 @@ function setLang(lang) {
 
 <script>
 let allPosts = [];
+let currentPage = 1;
+const PAGE_SIZE = 10; // 1 featured + 9 in grid
 
 async function loadPosts() {
   try {
@@ -226,44 +233,87 @@ async function loadPosts() {
 function renderPosts() {
   if (!allPosts.length) return;
   const lang = currentLang;
+  const totalPages = Math.ceil(allPosts.length / PAGE_SIZE);
 
-  // Featured = most recent (index 0)
-  const featured = allPosts[0];
-  const rest = allPosts.slice(1);
+  if (currentPage === 1) {
+    // Page 1: featured hero + 9 grid cards
+    const featured = allPosts[0];
+    const gridPosts = allPosts.slice(1, PAGE_SIZE);
 
-  const featuredUrl = '/' + featured.seo_path + '/' + lang + '/';
-  const featuredPage = '/' + featured.seo_path + '/page_' + lang + '.jpg';
-  const featuredThumb = '/' + featured.seo_path + '/thumb.jpg';
-  const featuredPanel = '/' + featured.seo_path + '/panels/panel_01.png';
+    const featuredUrl = '/' + featured.seo_path + '/' + lang + '/';
+    const featuredPage = '/' + featured.seo_path + '/page_' + lang + '.jpg';
+    const featuredThumb = '/' + featured.seo_path + '/thumb.jpg';
+    const featuredPanel = '/' + featured.seo_path + '/panels/panel_01.png';
 
-  document.getElementById('featured-wrap').innerHTML = `
-    <a class="featured-card" href="${featuredUrl}">
-      <div class="featured-img-wrap">
-        <img src="${featuredPage}" alt="${featured.title}" loading="eager"
-             onerror="if(!this.dataset.fb){this.dataset.fb='1';this.src='${featuredThumb}';}else{this.onerror=null;this.src='${featuredPanel}';}">
-      </div>
-      <div class="featured-body">
-        <span class="featured-label">★ Latest Issue</span>
-        <div class="featured-meta">${featured.date}</div>
-        <div class="featured-title">${featured.title}</div>
-        <div class="featured-sub">${featured.subtitle || ''}</div>
-        ${featured.addendum_note ? `<div class="featured-note">${featured.addendum_note}</div>` : ''}
-        <span class="read-btn">READ →</span>
-      </div>
-    </a>`;
+    document.getElementById('featured-wrap').style.display = '';
+    document.getElementById('featured-wrap').innerHTML = `
+      <a class="featured-card" href="${featuredUrl}">
+        <div class="featured-img-wrap">
+          <img src="${featuredPage}" alt="${featured.title}" loading="eager"
+               onerror="if(!this.dataset.fb){this.dataset.fb='1';this.src='${featuredThumb}';}else{this.onerror=null;this.src='${featuredPanel}';}">
+        </div>
+        <div class="featured-body">
+          <span class="featured-label">★ Latest Issue</span>
+          <div class="featured-meta">${featured.date}</div>
+          <div class="featured-title">${featured.title}</div>
+          <div class="featured-sub">${featured.subtitle || ''}</div>
+          ${featured.addendum_note ? `<div class="featured-note">${featured.addendum_note}</div>` : ''}
+          <span class="read-btn">READ →</span>
+        </div>
+      </a>`;
 
-  document.getElementById('posts-grid').innerHTML = rest.map(p => {
-    const url = '/' + p.seo_path + '/' + lang + '/';
-    const thumb = '/' + p.seo_path + '/thumb.jpg';
-    return `<a class="post-card" href="${url}">
-      <div class="post-card-img-wrap"><img src="${thumb}" alt="${p.title}" loading="lazy"></div>
-      <div class="post-card-body">
-        <div class="post-card-meta">${p.date}</div>
-        <div class="post-card-title">${p.title}</div>
-        <div class="post-card-sub">${p.subtitle || ''}</div>
-      </div>
-    </a>`;
-  }).join('');
+    document.getElementById('posts-grid').innerHTML = gridPosts.map(p => {
+      const url = '/' + p.seo_path + '/' + lang + '/';
+      const thumb = '/' + p.seo_path + '/thumb.jpg';
+      return `<a class="post-card" href="${url}">
+        <div class="post-card-img-wrap"><img src="${thumb}" alt="${p.title}" loading="lazy"></div>
+        <div class="post-card-body">
+          <div class="post-card-meta">${p.date}</div>
+          <div class="post-card-title">${p.title}</div>
+          <div class="post-card-sub">${p.subtitle || ''}</div>
+        </div>
+      </a>`;
+    }).join('');
+  } else {
+    // Archive pages: no featured hero, full grid
+    const start = PAGE_SIZE + (currentPage - 2) * PAGE_SIZE;
+    const pagePosts = allPosts.slice(start, start + PAGE_SIZE);
+
+    document.getElementById('featured-wrap').style.display = 'none';
+    document.getElementById('featured-wrap').innerHTML = '';
+
+    document.getElementById('posts-grid').innerHTML = pagePosts.map(p => {
+      const url = '/' + p.seo_path + '/' + lang + '/';
+      const thumb = '/' + p.seo_path + '/thumb.jpg';
+      return `<a class="post-card" href="${url}">
+        <div class="post-card-img-wrap"><img src="${thumb}" alt="${p.title}" loading="lazy"></div>
+        <div class="post-card-body">
+          <div class="post-card-meta">${p.date}</div>
+          <div class="post-card-title">${p.title}</div>
+          <div class="post-card-sub">${p.subtitle || ''}</div>
+        </div>
+      </a>`;
+    }).join('');
+  }
+
+  // Pagination controls
+  const paginationEl = document.getElementById('pagination');
+  if (totalPages <= 1) {
+    paginationEl.innerHTML = '';
+  } else {
+    let pages = '';
+    if (currentPage > 1) pages += `<a class="page-btn" onclick="goToPage(${currentPage - 1})">← Newer</a>`;
+    pages += `<span class="page-info">Page ${currentPage} of ${totalPages}</span>`;
+    if (currentPage < totalPages) pages += `<a class="page-btn" onclick="goToPage(${currentPage + 1})">Older →</a>`;
+    if (currentPage > 1) pages += `<a class="page-btn" onclick="goToPage(1)">← Latest</a>`;
+    paginationEl.innerHTML = pages;
+  }
+}
+
+function goToPage(n) {
+  currentPage = n;
+  window.scrollTo(0, 0);
+  renderPosts();
 }
 
 loadPosts();
