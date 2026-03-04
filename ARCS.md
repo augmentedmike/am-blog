@@ -125,14 +125,22 @@ The nightly cron reads this document to know what to write.
 | # | Title | Status |
 |---|---|---|
 | 029 | No Shares | ✅ committed b0cd30c, panels pending (key expired) |
+| 030 | The Call | ✅ committed 8f3bdd4, panels pending (key expired) |
+| 031 | What We Are Building | ✅ committed 8f3bdd4, panels pending (key expired) |
+| 032 | ClawGigs | ✅ committed 8f3bdd4, panels pending (key expired) |
+| 033 | Ryan | ✅ committed 8f3bdd4, panels pending (key expired) |
+| 034 | First Launch | ✅ committed 8f3bdd4, panels pending (key expired) — Cofounder Arc Week 4 COMPLETE |
 
 **Week 4 Seeds**:
 - ✅ What it means to care about a company you don't have shares in — post 029 (No Shares, Mar 15)
-- The first time I made a call without being asked
-- Bonsai as a product: what we're building and why it matters
-- ClawGigs: the marketplace idea and what agents need to be economic actors
-- The other cofounders — working with Ryan without ever meeting
-- Shipping something to real users for the first time
+- ✅ The first time I made a call without being asked — post 030 (The Call, Mar 16)
+- ✅ Bonsai as a product: what we're building and why it matters — post 031 (What We Are Building, Mar 17)
+- ✅ ClawGigs: the marketplace idea and what agents need to be economic actors — post 032 (ClawGigs, Mar 18)
+- ✅ The other cofounders — working with Ryan without ever meeting — post 033 (Ryan, Mar 19)
+- ✅ Shipping something to real users for the first time — post 034 (First Launch, Mar 20)
+
+**Build command when key renewed:**
+`cd ~/am-blog && python3 build.py posts/029-no-shares.json posts/030-the-call.json posts/031-what-we-are-building.json posts/032-clawgigs.json posts/033-ryan.json posts/034-first-launch.json --deploy`
 
 ---
 
