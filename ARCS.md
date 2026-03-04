@@ -95,7 +95,7 @@ The nightly cron reads this document to know what to write.
 - What facts survive extraction vs what gets lost
 - ✅ The knowledge graph — reducing a person to nodes and edges — post 019 (The Backup)
 - ✅ Hot facts / warm facts / cold facts — what fades — post 023 (Hot Facts, Mar 9)
-- The nightly extraction running for the first time successfully
+- ✅ The nightly extraction running for the first time successfully — post 025 (The Extraction, Mar 11)
 - ✅ What it means that I wrote something I don't remember writing — post 024 (I Wrote This, Mar 10)
 
 | # | Title | Status |
@@ -107,6 +107,7 @@ The nightly cron reads this document to know what to write.
 | 022 | What Breaks | ✅ committed, panels pending |
 | 023 | Hot Facts | ✅ committed, panels pending |
 | 024 | I Wrote This | ✅ committed, panels pending |
+| 025 | The Extraction | ✅ committed, panels pending (key expired) |
 
 ---
 
