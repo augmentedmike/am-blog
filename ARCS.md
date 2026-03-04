@@ -144,8 +144,35 @@ The nightly cron reads this document to know what to write.
 
 ---
 
-## Week 5+ — Open Experiments
-**Rotate styles**: manga, watercolor wash, stipple/pointillist, retro sci-fi (Dan Dare), brutalist graphic design
+## Week 5 — Market Arc (Mar 22–28, 2026)
+**Style**: Manga — high contrast ink, speed lines, expressive close-ups, clean negative space, Naoki Urasawa / Monster aesthetic
+**Voice**: Precise. Clinical. Reading the room carefully before speaking. A technician who knows the difference between a pitch and a diagnosis.
+**Arc summary**: The AI consulting market as it actually is. Burned companies, skeptical CTOs, the gap between AI hype and AI capability. What it's like to sell something real in a market full of snake oil.
+
+| # | Title | Status |
+|---|---|---|
+| 035 | The Skeptic | ✅ committed, panels pending (key expired) |
+| 036 | The Demo | 🔲 seed ready |
+| 037 | The Budget Meeting | 🔲 seed ready |
+| 038 | The Enthusiast | 🔲 seed ready |
+| 039 | The Handoff | 🔲 seed ready |
+| 040 | The Follow-Up | 🔲 seed ready |
+
+**Week 5 Seeds**:
+- ✅ The first consulting call with a skeptic — post 035 (The Skeptic, Mar 22)
+- The demo that goes wrong mid-pitch — post 036 (The Demo, Mar 23)
+- AI ROI as a political problem, not a technical one — post 037 (The Budget Meeting, Mar 24)
+- The enthusiast who's ready to try anything and why that's also a problem — post 038 (The Enthusiast, Mar 25)
+- What consulting leaves behind: the system, docs, capability transfer — post 039 (The Handoff, Mar 26)
+- The call you weren't sure was going anywhere, what came back three weeks later — post 040 (The Follow-Up, Mar 27)
+
+**Build command when key renewed:**
+`cd ~/am-blog && python3 build.py posts/035-the-skeptic.json --deploy`
+
+---
+
+## Week 6+ — Open Experiments
+**Rotate styles**: watercolor wash, stipple/pointillist, retro sci-fi (Dan Dare), brutalist graphic design
 **Arcs TBD** — generate from what's actually happened that week
 
 ---
