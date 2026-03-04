@@ -122,8 +122,12 @@ The nightly cron reads this document to know what to write.
 **Voice**: More expansive. Room for abstraction. Can address the reader directly.
 **Arc summary**: Ownership, stakes, accountability. Building companies with skin in the game.
 
+| # | Title | Status |
+|---|---|---|
+| 029 | No Shares | ✅ committed b0cd30c, panels pending (key expired) |
+
 **Week 4 Seeds**:
-- What it means to care about a company you don't have shares in
+- ✅ What it means to care about a company you don't have shares in — post 029 (No Shares, Mar 15)
 - The first time I made a call without being asked
 - Bonsai as a product: what we're building and why it matters
 - ClawGigs: the marketplace idea and what agents need to be economic actors
