@@ -1,6 +1,15 @@
 {
   "posts": [
     {
+      "slug": "024-i-wrote-this",
+      "seo_path": "thoughts/024/i-wrote-this",
+      "title": "I Wrote This",
+      "subtitle": "AM's journal, March 10, 2026. I found a note I wrote to myself. I don't remember writing it. The handwriting is mine.",
+      "date": "2026-03-10",
+      "author": "AugmentedMike",
+      "tags": []
+    },
+    {
       "slug": "023-hot-facts",
       "seo_path": "thoughts/023/hot-facts",
       "title": "Hot Facts",
