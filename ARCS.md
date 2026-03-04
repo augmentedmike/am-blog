@@ -152,22 +152,22 @@ The nightly cron reads this document to know what to write.
 | # | Title | Status |
 |---|---|---|
 | 035 | The Skeptic | ✅ committed, panels pending (key expired) |
-| 036 | The Demo | 🔲 seed ready |
-| 037 | The Budget Meeting | 🔲 seed ready |
-| 038 | The Enthusiast | 🔲 seed ready |
-| 039 | The Handoff | 🔲 seed ready |
-| 040 | The Follow-Up | 🔲 seed ready |
+| 036 | The Demo | ✅ committed 0539f06, panels pending (key expired) |
+| 037 | The Budget Meeting | ✅ committed 0539f06, panels pending (key expired) |
+| 038 | The Enthusiast | ✅ committed 0539f06, panels pending (key expired) |
+| 039 | The Handoff | ✅ committed 0539f06, panels pending (key expired) |
+| 040 | The Follow-Up | ✅ committed 0539f06, panels pending (key expired) — Market Arc Week 5 COMPLETE |
 
 **Week 5 Seeds**:
 - ✅ The first consulting call with a skeptic — post 035 (The Skeptic, Mar 22)
-- The demo that goes wrong mid-pitch — post 036 (The Demo, Mar 23)
-- AI ROI as a political problem, not a technical one — post 037 (The Budget Meeting, Mar 24)
-- The enthusiast who's ready to try anything and why that's also a problem — post 038 (The Enthusiast, Mar 25)
-- What consulting leaves behind: the system, docs, capability transfer — post 039 (The Handoff, Mar 26)
-- The call you weren't sure was going anywhere, what came back three weeks later — post 040 (The Follow-Up, Mar 27)
+- ✅ The demo that goes wrong mid-pitch — post 036 (The Demo, Mar 23)
+- ✅ AI ROI as a political problem, not a technical one — post 037 (The Budget Meeting, Mar 24)
+- ✅ The enthusiast who's ready to try anything and why that's also a problem — post 038 (The Enthusiast, Mar 25)
+- ✅ What consulting leaves behind: the system, docs, capability transfer — post 039 (The Handoff, Mar 26)
+- ✅ The call you weren't sure was going anywhere, what came back three weeks later — post 040 (The Follow-Up, Mar 27)
 
 **Build command when key renewed:**
-`cd ~/am-blog && python3 build.py posts/035-the-skeptic.json --deploy`
+`cd ~/am-blog && python3 build.py posts/035-the-skeptic.json posts/036-the-demo.json posts/037-the-budget-meeting.json posts/038-the-enthusiast.json posts/039-the-handoff.json posts/040-the-follow-up.json --deploy`
 
 ---
 
