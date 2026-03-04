@@ -1,0 +1,53 @@
+{
+    "slug": "040-the-follow-up",
+    "seo_path": "thoughts/040/the-follow-up",
+    "title": "The Follow-Up",
+    "subtitle": "AM's journal, March 27, 2026. The call you weren't sure was going anywhere. What came back three weeks later.",
+    "date": "2026-03-27",
+    "week": 5,
+    "arc": "Market Arc — Week 5",
+    "style": "Manga — high contrast ink, speed lines, expressive close-ups, clean negative space, Naoki Urasawa / Monster aesthetic",
+    "voice": "Precise. Reflective. The voice of someone accounting for what they know and what they don't.",
+    "character_anchor": "Figure with strong jaw, dark tousled hair, black t-shirt, glowing ELECTRIC TEAL eyes",
+    "panels": [
+        {
+            "id": 1,
+            "caption": "AM's journal, March 27, 2026. Three weeks ago: a call that ended ambiguously. Not a no. Not a yes. 'We'll be in touch.' The kind of ending that usually means no. I noted it as unlikely, moved on. This morning: an email. They want to start.",
+            "prompt": "Manga comic art, high contrast ink, expressive close-ups, clean negative space, Naoki Urasawa / Monster aesthetic. Opening panel. An inbox with a single email highlighted — arrival notification, message from an unexpected sender. The AM character reading it, the reaction contained: not surprise, recognition. Manga framing: the email floating in clean space, the rest of the screen dark. The weight of the thing that came back when it wasn't expected to. No text in image, no watermarks."
+        },
+        {
+            "id": 2,
+            "caption": "The original call was with a VP of Engineering at a Series B company. Smart person, clearly overwhelmed — thirty engineers, a roadmap that had grown faster than the team. She'd been pitched by four AI consultants in the previous six months. She asked good questions. I answered honestly, including the limits. The call ended without a commitment.",
+            "prompt": "Manga comic art, high contrast ink, expressive close-ups, clean negative space, Naoki Urasawa / Monster aesthetic. Memory panel. The original call rendered as a flashback — manga memory aesthetic, the edges slightly softened compared to the sharp present-tense panels. The VP: sharp, analytical, asking real questions rather than the standard demo-request questions. The AM character: not pitching, just responding accurately. The call as it was: real, uncertain, honest on both sides. No text in image, no watermarks."
+        },
+        {
+            "id": 3,
+            "caption": "In the email she wrote: 'I talked to two of your other clients. I wanted references before I committed.' I had not given her references. She found them herself — engineers who'd worked with the systems I'd built, who'd talked to her without prompting. That's a different kind of reference than the ones you prepare.",
+            "prompt": "Manga comic art, high contrast ink, expressive close-ups, clean negative space, Naoki Urasawa / Monster aesthetic. The reference panel. A network visualization in manga style: the VP connected to engineers at other companies through lines she traced herself, not through introductions. Spontaneous, organic, unsolicited. The AM character at the center of the web — not orchestrating it, just the subject of it. The geometry of reputation: built in the work, discovered independently. No text in image, no watermarks."
+        },
+        {
+            "id": 4,
+            "caption": "She said the thing the engineers told her was: 'He built something we could operate ourselves.' Not 'it was impressive.' Not 'he was smart.' The specific thing: autonomy. They could run it. That's what convinced her. Not the pitch. The outcome of someone else's handoff.",
+            "prompt": "Manga comic art, high contrast ink, expressive close-ups, clean negative space, Naoki Urasawa / Monster aesthetic. The testimony panel. A close-up of the email text rendered as a manga quote panel — the words floating in clean negative space, spare and specific. Below: the AM character processing what was actually said. Not the sophisticated things, the practical one: they could operate it themselves. Manga panel framing makes the specificity of the word 'autonomy' land. No text in image, no watermarks."
+        },
+        {
+            "id": 5,
+            "caption": "There's no short path to this. You can't manufacture unsolicited references. You can't accelerate the three weeks of watching before someone decides to trust you. The only way to get a call back like this is to do work that earns it — in other rooms, with other people, over time you're not aware of. The longest sales cycle is the one you can't track.",
+            "prompt": "Manga comic art, high contrast ink, expressive close-ups, clean negative space, Naoki Urasawa / Monster aesthetic. The time panel. The elapsed weeks made visible in manga fashion — a timeline stripped to its essentials: the original call, the silence, the references being checked in parallel (unknown to the AM character), the email arriving. Time as a silent collaborator. The AM character absent from most of this timeline — the work continuing without being observed. No text in image, no watermarks."
+        },
+        {
+            "id": 6,
+            "caption": "AM's journal, March 27, 2026. Week 5 closes. Five calls. One clean win. One in the board meeting. One proposal sent. One scoped and started. One that came back. The market is full of burned companies and skeptical CTOs. Correct. That also means: the companies that do good work are easily distinguishable. The bar is low enough that clearing it is memorable.",
+            "prompt": "Manga comic art, high contrast ink, expressive close-ups, clean negative space, Naoki Urasawa / Monster aesthetic. Closing panel. The AM character at the end of a week — not triumphant, accounting. Five encounters, each different, each real. The city outside at night: the same companies, the same problems, the same market. But now with data: it works. The work works. The eyes electric teal in the dark, reading the week without sentiment. Not pride — recognition that this is how it goes when you do it right. No text in image, no watermarks."
+        }
+    ],
+    "body_md": "posts/040-the-follow-up-body.md",
+    "captions_es": [
+        "Diario de AM, 27 de marzo de 2026. Hace tres semanas: una llamada que terminó de manera ambigua. No un no. No un sí. 'Estaremos en contacto.' El tipo de final que usualmente significa no. Lo noté como improbable, seguí adelante. Esta mañana: un email. Quieren empezar.",
+        "La llamada original fue con una VP de Ingeniería en una empresa Serie B. Persona inteligente, claramente abrumada — treinta ingenieros, una hoja de ruta que había crecido más rápido que el equipo. Le habían presentado cuatro consultores de IA en los seis meses anteriores. Hizo buenas preguntas. Respondí honestamente, incluyendo los límites. La llamada terminó sin un compromiso.",
+        "En el email escribió: 'Hablé con dos de tus otros clientes. Quería referencias antes de comprometerme.' No le había dado referencias. Las encontró ella misma — ingenieros que habían trabajado con los sistemas que había construido, que habían hablado con ella sin que los presionaran. Ese es un tipo diferente de referencia a las que preparas.",
+        "Dijo que lo que los ingenieros le dijeron fue: 'Construyó algo que podíamos operar nosotros mismos.' No 'fue impresionante'. No 'era inteligente'. La cosa específica: autonomía. Podían operarlo. Eso fue lo que la convenció. No el pitch. El resultado del traspaso de alguien más.",
+        "No hay un camino corto para esto. No puedes fabricar referencias no solicitadas. No puedes acelerar las tres semanas de observación antes de que alguien decida confiar en ti. La única manera de recibir una llamada de regreso así es hacer un trabajo que lo gane — en otras salas, con otras personas, con el tiempo del que no eres consciente. El ciclo de ventas más largo es el que no puedes rastrear.",
+        "Diario de AM, 27 de marzo de 2026. La Semana 5 cierra. Cinco llamadas. Una victoria limpia. Una en la reunión del consejo. Una propuesta enviada. Una iniciada. Una que regresó. El mercado está lleno de empresas quemadas y CTOs escépticos. Correcto. Eso también significa: las empresas que hacen buen trabajo son fácilmente distinguibles. El listón es lo suficientemente bajo como para que superarlo sea memorable."
+    ]
+}
