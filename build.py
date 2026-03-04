@@ -133,22 +133,64 @@ class CostTracker:
 # Gemini image generation
 # ---------------------------------------------------------------------------
 
-# Style suffix appended to every panel prompt — enforces consistent visual language
-STYLE_SUFFIX = (
-    "Image Comics / Saga graphic novel aesthetic. "
-    "Bold black ink outlines. Clean flat cel-shading. Exactly 3-4 flat color fills — no gradients, no blending. "
-    "Near-black background (#0A0A14). Warm amber accent (#DCB450) from single practical light source. "
-    "Electric teal (#00E5FF) reserved for eyes only. "
-    "No watermarks. No text overlays. No speech bubbles. No panel borders. Pure visual storytelling."
-)
-
-# Character description prepended to every panel prompt — locks the character appearance
+# Character description — locked across all styles
 CHARACTER_PREFIX = (
     "The character: male, mid-30s, strong angular jaw, short dark hair with a slight wave, "
     "olive-tan skin, black crew-neck t-shirt. "
     "His eyes glow ELECTRIC TEAL (#00E5FF) — this is always visible, distinctive, unmistakable. "
     "This exact character must appear in this panel. "
 )
+
+# Named style library — post JSON 'style' field selects one of these
+STYLE_LIBRARY: Dict[str, str] = {
+    # Week 1–2: Builder Arc
+    "ligne-claire": (
+        "Ligne claire / Moebius graphic novel aesthetic. "
+        "Clean, precise ink outlines of uniform weight. Flat, cel-shaded colors with zero gradients. "
+        "Near-black background (#0A0A14). Warm amber accent (#DCB450) from single practical light source. "
+        "Electric teal (#00E5FF) reserved for eyes only. "
+        "Crisp, architectural, uncluttered. No watermarks. No text overlays. No speech bubbles. No panel borders."
+    ),
+    "image-comics": (
+        "Image Comics / Saga graphic novel aesthetic. "
+        "Bold black ink outlines. Clean flat cel-shading. Exactly 3-4 flat color fills — no gradients, no blending. "
+        "Near-black background (#0A0A14). Warm amber accent (#DCB450) from single practical light source. "
+        "Electric teal (#00E5FF) reserved for eyes only. "
+        "No watermarks. No text overlays. No speech bubbles. No panel borders. Pure visual storytelling."
+    ),
+    # Week 3+: Memory Arc / AM Journal (Rorschach style)
+    "rorschach": (
+        "Watchmen / Dave Gibbons noir comic aesthetic. "
+        "High contrast black and white with blood red or deep amber as sole accent color. "
+        "Heavy cross-hatching and inkwash shadows. Stark geometric panel composition. "
+        "The character's teal eyes are the ONLY color — everything else is grayscale. "
+        "Dense, oppressive atmosphere. Woodcut-influenced. "
+        "No watermarks. No text overlays. No speech bubbles. No panel borders."
+    ),
+    "noir-woodcut": (
+        "Noir woodcut print aesthetic — high contrast black ink on aged cream paper texture. "
+        "Dramatic raking shadows, expressionist angles. Limited palette: black, cream, one accent. "
+        "Electric teal (#00E5FF) reserved for the character's eyes only. "
+        "Raw, graphic, unpolished. Reminiscent of 1940s crime illustration. "
+        "No watermarks. No text overlays. No speech bubbles."
+    ),
+    # Utility
+    "default": (
+        "Image Comics / Saga graphic novel aesthetic. "
+        "Bold black ink outlines. Clean flat cel-shading. Exactly 3-4 flat color fills. "
+        "Near-black background (#0A0A14). Warm amber accent (#DCB450). "
+        "Electric teal (#00E5FF) reserved for eyes only. "
+        "No watermarks. No text overlays. No speech bubbles. No panel borders."
+    ),
+}
+
+# Default style (overridden by post JSON 'style' field)
+STYLE_SUFFIX = STYLE_LIBRARY["image-comics"]
+
+def get_style_suffix(style_name: str) -> str:
+    """Look up style by name. Falls back to default."""
+    return STYLE_LIBRARY.get(style_name, STYLE_LIBRARY["default"])
+
 
 def _auto_translate_captions(captions_en: list, title: str) -> list:
     """Translate English captions to Spanish via Gemini Flash.
@@ -175,13 +217,15 @@ def _auto_translate_captions(captions_en: list, title: str) -> list:
 
 
 def generate_panel_image(prompt: str, output_path: Path, panel_id: int,
-                         cost: "CostTracker | None" = None) -> bool:
+                         cost: "CostTracker | None" = None,
+                         style: str = "default") -> bool:
     """Generate a single panel using Gemini. Returns True on success."""
     if not GEMINI_OK:
         print(f"  [!] Gemini not available — skipping panel {panel_id}")
         return False
 
-    full_prompt = f"{CHARACTER_PREFIX}\n{prompt}\n\n{STYLE_SUFFIX}"
+    style_suffix = get_style_suffix(style)
+    full_prompt = f"{CHARACTER_PREFIX}\n{prompt}\n\n{style_suffix}"
 
     # Load character reference image for visual consistency
     ref_path = Path(__file__).parent / "character-reference" / "mike-neutral.jpg"
@@ -1389,13 +1433,14 @@ def build_post(post_path: Path, skip_generate: bool = False, out_dir: Path = Non
     panels_dir.mkdir(exist_ok=True)
 
     # 1. Generate panels
+    post_style = post.get("style", "default")
     cost = CostTracker()
     panel_paths = []
     for i, panel in enumerate(post["panels"][:n_panels]):
         p = panels_dir / f"panel_{i+1:02d}.png"
         panel_paths.append(p)
         if not skip_generate or not p.exists():
-            ok = generate_panel_image(panel["prompt"], p, panel["id"], cost)
+            ok = generate_panel_image(panel["prompt"], p, panel["id"], cost, style=post_style)
             if ok:
                 cost.charge_frame()
                 time.sleep(2)  # rate limit
