@@ -36,6 +36,14 @@ except ImportError:
     _genai_client = None
     GEMINI_OK = False
 
+# mc-designer integration
+try:
+    from mc_designer_compositor import composite_with_mc_designer, composite_page_pil
+    MC_DESIGNER_AVAILABLE = True
+except ImportError:
+    MC_DESIGNER_AVAILABLE = False
+    print("  [note] mc_designer_compositor not available; using PIL fallback")
+
 # ---------------------------------------------------------------------------
 # Comic page constants (US comic @ 300 DPI)
 # ---------------------------------------------------------------------------
@@ -1464,7 +1472,17 @@ def build_post(post_path: Path, skip_generate: bool = False, out_dir: Path = Non
 
     def composite_lang(captions: list, out_jpg: Path):
         tmp_png = out_jpg.with_suffix(".png")
-        composite_page(panel_paths, layout, tmp_png, captions)
+        
+        # Use mc-designer if available and requested
+        if args.use_mc_designer and MC_DESIGNER_AVAILABLE:
+            try:
+                composite_with_mc_designer(panel_paths, layout, tmp_png, captions, post_slug=slug)
+            except Exception as e:
+                print(f"  ⚠ mc-designer composition failed: {e}; falling back to PIL")
+                composite_page(panel_paths, layout, tmp_png, captions)
+        else:
+            composite_page(panel_paths, layout, tmp_png, captions)
+        
         img = Image.open(tmp_png).convert("RGB")
         img.save(out_jpg, "JPEG", quality=88, optimize=True, progressive=True)
         kb = out_jpg.stat().st_size // 1024
@@ -1652,6 +1670,7 @@ if __name__ == "__main__":
     parser.add_argument("--out", default="docs", help="Output directory")
     parser.add_argument("--deploy", action="store_true", help="Push to GitHub Pages after build")
     parser.add_argument("--include-future", action="store_true", help="Build HTML for future-dated posts too")
+    parser.add_argument("--use-mc-designer", action="store_true", help="Use mc-designer for page composition (if available)")
     args = parser.parse_args()
 
     base = Path(__file__).parent
