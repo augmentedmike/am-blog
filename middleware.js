@@ -31,6 +31,12 @@ export default async function middleware(req) {
   const oldMatch = path.match(/^\/(\d{3}-[^/]+)(\/.*)?$/);
   if (oldMatch) {
     const slug = oldMatch[1];
+    const rest = oldMatch[2] || '/';
+
+    // Always serve assets directly — don't redirect images, css, js, etc.
+    const isAsset = rest.match(/\.(jpg|jpeg|png|gif|webp|svg|css|js|json|txt|xml|ico)$/i);
+    if (isAsset) return; // pass through to static file serving
+
     if (manifest) {
       const post = manifest.posts.find(p => p.slug === slug);
       if (post) {
