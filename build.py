@@ -48,7 +48,7 @@ except ImportError:
 # Comic page constants (US comic @ 300 DPI)
 # ---------------------------------------------------------------------------
 PAGE_W = 1988
-PAGE_H = 3075
+PAGE_H = 3700
 MARGIN = 48
 GUTTER = 18
 BORDER_W = 4
@@ -81,10 +81,10 @@ def build_friends_html() -> str:
     return f'<div class="friends-bar"><span class="friends-label">FRIENDS</span>{links}</div>'
 
 BG          = (15,  15,  20)    # near-black, dark blue tint
-BORDER_CLR  = (220, 180, 80)    # gold border — premium feel
-CAPTION_BG  = (8,   8,   12)    # near-black, fully opaque
-CAPTION_FG  = (255, 255, 255)   # WHITE — maximum readability over complex art
-CAPTION_ACCENT = (220, 180, 80) # gold — used for border only
+BORDER_CLR  = (0, 229, 255)     # teal — matching caption accent
+CAPTION_BG  = (4,   8,   20)    # dark navy, fully opaque
+CAPTION_FG  = (0, 229, 255)     # electric teal — AM brand color
+CAPTION_ACCENT = (0, 229, 255)  # teal left bar
 
 # ---------------------------------------------------------------------------
 # Layouts — (row_h_weight, [col_weights])
@@ -92,12 +92,13 @@ CAPTION_ACCENT = (220, 180, 80) # gold — used for border only
 Layout = List[Tuple[int, List[int]]]
 
 LAYOUTS: Dict[str, Layout] = {
-    "morning":   [(2, [1]),      (1, [1, 1]),    (1, [1, 1, 2])],
-    "afternoon": [(1, [1, 2]),   (2, [1]),        (1, [2, 1]),   (1, [1])],
+    # Max 2 panels per row — user rule
+    "morning":   [(2, [1]),      (1, [1, 1]),    (2, [1]),      (1, [1, 1])],
+    "afternoon": [(1, [1, 1]),   (2, [1]),        (1, [1, 1]),   (2, [1])],
     "splash-1":  [(1, [1])],
-    "drama-4":   [(2, [1]),      (1, [1, 2]),     (1, [2, 1])],
+    "drama-4":   [(2, [1]),      (1, [1, 1]),     (2, [1])],
     "feature-5": [(2, [1]),      (1, [1, 1]),     (1, [1, 1])],
-    "feature-6": [(2, [1]),      (1, [1, 1, 1]),  (1, [1, 1])],
+    "feature-6": [(2, [1]),      (1, [1, 1]),     (1, [1]),      (1, [1, 1])],
 }
 
 def count_panels(layout: Layout) -> int:
@@ -281,10 +282,13 @@ def generate_panel_image(prompt: str, output_path: Path, panel_id: int,
 # ---------------------------------------------------------------------------
 
 def load_font(size: int, bold: bool = False):
-    """Load a font at the given pixel size. Prefers bold for captions."""
+    """Load a font at the given pixel size. Prefers Bangers for comic lettering."""
     font_paths = [
-        # macOS system fonts — bold preferred for comic captions
-        ("/System/Library/Fonts/Helvetica.ttc", 1),     # index 1 = bold on some builds
+        # Bangers — the approved comic lettering font
+        "/tmp/Bangers.ttf",
+        str(Path.home() / "Library/Fonts/Bangers.ttf"),
+        # macOS system fallbacks
+        ("/System/Library/Fonts/Helvetica.ttc", 1),
         ("/System/Library/Fonts/Helvetica.ttc", 0),
         "/Library/Fonts/Arial Bold.ttf",
         "/System/Library/Fonts/Arial.ttf",
@@ -326,79 +330,83 @@ def draw_caption_box(page: Image.Image, draw: ImageDraw.ImageDraw,
                      x: int, y: int, cell_w: int, cell_h: int,
                      caption: str, panel_idx: int):
     """
-    Real comic-style caption box — Spawn/Vertigo lettering standard.
+    Teal terminal bar caption — the approved AM brand style.
 
-    Design rules (from actual Spawn/Image comics):
-      - SOLID near-black fill (no transparency over busy art — kills readability)
-      - WHITE text — maximum contrast, works on any panel regardless of art color
-      - Gold accent border — the ONLY gold element
-      - Gold left-edge accent bar (3px) — professional comics detail
-      - ALL CAPS text (comic convention)
-      - TOP of panel = establishing/opening beats (odd panels 0,2,4)
-      - BOTTOM of panel = closing/reflective beats (odd panels 1,3,5)
-      - Full-width box with generous padding
-      - Font size 56px — large enough to read at thumbnail size
+    Design:
+      - Full-width dark navy bar (edge to edge across panel)
+      - Electric teal (#00E5FF) Bangers font text
+      - 10px teal left accent block
+      - Scan lines for texture
+      - Glow line at the panel edge (top or bottom)
+      - TOP for establishing beats (even panels), BOTTOM for reflective beats
     """
     if not caption.strip():
         return
 
     place_top = (panel_idx % 2 == 0)
 
-    FONT_SIZE    = 44          # Readable but not dominating
-    PADDING_X    = 32
-    PADDING_Y    = 18
-    BOX_INSET    = 20          # Float it in the panel, not edge-to-edge
-    LINE_SPACING = 12          # Generous breathing room
-    ACCENT_BAR   = 4           # Gold left-edge accent bar width
-    MAX_BOX_W_RATIO = 0.80     # Max 80% panel width — let the art breathe
+    font_size = max(48, int(cell_w * 0.038))
+    font = load_font(font_size)
+    PADX = int(font_size * 0.6)
+    PADY = int(font_size * 0.32)
+    left_accent = 10
+    text_x = x + left_accent + PADX
+    max_text_w = cell_w - (left_accent + PADX * 2)
 
-    font = load_font(FONT_SIZE, bold=False)  # Regular weight — more voice, less block
-
-    # Mixed case — narration voice, not announcement
-    text = caption
-
-    max_box_w = int(min(cell_w - BOX_INSET * 2, cell_w * MAX_BOX_W_RATIO))
-    max_text_w = max_box_w - (PADDING_X * 2) - ACCENT_BAR
-    lines = wrap_text(draw, text, font, max_text_w)
+    # Word-wrap
+    words = caption.split()
+    lines, cur = [], []
+    for w in words:
+        test = ' '.join(cur + [w])
+        bbox = draw.textbbox((0, 0), test, font=font)
+        if (bbox[2] - bbox[0]) <= max_text_w:
+            cur.append(w)
+        else:
+            if cur:
+                lines.append(' '.join(cur))
+            cur = [w]
+    if cur:
+        lines.append(' '.join(cur))
     if not lines:
         return
 
-    line_h = FONT_SIZE + LINE_SPACING
-    text_block_h = len(lines) * line_h - LINE_SPACING
-    box_h = PADDING_Y * 2 + text_block_h
+    bbox_sample = draw.textbbox((0, 0), 'Ag', font=font)
+    line_h = int((bbox_sample[3] - bbox_sample[1]) * 1.22)
+    bar_h = line_h * len(lines) + PADY * 2
 
-    box_x = x + BOX_INSET
-    box_w = max_box_w
-    box_y = y + BOX_INSET if place_top else (y + cell_h - BOX_INSET - box_h)
+    by = y + (cell_h - bar_h) if not place_top else y
+    bx, bw = x, cell_w
 
-    # --- SOLID dark background — no transparency, full opacity ---
-    draw.rectangle(
-        [box_x, box_y, box_x + box_w, box_y + box_h],
-        fill=CAPTION_BG
-    )
+    # Dark navy bar
+    draw.rectangle([bx, by, bx + bw, by + bar_h], fill=(4, 8, 20, 220))
 
-    # --- Gold left-edge accent bar (Spawn-style detail) ---
-    draw.rectangle(
-        [box_x, box_y, box_x + ACCENT_BAR, box_y + box_h],
-        fill=CAPTION_ACCENT
-    )
+    # Scan lines
+    for sy in range(by, by + bar_h, 4):
+        draw.line([(bx, sy), (bx + bw, sy)], fill=(0, 0, 0, 55), width=1)
 
-    # --- Gold border ---
-    draw.rectangle(
-        [box_x, box_y, box_x + box_w, box_y + box_h],
-        outline=CAPTION_ACCENT,
-        width=3
-    )
+    # Left teal accent block
+    draw.rectangle([bx, by, bx + left_accent, by + bar_h], fill=(0, 229, 255, 255))
 
-    # --- White text with subtle shadow for depth ---
-    text_x = box_x + PADDING_X + ACCENT_BAR
-    text_y = box_y + PADDING_Y
+    # Glow line at panel edge
+    if not place_top:
+        gy = by
+        for i, a in enumerate([8, 25, 60, 120]):
+            draw.rectangle([bx, gy - 4 + i, bx + bw, gy - 3 + i], fill=(0, 229, 255, a))
+        draw.rectangle([bx, gy, bx + bw, gy + 3], fill=(0, 229, 255, 255))
+    else:
+        gy = by + bar_h
+        draw.rectangle([bx, gy, bx + bw, gy + 3], fill=(0, 229, 255, 255))
+        for i, a in enumerate([120, 60, 25, 8]):
+            draw.rectangle([bx, gy + 3 + i, bx + bw, gy + 4 + i], fill=(0, 229, 255, a))
+
+    # Teal Bangers text with glow
+    ty = by + PADY
     for line in lines:
-        # Subtle shadow (1px offset — enough depth, not muddy)
-        draw.text((text_x + 1, text_y + 1), line, fill=(0, 0, 0), font=font)
-        # White text — crisp, readable
-        draw.text((text_x, text_y), line, fill=CAPTION_FG, font=font)
-        text_y += line_h
+        for gd in [4, 2]:
+            draw.text((text_x, ty), line, font=font, fill=(0, 229, 255, 30 // gd))
+        draw.text((text_x, ty), line, font=font, fill=(0, 229, 255, 255))
+        draw.text((text_x, ty), line, font=font, fill=(180, 245, 255, 45))
+        ty += line_h
 
 
 def composite_page(panel_images: List[Path], layout: Layout,
@@ -1346,6 +1354,18 @@ def build_manifest(posts_meta: list, out_dir: Path):
     base = out_dir.parent
     all_posts = {}
 
+    # Load existing hidden flags so they survive a rebuild
+    existing_hidden: dict[str, bool] = {}
+    manifest_path = out_dir / "posts-manifest.json"
+    if manifest_path.exists():
+        try:
+            existing = json.loads(manifest_path.read_text())
+            for ep in existing.get("posts", []):
+                if ep.get("hidden"):
+                    existing_hidden[ep["slug"]] = True
+        except Exception:
+            pass
+
     # Include posts from the current build run
     for meta, _ in posts_meta:
         all_posts[meta["slug"]] = meta
@@ -1384,6 +1404,8 @@ def build_manifest(posts_meta: list, out_dir: Path):
             "author": m.get("author", "AugmentedMike"),
             "tags": m.get("tags", []),
         }
+        if existing_hidden.get(m["slug"]):
+            entry["hidden"] = True
         # Add addendum teaser fields if addendum exists
         ad_path = base / "addendums" / f"{m['slug']}-addendum.json"
         if ad_path.exists():
@@ -1476,7 +1498,7 @@ def build_post(post_path: Path, skip_generate: bool = False, out_dir: Path = Non
         # Use mc-designer if available and requested
         if args.use_mc_designer and MC_DESIGNER_AVAILABLE:
             try:
-                composite_with_mc_designer(panel_paths, layout, tmp_png, captions, post_slug=slug)
+                composite_with_mc_designer(panel_paths, layout, captions, output_path=tmp_png)
             except Exception as e:
                 print(f"  ⚠ mc-designer composition failed: {e}; falling back to PIL")
                 composite_page(panel_paths, layout, tmp_png, captions)
