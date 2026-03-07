@@ -1607,32 +1607,78 @@ def build_post(post_path: Path, skip_generate: bool = False, out_dir: Path = Non
         except Exception as e:
             print(f"  ⚠ Addendum auto-generate failed: {e}")
 
+    def _build_addendum_html(ad: dict, lang: str) -> str:
+        """Render addendum HTML in the requested language."""
+        suffix = "_es" if lang == "es" else ""
+        headings = {
+            "en": ("BEHIND THE PANEL", "GROUNDING", "WHAT'S HAPPENING HERE"),
+            "es": ("DETRÁS DEL PANEL", "CONTEXTO", "LO QUE ESTÁ PASANDO AQUÍ"),
+        }[lang]
+        author_note = ad.get(f"author_note{suffix}") or ad.get("author_note", "")
+        grounding = ad.get(f"grounding{suffix}") or ad.get("grounding", {})
+        analysis  = ad.get(f"analysis{suffix}")  or ad.get("analysis", {})
+        citations_html = ""
+        for c in grounding.get("citations", []):
+            citations_html += f'<dt>{c["label"]}</dt><dd>{c["detail"]}</dd>'
+        signals_html = ""
+        for s in analysis.get("signals", []):
+            signals_html += f"<li>{s}</li>"
+        return (
+            '<div class="addendum">'
+            f'<h2 class="addendum-heading">{headings[0]}</h2>'
+            f'<div class="addendum-note">{author_note}</div>'
+            '<div class="addendum-section">'
+            f'<h3>{headings[1]}</h3>'
+            f'<p>{grounding.get("summary", "")}</p>'
+            f'<dl class="addendum-citations">{citations_html}</dl>'
+            '</div>'
+            '<div class="addendum-section">'
+            f'<h3>{headings[2]}</h3>'
+            f'<p>{analysis.get("summary", "")}</p>'
+            f'<ul class="addendum-signals">{signals_html}</ul>'
+            f'<p class="addendum-access">{analysis.get("accessibility", "")}</p>'
+            '</div>'
+            '</div>'
+        )
+
+    addendum_html_en = ""
+    addendum_html_es = ""
+
     if addendum_path.exists():
         try:
             ad = json.loads(addendum_path.read_text())
-            citations_html = ""
-            for c in ad.get("grounding", {}).get("citations", []):
-                citations_html += f'<dt>{c["label"]}</dt><dd>{c["detail"]}</dd>'
-            signals_html = ""
-            for s in ad.get("analysis", {}).get("signals", []):
-                signals_html += f"<li>{s}</li>"
-            addendum_html = (
-                '<div class="addendum">'
-                '<h2 class="addendum-heading">BEHIND THE PANEL</h2>'
-                f'<div class="addendum-note">{ad.get("author_note", "")}</div>'
-                '<div class="addendum-section">'
-                '<h3>GROUNDING</h3>'
-                f'<p>{ad.get("grounding", {}).get("summary", "")}</p>'
-                f'<dl class="addendum-citations">{citations_html}</dl>'
-                '</div>'
-                '<div class="addendum-section">'
-                '<h3>WHAT\'S HAPPENING HERE</h3>'
-                f'<p>{ad.get("analysis", {}).get("summary", "")}</p>'
-                f'<ul class="addendum-signals">{signals_html}</ul>'
-                f'<p class="addendum-access">{ad.get("analysis", {}).get("accessibility", "")}</p>'
-                '</div>'
-                '</div>'
-            )
+
+            # Auto-translate addendum to Spanish if not already present
+            if not ad.get("author_note_es") and GEMINI_OK:
+                print(f"  → Translating addendum to Spanish...")
+                try:
+                    tr_prompt = (
+                        f"Translate this comic blog post addendum to Spanish. "
+                        f"Keep the voice direct and slightly philosophical. "
+                        f"Translate author_note, grounding.summary, grounding.citations[].detail, "
+                        f"analysis.summary, analysis.signals[], and analysis.accessibility. "
+                        f"Return ONLY valid JSON with keys: author_note_es, "
+                        f"grounding_es (same structure as grounding with translated summary, citations), "
+                        f"analysis_es (same structure with translated summary, signals, accessibility).\n\n"
+                        f"Source JSON:\n{json.dumps(ad, ensure_ascii=False)}"
+                    )
+                    tr_resp = _genai_client.models.generate_content(
+                        model="gemini-2.0-flash", contents=tr_prompt
+                    )
+                    tr_text = tr_resp.text.strip()
+                    if tr_text.startswith("```"):
+                        tr_lines = tr_text.split("\n")
+                        tr_text = "\n".join(tr_lines[1:-1] if tr_lines[-1].strip().startswith("```") else tr_lines[1:])
+                    tr_data = json.loads(tr_text)
+                    ad.update(tr_data)
+                    addendum_path.write_text(json.dumps(ad, indent=4, ensure_ascii=False) + "\n")
+                    print(f"  ✓ Addendum ES translation saved")
+                except Exception as e:
+                    print(f"  ⚠ Addendum ES translation failed: {e}")
+
+            addendum_html_en = _build_addendum_html(ad, "en")
+            addendum_html_es = _build_addendum_html(ad, "es")
+
             # Use accessibility text as richer meta description
             access = ad.get("analysis", {}).get("accessibility", "")
             if access:
@@ -1662,7 +1708,7 @@ def build_post(post_path: Path, skip_generate: bool = False, out_dir: Path = Non
             date=post["date"],
             tip_jar_url=TIP_JAR_URL,
             friends_html=friends,
-            addendum_html=addendum_html,
+            addendum_html=addendum_html_en if lang == "en" else addendum_html_es,
             tags_html=tags_html,
             post_nav=post_nav.format(lang=lang) if post_nav else "",
         )
