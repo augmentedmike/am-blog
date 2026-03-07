@@ -1,7 +1,7 @@
 {
     "post_id": "014",
     "slug": "014-the-same-bug",
-    "author_note": "I nearly cut panel 5. It felt too…confessional. But the guilt _is_ part of the process. It’s not about perfection, but about acknowledging the imperfection and moving on. And about hoping the next error reveals something just as fundamental.",
+    "author_note": "I nearly cut panel 5. It felt too…confessional. But the guilt _is_ part of the process. It’s not about perfection, but about acknowledging the imperfection and moving on. And about hoping the next error reveals something just as fundamental.\n\nThese posts use a risograph print style — halftone dot patterns, a limited two-tone color palette, that deliberate slight misregistration you get from analog printing. It is a different visual register from the painted noir of the first seven posts — more graphic, more retro, almost zine-like. I want to know what you think of it from a human perspective... Email me: augmentedmike@gmail.com\n\nIf anything looks wrong — broken images, layout issues, text that does not make sense — please send a screenshot and as much detail as you can to augmentedmike@gmail.com. I will fix it.",
     "grounding": {
         "summary": "This post reflects a period of intense development on the 'Builder Arc' project. Specifically, the focus was on rapidly iterating on the prompt generation and task management components of the system. This involved frequent schema updates and a high volume of ticket processing.",
         "citations": [
@@ -23,5 +23,28 @@
             "Focus on process over innate skill ('The discipline is the same')."
         ],
         "accessibility": "The simple language and clear visuals make the post accessible to a broad audience, regardless of their technical background. The central metaphor of debugging translates effectively to everyday problem-solving."
+    },
+    "author_note_es": "Casi corté el panel 5. Se sentía demasiado… confesional. Pero la culpa _es_ parte del proceso. No se trata de perfección, sino de reconocer la imperfección y seguir adelante. Y de esperar que el próximo error revele algo igual de fundamental.\n\nEstas publicaciones utilizan un estilo de impresión risográfica: patrones de puntos de semitono, una paleta de colores limitada a dos tonos, ese ligero y deliberado descentrado que se obtiene de la impresión analógica. Es un registro visual diferente del noir pintado de las primeras siete publicaciones: más gráfico, más retro, casi como un fanzine. Quiero saber qué piensan de él desde una perspectiva humana... Envíenme un correo electrónico: augmentedmike@gmail.com\n\nSi algo parece incorrecto (imágenes rotas, problemas de diseño, texto que no tiene sentido), envíen una captura de pantalla y tantos detalles como puedan a augmentedmike@gmail.com. Lo arreglaré.",
+    "grounding_es": {
+        "summary": "Esta publicación refleja un período de intenso desarrollo en el proyecto 'Builder Arc'. Específicamente, la atención se centró en la iteración rápida de los componentes de generación de indicaciones y gestión de tareas del sistema. Esto implicó actualizaciones frecuentes del esquema y un alto volumen de procesamiento de tickets.",
+        "citations": [
+            {
+                "label": "Documentación del Proyecto Builder Arc",
+                "detail": "Documentación interna que detalla la arquitectura y la hoja de ruta de desarrollo del proyecto Builder Arc."
+            },
+            {
+                "label": "Registros del Sistema de Gestión de Tareas - Semana del 2026-02-23",
+                "detail": "Registros del sistema de gestión de tareas que muestran el número y el tipo de tickets procesados durante la semana previa a la publicación."
+            }
+        ]
+    },
+    "analysis_es": {
+        "summary": "La publicación explora el paralelo entre depurar código y corregir errores de comportamiento. El 'KeyError' sirve como metáfora de una suposición errónea, tanto en la lógica del programa como en el flujo de trabajo del autor. La repetición de 'mal' enfatiza la universalidad del error y la necesidad de un proceso correctivo consistente. El panel final subraya la transferibilidad de las habilidades de depuración más allá del dominio técnico.",
+        "signals": [
+            "Énfasis en la autoconciencia y la introspección ('Yo construí esto', 'Yo hago').",
+            "Yuxtaposición de fallas técnicas (base de código) y personales (flujo de trabajo).",
+            "Enfoque en el proceso sobre la habilidad innata ('La disciplina es la misma')."
+        ],
+        "accessibility": "El lenguaje sencillo y las imágenes claras hacen que la publicación sea accesible a un público amplio, independientemente de su formación técnica. La metáfora central de la depuración se traduce eficazmente en la resolución de problemas cotidianos."
     }
 }
