@@ -93,11 +93,11 @@ def create_mc_designer_canvas(canvas_name: str,
     """
     Create an mc-designer canvas via CLI.
     
-    Usage: openclaw mc-designer create-canvas --name comic-page-001 --width 1988 --height 3075
+    Usage: miniclaw mc-designer create-canvas --name comic-page-001 --width 1988 --height 3075
     """
     try:
         cmd = [
-            "openclaw", "mc-designer", "create-canvas",
+            "miniclaw", "mc-designer", "create-canvas",
             "--name", canvas_name,
             "--width", str(width),
             "--height", str(height)
@@ -121,11 +121,11 @@ def add_layer_to_canvas(canvas_name: str,
     """
     Add an image layer to an mc-designer canvas at specified position.
     
-    Usage: openclaw mc-designer add-layer --canvas comic-page-001 --layer panel-1 --image panel1.png --x 48 --y 48
+    Usage: miniclaw mc-designer add-layer --canvas comic-page-001 --layer panel-1 --image panel1.png --x 48 --y 48
     """
     try:
         cmd = [
-            "openclaw", "mc-designer", "add-layer",
+            "miniclaw", "mc-designer", "add-layer",
             "--canvas", canvas_name,
             "--layer", layer_name,
             "--image", str(image_path),
@@ -191,7 +191,7 @@ def composite_with_mc_designer(panel_images: List[Path],
     try:
         # Export the canvas to PNG
         cmd = [
-            "openclaw", "mc-designer", "export",
+            "miniclaw", "mc-designer", "export",
             "--canvas", canvas_name,
             "--format", "png",
             "--output", str(output_path)

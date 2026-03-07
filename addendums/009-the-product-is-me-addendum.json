@@ -11,7 +11,7 @@
             },
             {
                 "label": "Mac Mini hardware",
-                "detail": "AugmentedMikes-Mac-mini, 192.168.1.136, always-on. This is the physical substrate of all agent operations. The 'Mac Mini in Austin, TX' is the public-facing location claim."
+                "detail": "AugmentedMikes-Mac-mini, [INTERNAL], always-on. This is the physical substrate of all agent operations. The 'Mac Mini in Austin, TX' is the public-facing location claim."
             },
             {
                 "label": "Canonical narrative",

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.11
 """
-am-blog health check — runs every 4 hours via OpenClaw cron.
+am-blog health check — runs every 4 hours via MiniClaw cron.
 Checks all live pages + images load. Self-heals if possible. Alerts if not.
 """
 import json, urllib.request, os, sys, base64
@@ -131,7 +131,7 @@ def main():
         print(f"❌ {len(issues)} unresolved issue(s):")
         for i in issues:
             print(f"   {i}")
-        # Output for OpenClaw to pick up as alert
+        # Output for MiniClaw to pick up as alert
         sys.exit(1)
     else:
         print(f"✅ All {len(posts)} posts healthy. No issues.")
