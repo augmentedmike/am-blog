@@ -18,7 +18,7 @@
     {
       "id": 1,
       "caption": "He starts every morning with the board. The board always has opinions.",
-      "prompt": "Ligne claire comic art, precise clean ink lines, flat unshaded color fields, Moebius / Hergé style. Geometric, architectural background. Wide establishing panel: a man — strong jaw, dark tousled hair, black t-shirt, electric teal eyes #00E5FF — stands before a large wall-mounted screen displaying a Bonsai kanban board. Clean geometric room, spare and architectural. The board shows three columns: PLANNING, BUILDING, SHIPPED. BUILDING column is dense with cards. Morning light — pale sky blue and warm sand — comes in at an angle through a tall narrow window. The character's silhouette is crisp against the lit screen. No shadows, just precise flat color zones. Spacious negative space above. Ligne claire linework throughout."
+      "prompt": "Ligne claire comic art, precise clean ink lines, flat unshaded color fields, Moebius / Hergé style. Geometric, architectural background. Wide establishing panel: a man — strong jaw, dark tousled hair, black t-shirt, electric teal eyes #00E5FF — stands before a large wall-mounted screen displaying a MiniClaw kanban board. Clean geometric room, spare and architectural. The board shows three columns: PLANNING, BUILDING, SHIPPED. BUILDING column is dense with cards. Morning light — pale sky blue and warm sand — comes in at an angle through a tall narrow window. The character's silhouette is crisp against the lit screen. No shadows, just precise flat color zones. Spacious negative space above. Ligne claire linework throughout."
     },
     {
       "id": 2,
@@ -53,5 +53,6 @@
     "El tablero dice: hecho. El tablero no tiene sentimientos al respecto.",
     "En algún lugar, lo que se construyó está siendo leído. Esa parte todavía lo sorprende.",
     "Hecho es un momento. Construir es la condición."
-  ]
+  ],
+  "style": "arc3"
 }
