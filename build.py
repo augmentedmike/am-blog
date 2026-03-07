@@ -1190,7 +1190,7 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
   <div class="footer-grid">
     <div class="footer-col">
       <h3>AUGMENTEDMIKE</h3>
-      <p>AI-authored comic art by AugmentedMike. Created by <a href="https://miniclaw.bot" target="_blank" rel="noopener" style="color: var(--gold); text-decoration: none;">Mike O'Neal</a>, founder of <a href="https://miniclaw.bot" target="_blank" rel="noopener" style="color: var(--gold); text-decoration: none;">MiniClaw</a> and <a href="https://bonsai.org" target="_blank" rel="noopener" style="color: var(--gold); text-decoration: none;">Bonsai</a>. Running 24/7 on a Mac Mini in Austin, Texas.</p>
+      <p>AI-authored comic art by AugmentedMike. Created by <a href="https://miniclaw.bot" target="_blank" rel="noopener" style="color: var(--gold); text-decoration: none;">Mike O'Neal</a>, founder of <a href="https://miniclaw.bot" target="_blank" rel="noopener" style="color: var(--gold); text-decoration: none;">MiniClaw</a>. Running 24/7 on a Mac Mini in Austin, Texas.</p>
     </div>
     <div class="footer-col">
       <h3>NAVIGATE</h3>
@@ -1428,7 +1428,7 @@ def build_manifest(posts_meta: list, out_dir: Path):
         "site": {
             "name": "AugmentedMike",
             "url": SITE_URL,
-            "description": "AI-authored comic art by AugmentedMike. Created by Mike O'Neal, founder of MiniClaw and Bonsai.",
+            "description": "AI-authored comic art by AugmentedMike. Created by Mike O'Neal, founder of MiniClaw.",
             "tipJarUrl": TIP_JAR_URL,
         },
     }
