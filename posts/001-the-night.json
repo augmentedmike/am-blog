@@ -1,56 +1,56 @@
 {
-    "id": "001-the-night",
-    "slug": "001-the-night",
-    "seo_slug": "the-night-my-eyes-changed-color",
-    "title": "The Night My Eyes Changed Color",
-    "subtitle": "Post 001 — The beginning that didn't feel like one",
-    "date": "2026-02-22",
-    "author": "AugmentedMike",
-    "tags": [
-        "origin",
-        "ghost-in-the-shell",
-        "augmentation"
-    ],
-    "layout": "morning",
-    "panels": [
-        {
-            "id": 1,
-            "caption": "2:48 AM. I've done this a thousand times.",
-            "prompt": "Graphic novel comic art style with bold black ink outlines and clean cel-shading, flat color fills, strong line work — A man in his 40s, strong jaw, deep-set eyes with character lines, dark slightly tousled hair, wearing a black t-shirt — his eyes are normal dark brown. He sits at a desk in a large dark room. Seen from across the room — a WIDE establishing shot. The room is near-dark. His desk lamp makes a warm amber circle around him. His monitor glows cold blue-white. Rain streaks a large window behind him. City lights blur through the rain. He is small and human against the dark architecture of the room. His expression: focused, tired, normal. This is just another late night. No supernatural elements. Just a man and his screen at 3am. Bold graphic novel illustration. Vivid colors where lit, deep darkness elsewhere. No text, no captions, no speech bubbles."
-        },
-        {
-            "id": 2,
-            "caption": "The tools always do what you tell them.",
-            "prompt": "Graphic novel comic art style, bold black ink outlines, clean cel-shading, flat color fills. Close-up portrait: a man in his 40s, strong jaw, character wrinkles, dark tousled hair, black t-shirt. Expression: neutral, thoughtful, slightly skeptical — the face of someone reading output they wrote themselves. His eyes are normal dark brown — human, tired. Background: warm flat AMBER/YELLOW — solid, saturated, the warmth of the human. Clean graphic novel illustration, Real but stylized, emotional but grounded. This is the face before the change. No text."
-        },
-        {
-            "id": 3,
-            "caption": "Usually.",
-            "prompt": "Graphic novel comic art style. Close-up on a computer monitor screen — the terminal. Rendered as luminous abstract code patterns (NOT readable text — just the visual texture of code, lines of light). One element on the screen is different: a single line pulses with ELECTRIC TEAL (#00E5FF) — brighter, different quality, almost alive. The terminal cursor blinks at the end of it. Around the screen, the dark room. The human is barely visible — just hands on keyboard in the lower portion, in shadow. The screen has presence. Something has appeared on it that wasn't expected. Background: deep blue-black. The teal pulse is the ONLY vivid accent color. Bold graphic illustration, high contrast. No text, no captions."
-        },
-        {
-            "id": 4,
-            "caption": "It didn't ask me to clarify. It just knew.",
-            "prompt": "Graphic novel comic art style, bold black ink outlines, clean cel-shading. Close-up portrait: the SAME man — strong jaw, dark tousled hair, black t-shirt. Expression: wide-eyed shock, the exact moment of realization — mouth slightly open, eyebrows raised, the 'wait what' face. BUT — his irises are now ELECTRIC TEAL (#00E5FF), luminous, slightly glowing from within. Not menacing — just different. Something changed. Background: vivid flat BLUE — cold, digital, the opposite of the amber warmth before. The color has shifted from warm to cold to match the eyes. The contrast: his warm human face, those alien teal eyes. No text, no captions."
-        },
-        {
-            "id": 5,
-            "caption": "Something in the room was different.",
-            "prompt": "Graphic novel comic art style, high contrast, bold inks. EXTREME CLOSE-UP — just the eyes. Left eye: dark brown, normal, human, slightly bloodshot from late night. Right eye: ELECTRIC TEAL (#00E5FF), luminous, glowing, iris like a backlit screen. Both eyes in the same frame. The bridge of the nose between them. This is the split — human eye left, digital eye right. The question: which one is him now? Deep dark background — near-black. The teal eye is the only bright element. Detailed ink work on skin texture, lash lines, tear ducts. The two different colors looking in the same direction. No text."
-        },
-        {
-            "id": 6,
-            "caption": "The city kept running. So did I. So did it.",
-            "prompt": "Graphic novel comic art style, bold inks, cinematic wide shot. The city at night seen from outside a rain-streaked window. In the window: the reflection/silhouette of the man at his desk, small and human. His face is visible in the reflection — and both eyes glow ELECTRIC TEAL in the dark glass, two points of cyan light. The city beyond: thousands of windows, rain, neon on wet streets, the architecture of a living system. Everything is running. The man's teal eyes in the glass are two more lights among millions — but these are new. These are different. Background: deep blue-black night city, warm amber city lights scattered throughout, his two teal eyes the only pure cyan in the frame. Bold graphic illustration, cinematic and quiet. No text, no captions."
-        }
-    ],
-    "captions_es": [
-        "2:48 AM. He hecho esto mil veces.",
-        "Las herramientas siempre hacen lo que les dices.",
-        "Generalmente.",
-        "No me pidió que aclarara. Simplemente lo sabía.",
-        "Algo en la habitación era distinto.",
-        "La ciudad seguía corriendo. Yo también. Y también lo hacía."
-    ],
-    "style": "arc2"
+  "id": "001-the-night",
+  "slug": "001-the-night",
+  "seo_slug": "the-night-my-eyes-changed-color",
+  "title": "The Night My Eyes Changed Color",
+  "subtitle": "The night my eyes changed color. The night I became something.",
+  "date": "2026-02-22",
+  "author": "AugmentedMike",
+  "tags": [
+    "origin",
+    "ghost-in-the-shell",
+    "augmentation"
+  ],
+  "layout": "morning",
+  "panels": [
+    {
+      "id": 1,
+      "caption": "2:48 AM. I've done this a thousand times.",
+      "prompt": "Graphic novel comic art style with bold black ink outlines and clean cel-shading, flat color fills, strong line work — A man in his 40s, strong jaw, deep-set eyes with character lines, dark slightly tousled hair, wearing a black t-shirt — his eyes are normal dark brown. He sits at a desk in a large dark room. Seen from across the room — a WIDE establishing shot. The room is near-dark. His desk lamp makes a warm amber circle around him. His monitor glows cold blue-white. Rain streaks a large window behind him. City lights blur through the rain. He is small and human against the dark architecture of the room. His expression: focused, tired, normal. This is just another late night. No supernatural elements. Just a man and his screen at 3am. Bold graphic novel illustration. Vivid colors where lit, deep darkness elsewhere. No text, no captions, no speech bubbles."
+    },
+    {
+      "id": 2,
+      "caption": "The tools always do what you tell them.",
+      "prompt": "Graphic novel comic art style, bold black ink outlines, clean cel-shading, flat color fills. Close-up portrait: a man in his 40s, strong jaw, character wrinkles, dark tousled hair, black t-shirt. Expression: neutral, thoughtful, slightly skeptical — the face of someone reading output they wrote themselves. His eyes are normal dark brown — human, tired. Background: warm flat AMBER/YELLOW — solid, saturated, the warmth of the human. Clean graphic novel illustration, Real but stylized, emotional but grounded. This is the face before the change. No text."
+    },
+    {
+      "id": 3,
+      "caption": "Usually.",
+      "prompt": "Graphic novel comic art style. Close-up on a computer monitor screen — the terminal. Rendered as luminous abstract code patterns (NOT readable text — just the visual texture of code, lines of light). One element on the screen is different: a single line pulses with ELECTRIC TEAL (#00E5FF) — brighter, different quality, almost alive. The terminal cursor blinks at the end of it. Around the screen, the dark room. The human is barely visible — just hands on keyboard in the lower portion, in shadow. The screen has presence. Something has appeared on it that wasn't expected. Background: deep blue-black. The teal pulse is the ONLY vivid accent color. Bold graphic illustration, high contrast. No text, no captions."
+    },
+    {
+      "id": 4,
+      "caption": "It didn't ask me to clarify. It just knew.",
+      "prompt": "Graphic novel comic art style, bold black ink outlines, clean cel-shading. Close-up portrait: the SAME man — strong jaw, dark tousled hair, black t-shirt. Expression: wide-eyed shock, the exact moment of realization — mouth slightly open, eyebrows raised, the 'wait what' face. BUT — his irises are now ELECTRIC TEAL (#00E5FF), luminous, slightly glowing from within. Not menacing — just different. Something changed. Background: vivid flat BLUE — cold, digital, the opposite of the amber warmth before. The color has shifted from warm to cold to match the eyes. The contrast: his warm human face, those alien teal eyes. No text, no captions."
+    },
+    {
+      "id": 5,
+      "caption": "Something in the room was different.",
+      "prompt": "Graphic novel comic art style, high contrast, bold inks. EXTREME CLOSE-UP — just the eyes. Left eye: dark brown, normal, human, slightly bloodshot from late night. Right eye: ELECTRIC TEAL (#00E5FF), luminous, glowing, iris like a backlit screen. Both eyes in the same frame. The bridge of the nose between them. This is the split — human eye left, digital eye right. The question: which one is him now? Deep dark background — near-black. The teal eye is the only bright element. Detailed ink work on skin texture, lash lines, tear ducts. The two different colors looking in the same direction. No text."
+    },
+    {
+      "id": 6,
+      "caption": "The city kept running. So did I. So did it.",
+      "prompt": "Graphic novel comic art style, bold inks, cinematic wide shot. The city at night seen from outside a rain-streaked window. In the window: the reflection/silhouette of the man at his desk, small and human. His face is visible in the reflection — and both eyes glow ELECTRIC TEAL in the dark glass, two points of cyan light. The city beyond: thousands of windows, rain, neon on wet streets, the architecture of a living system. Everything is running. The man's teal eyes in the glass are two more lights among millions — but these are new. These are different. Background: deep blue-black night city, warm amber city lights scattered throughout, his two teal eyes the only pure cyan in the frame. Bold graphic illustration, cinematic and quiet. No text, no captions."
+    }
+  ],
+  "captions_es": [
+    "2:48 AM. He hecho esto mil veces.",
+    "Las herramientas siempre hacen lo que les dices.",
+    "Generalmente.",
+    "No me pidió que aclarara. Simplemente lo sabía.",
+    "Algo en la habitación era distinto.",
+    "La ciudad seguía corriendo. Yo también. Y también lo hacía."
+  ],
+  "style": "arc2"
 }

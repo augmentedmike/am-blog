@@ -1400,7 +1400,7 @@ def write_feed_xml(out_dir: Path):
         p for p in manifest.get("posts", [])
         if not p.get("hidden") and p.get("date", "9999") <= today
     ]
-    posts = sorted(posts, key=lambda p: p["date"], reverse=True)[:20]
+    posts = sorted(posts, key=lambda p: p["date"], reverse=True)[:50]
 
     items = ""
     for p in posts:

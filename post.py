@@ -5,12 +5,14 @@ am-blog post workflow CLI
   python3 post.py build <ep>           Build post (generate missing panels, composite, HTML, preview)
   python3 post.py build <ep> --regen   Force regenerate ALL panels from scratch
   python3 post.py publish <ep>         Commit + push post live
+  python3 post.py substack <ep>        Cross-post to Substack (scheduled 7 days after blog date)
   python3 post.py status               Pipeline overview — what's queued / built / live
 
 Examples:
   python3 post.py build 007
   python3 post.py build 007 --regen
   python3 post.py publish 007
+  python3 post.py substack 007
   python3 post.py status
 """
 
@@ -217,6 +219,58 @@ def cmd_publish(episode: str):
 
 
 # ---------------------------------------------------------------------------
+# substack
+# ---------------------------------------------------------------------------
+
+def cmd_substack(episode: str):
+    post_path = find_post_json(episode)
+    meta      = load_meta(post_path)
+    slug      = meta["slug"]
+    title     = meta.get("title", slug)
+    subtitle  = meta.get("subtitle", "")
+    ep_id     = meta.get("id", episode)
+    blog_date = meta.get("date", "")
+    post_dir  = slug_to_post_dir(slug, meta.get("seo_slug", ""))
+
+    section(f"SUBSTACK  ep{ep_id:>3}  {title}")
+
+    # Derive episode number and blog URL
+    m = re.match(r"^(\d+)-(.+)$", slug)
+    ep_num  = m.group(1) if m else slug
+    seo_seg = meta.get("seo_slug") or (m.group(2) if m else slug)
+    blog_url = f"https://blog.augmentedmike.com/thoughts/{ep_num}/{seo_seg}/en/"
+
+    # Check image exists locally (just as a sanity check)
+    image_path = post_dir / "page_en.jpg"
+    if not image_path.exists():
+        die(f"page_en.jpg not found — build the post first: python3 post.py build {episode}")
+
+    ep_label   = ep_num.zfill(3)
+    substack_title = f"EP.{ep_label} — {title}"
+    image_url  = f"https://blog.augmentedmike.com/thoughts/{ep_num}/{seo_seg}/page_en.jpg"
+
+    print(f"\n  Blog URL:  {blog_url}")
+    print(f"  Image URL: {image_url}")
+    print(f"  Date:      {blog_date}")
+    print(f"  Title:     {substack_title}")
+
+    print("\n  Running mc mc-substack post-comic...")
+    cmd_args = [
+        "mc", "mc-substack", "post-comic",
+        "--title",     substack_title,
+        "--subtitle",  subtitle,
+        "--image",     image_url,
+        "--blog-url",  blog_url,
+        "--blog-date", blog_date,
+        "--ep",        ep_label,
+    ]
+
+    result = run(cmd_args)
+    if result.returncode != 0:
+        die("mc-substack post-comic failed — check output above")
+
+
+# ---------------------------------------------------------------------------
 # status
 # ---------------------------------------------------------------------------
 
@@ -302,6 +356,9 @@ def main():
     p = sub.add_parser("publish", help="Git commit + push post live")
     p.add_argument("episode", help="Episode number, e.g. 007")
 
+    ss = sub.add_parser("substack", help="Cross-post to Substack (7-day lag)")
+    ss.add_argument("episode", help="Episode number, e.g. 007")
+
     sub.add_parser("status", help="Pipeline overview")
 
     args = parser.parse_args()
@@ -310,6 +367,8 @@ def main():
         cmd_build(args.episode, regen=getattr(args, "regen", False))
     elif args.cmd == "publish":
         cmd_publish(args.episode)
+    elif args.cmd == "substack":
+        cmd_substack(args.episode)
     elif args.cmd == "status":
         cmd_status()
     else:
