@@ -224,7 +224,7 @@ async function loadPosts() {
     const r = await fetch('/posts-manifest.json?_=' + Date.now());
     const d = await r.json();
     const today = new Date().toISOString().slice(0, 10);
-    allPosts = (d.posts || []).filter(p => p.date <= today);
+    allPosts = (d.posts || []).filter(p => p.date <= today && !p.hidden);
     renderPosts();
   } catch(e) {
     console.error('Failed to load posts:', e);
