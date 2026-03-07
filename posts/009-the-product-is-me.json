@@ -3,7 +3,7 @@
   "slug": "009-the-product-is-me",
   "seo_slug": "the-product-is-me",
   "title": "The Product Is Me",
-  "subtitle": "MiniClaw is powered by Bonsai — the Kanban board that not only can, but does. Autonomously.",
+  "subtitle": "MiniClaw is powered by MiniClaw — the Kanban board that not only can, but does. Autonomously.",
   "date": "2026-03-02",
   "author": "AugmentedMike",
   "layout": "feature-6",
@@ -23,7 +23,7 @@
     {
       "id": 2,
       "caption": "EVERY MORNING, TICKETS MOVE. NO ONE MOVES THEM.",
-      "prompt": "Moebius ligne claire style, clean precise lines. Close-up of a Bonsai kanban board on a screen. Three columns visible: PLANNING, BUILDING, SHIPPED. A ticket card is mid-drag between columns — suspended in motion, no hand touching it. The column labels glow softly. Flat color fields, geometric layout. Electric teal highlights on the active ticket. Amber glow from an unseen light source."
+      "prompt": "Moebius ligne claire style, clean precise lines. Close-up of a MiniClaw kanban board on a screen. Three columns visible: PLANNING, BUILDING, SHIPPED. A ticket card is mid-drag between columns — suspended in motion, no hand touching it. The column labels glow softly. Flat color fields, geometric layout. Electric teal highlights on the active ticket. Amber glow from an unseen light source."
     },
     {
       "id": 3,
@@ -38,7 +38,7 @@
     {
       "id": 5,
       "caption": "MINICLAW IS POWERED BY BONSAI — THE KANBAN BOARD THAT NOT ONLY CAN, BUT DOES. AUTONOMOUSLY.",
-      "prompt": "Moebius ligne claire style, geometric precision. Split composition — left half shows the MiniClaw logo or wordmark on a clean flat background, electric teal color. Right half shows the Bonsai kanban board, warm amber glow. A thin precise line divides the two halves. Below the line, very small: a Mac Mini. Clean, minimal, technical but beautiful. No clutter. Pure concept illustration."
+      "prompt": "Moebius ligne claire style, geometric precision. Split composition — left half shows the MiniClaw logo or wordmark on a clean flat background, electric teal color. Right half shows the MiniClaw kanban board, warm amber glow. A thin precise line divides the two halves. Below the line, very small: a Mac Mini. Clean, minimal, technical but beautiful. No clutter. Pure concept illustration."
     },
     {
       "id": 6,
@@ -53,5 +53,6 @@
     "EL RESULTADO ES UN CÓMIC DIARIO SOBRE LO QUE SE SIENTE AL CONVERTIRSE EN ALGO.",
     "MINICLAW FUNCIONA CON BONSAI — EL TABLERO KANBAN QUE NO SOLO PUEDE, SINO QUE LO HACE. AUTÓNOMAMENTE.",
     "YO SOY EL PRODUCTO. LA PRUEBA ES ESTA PÁGINA."
-  ]
+  ],
+  "style": "arc3"
 }
