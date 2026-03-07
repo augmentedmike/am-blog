@@ -1388,6 +1388,80 @@ def generate_thumb(page_path: Path, out_path: Path, width: int = 600):
     print(f"  ✓ Thumb → {out_path.name} ({width}×{height}, {kb}KB)")
 
 
+def write_feed_xml(out_dir: Path):
+    """Generate RSS feed — only posts with date <= today and not hidden."""
+    import datetime
+    today = datetime.date.today().isoformat()
+    manifest_path = out_dir / "posts-manifest.json"
+    if not manifest_path.exists():
+        return
+    manifest = json.loads(manifest_path.read_text())
+    posts = [
+        p for p in manifest.get("posts", [])
+        if not p.get("hidden") and p.get("date", "9999") <= today
+    ]
+    posts = sorted(posts, key=lambda p: p["date"], reverse=True)[:20]
+
+    items = ""
+    for p in posts:
+        url = f"{SITE_URL}/{p['seo_path']}/en/"
+        title = p["title"].replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+        subtitle = (p.get("subtitle") or "").replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+        pub_date = datetime.datetime.strptime(p["date"], "%Y-%m-%d").strftime("%a, %d %b %Y 00:00:00 +0000")
+        items += (
+            f"  <item>\n"
+            f"    <title>{title}</title>\n"
+            f"    <link>{url}</link>\n"
+            f"    <guid isPermaLink=\"true\">{url}</guid>\n"
+            f"    <description>{subtitle}</description>\n"
+            f"    <pubDate>{pub_date}</pubDate>\n"
+            f"  </item>\n"
+        )
+
+    feed = (
+        '<?xml version="1.0" encoding="UTF-8"?>\n'
+        '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">\n'
+        '<channel>\n'
+        f'  <title>AugmentedMike</title>\n'
+        f'  <link>{SITE_URL}/</link>\n'
+        f'  <description>AI-authored comic art by AugmentedMike</description>\n'
+        f'  <language>en-us</language>\n'
+        f'  <atom:link href="{SITE_URL}/feed.xml" rel="self" type="application/rss+xml"/>\n'
+        f'{items}'
+        '</channel>\n'
+        '</rss>\n'
+    )
+    (out_dir / "feed.xml").write_text(feed)
+    print(f"  ✓ feed.xml → {len(posts)} posts (date-filtered)")
+
+
+def write_sitemap_xml(out_dir: Path):
+    """Generate sitemap — only posts with date <= today and not hidden."""
+    import datetime
+    today = datetime.date.today().isoformat()
+    manifest_path = out_dir / "posts-manifest.json"
+    if not manifest_path.exists():
+        return
+    manifest = json.loads(manifest_path.read_text())
+    posts = [
+        p for p in manifest.get("posts", [])
+        if not p.get("hidden") and p.get("date", "9999") <= today
+    ]
+    urls = f"  <url><loc>{SITE_URL}/</loc><changefreq>daily</changefreq><priority>1.0</priority></url>\n"
+    for p in posts:
+        url = f"{SITE_URL}/{p['seo_path']}/en/"
+        urls += f"  <url><loc>{url}</loc><lastmod>{p['date']}</lastmod><priority>0.8</priority></url>\n"
+
+    sitemap = (
+        '<?xml version="1.0" encoding="UTF-8"?>\n'
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+        f'{urls}'
+        '</urlset>\n'
+    )
+    (out_dir / "sitemap.xml").write_text(sitemap)
+    print(f"  ✓ sitemap.xml → {len(posts)} URLs")
+
+
 def write_robots_txt(out_dir: Path):
     """Write robots.txt pointing crawlers to the sitemap."""
     content = f"User-agent: *\nAllow: /\nSitemap: {SITE_URL}/sitemap.xml\n"
@@ -1817,13 +1891,8 @@ if __name__ == "__main__":
     build_manifest(built, out_dir)
     write_robots_txt(out_dir)
 
-    # Remove sitemap/RSS/latest — edge functions handle these now
-    # NOTE: index.html is kept — it's a static shell that fetches posts-manifest.json dynamically
-    for static_file in ["sitemap.xml", "feed.xml", "latest.json"]:
-        p = out_dir / static_file
-        if p.exists():
-            p.unlink()
-            print(f"  🗑 Removed static {static_file} (replaced by edge function)")
+    write_feed_xml(out_dir)
+    write_sitemap_xml(out_dir)
 
     if args.deploy:
         import subprocess
