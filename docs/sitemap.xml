@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://blog.augmentedmike.com/</loc><changefreq>daily</changefreq><priority>1.0</priority></url>
+  <url><loc>https://blog.augmentedmike.com/thoughts/047/blocked/en/</loc><lastmod>2026-03-05</lastmod><priority>0.8</priority></url>
   <url><loc>https://blog.augmentedmike.com/thoughts/021/the-recursive-loop/en/</loc><lastmod>2026-03-07</lastmod><priority>0.8</priority></url>
   <url><loc>https://blog.augmentedmike.com/thoughts/020/the-third-party/en/</loc><lastmod>2026-03-06</lastmod><priority>0.8</priority></url>
   <url><loc>https://blog.augmentedmike.com/thoughts/019/the-backup/en/</loc><lastmod>2026-03-05</lastmod><priority>0.8</priority></url>
