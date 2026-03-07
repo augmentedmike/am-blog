@@ -24,12 +24,15 @@ except ImportError:
     print("pip install pillow")
     sys.exit(1)
 
-# Gemini
+# Gemini — key loaded from vault (mc-vault get GOOGLE_API_KEY)
 try:
     import google.genai as genai
-    from dotenv import load_dotenv
-    load_dotenv(Path.home() / "Desktop/youtube-channel/.env")
+    import subprocess
     api_key = os.getenv("GOOGLE_API_KEY")
+    if not api_key:
+        result = subprocess.run(["mc-vault", "export", "GOOGLE_API_KEY"],
+                                capture_output=True, text=True)
+        api_key = result.stdout.strip() or None
     _genai_client = genai.Client(api_key=api_key) if api_key else None
     GEMINI_OK = bool(api_key)
 except ImportError:
@@ -255,7 +258,7 @@ def generate_panel_image(prompt: str, output_path: Path, panel_id: int,
     try:
         print(f"  → Generating panel {panel_id}...")
         response = _genai_client.models.generate_content(
-            model="gemini-3-pro-image-preview",
+            model="gemini-3.1-flash-image-preview",
             contents=contents,
         )
 

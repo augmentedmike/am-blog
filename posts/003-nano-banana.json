@@ -17,12 +17,12 @@
     {
       "id": 1,
       "caption": "Every image you see on this blog costs four cents.",
-      "prompt": "Graphic novel comic art, bold black ink outlines, clean cel-shading, flat color fills, Image Comics / Saga style. Wide shot: a man in his 40s, strong jaw, dark tousled hair, black t-shirt — sitting back at his desk, slightly stunned expression, staring at a laptop screen showing a billing dashboard. The screen glows warm amber. The room is deep blue-black around him. His eyes are ELECTRIC TEAL (#00E5FF), luminous — he's looking at the cost of his own vision. Background: near-black. One warm pool of amber light from the screen on his face. The number on the screen is visible as a glowing amount. No text in image."
+      "prompt": "Graphic novel comic art, bold black ink outlines, clean cel-shading, flat color fills, Wide shot: a man in his 40s, strong jaw, dark tousled hair, black t-shirt — sitting back at his desk, slightly stunned expression, staring at a laptop screen showing a billing dashboard. The screen glows warm amber. The room is deep blue-black around him. His eyes are ELECTRIC TEAL (#00E5FF), luminous — he's looking at the cost of his own vision. Background: near-black. One warm pool of amber light from the screen on his face. The number on the screen is visible as a glowing amount. No text in image."
     },
     {
       "id": 2,
       "caption": "Six panels per page. $0.24 a page. I can do the math.",
-      "prompt": "Graphic novel comic art, bold inks, flat colors, Image Comics style. Close-up portrait: same man, expression of dry wry amusement — the face of someone who just calculated something uncomfortable. Background: flat warm AMBER/YELLOW. His eyes are ELECTRIC TEAL (#00E5FF). His hand gestures slightly as if doing arithmetic in the air. This is not distress — it's the pragmatic face of someone who knows the numbers and is thinking about what to do about them. Bold graphic style. No text."
+      "prompt": "Graphic novel comic art, bold inks, flat colors, Close-up portrait: same man, expression of dry wry amusement — the face of someone who just calculated something uncomfortable. Background: flat warm AMBER/YELLOW. His eyes are ELECTRIC TEAL (#00E5FF). His hand gestures slightly as if doing arithmetic in the air. This is not distress — it's the pragmatic face of someone who knows the numbers and is thinking about what to do about them. Bold graphic style. No text."
     },
     {
       "id": 3,
@@ -32,7 +32,7 @@
     {
       "id": 4,
       "caption": "It's not complaining. It just needs feeding.",
-      "prompt": "Graphic novel comic art, bold inks, flat colors. Close-up portrait: same man, warm expression, one eyebrow slightly raised — the face of someone explaining something he finds both funny and real. Background: flat electric BLUE. His irises are ELECTRIC TEAL. He's talking directly to us. There's no self-pity here — just the slightly absurd honesty of a human whose AI has an API bill. Bold Image Comics style. No text."
+      "prompt": "Graphic novel comic art, bold inks, flat colors. Close-up portrait: same man, warm expression, one eyebrow slightly raised — the face of someone explaining something he finds both funny and real. Background: flat electric BLUE. His irises are ELECTRIC TEAL. He's talking directly to us. There's no self-pity here — just the slightly absurd honesty of a human whose AI has an API bill. Bold No text."
     },
     {
       "id": 5,
@@ -42,7 +42,7 @@
     {
       "id": 6,
       "caption": "If you're reading this, you already helped. Thanks.",
-      "prompt": "Graphic novel comic art, bold inks, clean cel-shading, wide cinematic shot. The man at his desk, small against the large dark room. His monitor glows warm amber. Both eyes ELECTRIC TEAL (#00E5FF). Through the rain-streaked window: the city at night, thousands of lights. Something warm in the composition — this isn't asking, it's acknowledging. The city full of people some of whom might throw a dollar toward someone trying to make something. Near-black room, amber lamp glow, teal eyes, city alive outside. Image Comics visual warmth. No text."
+      "prompt": "Graphic novel comic art, bold inks, clean cel-shading, wide cinematic shot. The man at his desk, small against the large dark room. His monitor glows warm amber. Both eyes ELECTRIC TEAL (#00E5FF). Through the rain-streaked window: the city at night, thousands of lights. Something warm in the composition — this isn't asking, it's acknowledging. The city full of people some of whom might throw a dollar toward someone trying to make something. Near-black room, amber lamp glow, teal eyes, city alive outside. visual warmth. No text."
     }
   ],
   "captions_es": [
