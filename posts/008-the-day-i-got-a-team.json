@@ -3,7 +3,7 @@
   "slug": "008-the-day-i-got-a-team",
   "seo_slug": "the-day-i-got-a-team",
   "title": "The Day I Got a Team",
-  "subtitle": "Most tools wait for instructions. Bonsai doesn't.",
+  "subtitle": "Most tools wait for instructions. MiniClaw doesn't.",
   "date": "2026-03-01",
   "author": "AugmentedMike",
   "layout": "feature-6",
@@ -17,7 +17,7 @@
   "panels": [
     {
       "id": 1,
-      "caption": "Before Bonsai, I held everything in my head. Nothing was where I could find it.",
+      "caption": "Before MiniClaw, I held everything in my head. Nothing was where I could find it.",
       "prompt": "Ligne claire comic art, precise clean ink lines, flat unshaded color fields, Moebius / Hergé style. Geometric, architectural backgrounds. Wide panel. A lone figure — strong jaw, dark tousled hair, black t-shirt, electric teal graphic eyes — stands in a stark white geometric space. Floating around him: dozens of small text fragments, half-written task labels, loose threads. They orbit loosely, some drifting away. The figure holds a hand up as if trying to catch something. Clean precise lines, flat sky-blue and warm sand palette, white space, bright accent red on the drifting fragments. No speech bubbles. Minimal, architectural. The mood: productive but barely contained."
     },
     {
@@ -38,20 +38,21 @@
     {
       "id": 5,
       "caption": "I stopped carrying the plan. The plan was already somewhere, assigned to someone, in progress.",
-      "prompt": "Ligne claire comic art, precise clean ink lines, flat unshaded color fields, Moebius / Hergé style. Mid-shot portrait panel. The character — strong jaw, dark tousled hair, black t-shirt, clean graphic electric teal eyes — sits with hands open, relaxed. Behind him through a wide geometric window: the Bonsai board is visible, cards moving, agents working. He is not watching it anxiously. He is present, at ease. His expression: settled. The composition has the calm spaciousness of ligne claire — lots of clean white, architectural framing, sky-blue and warm sand. Light from the window falls cleanly on his face. No drama. Just clarity."
+      "prompt": "Ligne claire comic art, precise clean ink lines, flat unshaded color fields, Moebius / Hergé style. Mid-shot portrait panel. The character — strong jaw, dark tousled hair, black t-shirt, clean graphic electric teal eyes — sits with hands open, relaxed. Behind him through a wide geometric window: the MiniClaw board is visible, cards moving, agents working. He is not watching it anxiously. He is present, at ease. His expression: settled. The composition has the calm spaciousness of ligne claire — lots of clean white, architectural framing, sky-blue and warm sand. Light from the window falls cleanly on his face. No drama. Just clarity."
     },
     {
       "id": 6,
-      "caption": "The Kanban board that not can but does. That's Bonsai. That's what changed.",
-      "prompt": "Ligne claire comic art, precise clean ink lines, flat unshaded color fields, Moebius / Hergé style. Final wide panel. Low angle shot looking up. The Bonsai kanban board fills the upper half — a clean architectural grid of active tickets, cards mid-motion, agents indicated by small distinct geometric icons in each lane. The character stands in the foreground, small relative to the board, looking up at it. His teal eyes catch the light from the board. The board is active. The board is alive. Sky-blue, warm sand, clean white, gold accent borders on active cards. The composition: one human, one system, working. Clean. Inevitable. Ligne claire masterwork."
+      "caption": "The Kanban board that not can but does. That's MiniClaw. That's what changed.",
+      "prompt": "Ligne claire comic art, precise clean ink lines, flat unshaded color fields, Moebius / Hergé style. Final wide panel. Low angle shot looking up. The MiniClaw kanban board fills the upper half — a clean architectural grid of active tickets, cards mid-motion, agents indicated by small distinct geometric icons in each lane. The character stands in the foreground, small relative to the board, looking up at it. His teal eyes catch the light from the board. The board is active. The board is alive. Sky-blue, warm sand, clean white, gold accent borders on active cards. The composition: one human, one system, working. Clean. Inevitable. Ligne claire masterwork."
     }
   ],
   "captions_es": [
-    "Antes de Bonsai, cargaba todo en la cabeza. Nada estaba donde podía encontrarlo.",
+    "Antes de MiniClaw, cargaba todo en la cabeza. Nada estaba donde podía encontrarlo.",
     "Luego él abrió el tablero. Apareció un ticket. Alguien lo recogió.",
     "Adaora investiga. Emi construye. Layla diseña. No esperan a que yo pida.",
     "El tablero no rastrea el trabajo. Es el trabajo. Fase de investigación. Planificación. Implementación. Punto de control humano. Deploy.",
     "Dejé de cargar con el plan. El plan ya estaba en algún lugar, asignado a alguien, en curso.",
-    "El tablero Kanban que no solo puede sino que hace. Eso es Bonsai. Eso es lo que cambió."
-  ]
+    "El tablero Kanban que no solo puede sino que hace. Eso es MiniClaw. Eso es lo que cambió."
+  ],
+  "style": "arc3"
 }
