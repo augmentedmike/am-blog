@@ -586,7 +586,8 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
     height: 14px;
     padding: 0.25rem;
     box-sizing: content-box;
-    opacity: 0.4;
+    color: #ffffff;
+    opacity: 1;
   }}
   .header-lang-btn {{
     background: transparent;
