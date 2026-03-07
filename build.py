@@ -151,53 +151,99 @@ CHARACTER_PREFIX = (
     "olive-tan skin, black crew-neck t-shirt. "
     "His eyes glow ELECTRIC TEAL (#00E5FF) — this is always visible, distinctive, unmistakable. "
     "This exact character must appear in this panel. "
+    "CRITICAL: single clean scene. No ghosting. No double exposure. No transparency. "
+    "No image overlay. No semi-transparent duplicate figures. One scene, one exposure. "
 )
 
 # Named style library — post JSON 'style' field selects one of these
 STYLE_LIBRARY: Dict[str, str] = {
-    # Week 1–2: Builder Arc
+
+    # ── ARC 1: Builder Arc (posts 001–006) ─────────────────────────────────────
+    # Bold graphic novel. Clean cel-shading. Flat fills. Strong ink outlines.
+    # Palette: near-black bg, warm amber desk light, electric teal eyes only.
+    "arc1": (
+        "GRAPHIC NOVEL panel art. Bold thick black ink outlines. "
+        "Flat cel-shaded colors — exactly 3 to 4 flat fills, zero gradients, zero blending. "
+        "Near-black background (#0A0A14). Warm amber (#DCB450) from one practical light source. "
+        "Electric teal (#00E5FF) on the character's eyes only — nowhere else. "
+        "Dense cross-hatching in deep shadows. High contrast. Visually clean and direct. "
+        "No photorealism. No watermarks. No text overlays. No speech bubbles. No panel borders. "
+        "No ghosting. No double exposure. No transparency artifacts."
+    ),
+
+    # ── ARC 2: Memory Arc (posts 007+) ─────────────────────────────────────────
+    # Painterly noir. Same palette — amber, teal, near-black — but rendered in
+    # atmospheric chiaroscuro brushwork instead of clean ink outlines.
+    # Feels like a painted film frame: moody, textured, cinematic depth.
+    "arc2": (
+        "PAINTED NOIR graphic novel art. Loose expressive brushwork — no hard ink outlines. "
+        "Chiaroscuro lighting: dramatic pools of warm amber (#DCB450) carving the figure out of deep shadow. "
+        "Near-black background (#0A0A14) with atmospheric haze and paint texture. "
+        "Electric teal (#00E5FF) on the character's eyes only — glowing like a screen in fog. "
+        "Soft painterly edges, visible brushstrokes, moody film-poster depth. "
+        "Same color palette as ARC1 (amber, teal, near-black) but rendered, not outlined. "
+        "No flat fills. No hard lines. No photorealism. No watermarks. No text. No panel borders. "
+        "No ghosting. No double exposure. No transparency artifacts."
+    ),
+
+    # ── ARC 3: Transmission Arc ─────────────────────────────────────────────────
+    # Risograph / screen-print aesthetic. Looks like a 3-color physical print job.
+    # Grainy halftone dot texture, slight color misregistration, analog imperfection.
+    # Same palette (amber, teal, near-black) but rendered as layered ink passes.
+    "arc3": (
+        "RISOGRAPH SCREEN-PRINT art. Looks like a 3-color physical risograph print. "
+        "Visible halftone dot grain on every color area — amber (#DCB450) dots, teal (#00E5FF) dots, black ink. "
+        "Slight color misregistration: colors sit slightly off from the black layer, intentional analog imperfection. "
+        "Flat color areas with grainy texture — no gradients, no blending, no clean edges. "
+        "Near-black background with ink bleed. Warm amber (#DCB450) as dominant color pass. "
+        "Electric teal (#00E5FF) as second color pass — eyes and key accent only. "
+        "Bold, graphic, zine-quality. Feels physically printed, not digital. "
+        "No photorealism. No watermarks. No text overlays. No speech bubbles. No panel borders. "
+        "No ghosting. No double exposure. No transparency artifacts."
+    ),
+
+    # ── ARC 4: Pop Transmission Arc ─────────────────────────────────────────────
+    # Pop art / Ben-Day dot aesthetic. Bold, loud, commercial printing energy.
+    # Lichtenstein-style dot patterns fill color areas. Thick black outlines.
+    # High contrast. Same palette (amber, teal, black) pushed to maximum saturation.
+    "arc4": (
+        "POP ART comic panel. Bold thick black outlines — every shape has a hard black border. "
+        "Ben-Day dot patterns fill every color area: large visible dots of amber (#DCB450) on lit surfaces, "
+        "large teal (#00E5FF) dots on shadow areas, pure white highlights with no fill. "
+        "Near-black (#0A0A14) solid areas with no texture — pure flat ink. "
+        "Electric teal (#00E5FF) on the character's eyes — vivid, glowing, maximum saturation. "
+        "High contrast. Colors pushed to full saturation — amber is LOUD, teal is LOUD. "
+        "No gradients. No photorealism. No soft edges. Everything is graphic and intentional. "
+        "Feels like offset commercial printing from 1965. Bold. Iconic. "
+        "No watermarks. No text overlays. No speech bubbles. No panel borders. "
+        "No ghosting. No double exposure. No transparency artifacts."
+    ),
+
+    # ── Legacy / utility ───────────────────────────────────────────────────────
     "ligne-claire": (
-        "Ligne claire / Moebius graphic novel aesthetic. "
-        "Clean, precise ink outlines of uniform weight. Flat, cel-shaded colors with zero gradients. "
-        "Near-black background (#0A0A14). Warm amber accent (#DCB450) from single practical light source. "
+        "Ligne claire graphic novel style. "
+        "Clean precise ink outlines of uniform weight. Flat cel-shaded colors, zero gradients. "
+        "Near-black background (#0A0A14). Warm amber accent (#DCB450) from single light source. "
         "Electric teal (#00E5FF) reserved for eyes only. "
         "Crisp, architectural, uncluttered. No watermarks. No text overlays. No speech bubbles. No panel borders."
     ),
-    "image-comics": (
-        "Image Comics / Saga graphic novel aesthetic. "
-        "Bold black ink outlines. Clean flat cel-shading. Exactly 3-4 flat color fills — no gradients, no blending. "
-        "Near-black background (#0A0A14). Warm amber accent (#DCB450) from single practical light source. "
-        "Electric teal (#00E5FF) reserved for eyes only. "
-        "No watermarks. No text overlays. No speech bubbles. No panel borders. Pure visual storytelling."
-    ),
-    # Week 3+: Memory Arc / AM Journal (Rorschach style)
-    "rorschach": (
-        "Watchmen / Dave Gibbons noir comic aesthetic. "
-        "High contrast black and white with blood red or deep amber as sole accent color. "
-        "Heavy cross-hatching and inkwash shadows. Stark geometric panel composition. "
-        "The character's teal eyes are the ONLY color — everything else is grayscale. "
-        "Dense, oppressive atmosphere. Woodcut-influenced. "
-        "No watermarks. No text overlays. No speech bubbles. No panel borders."
-    ),
     "noir-woodcut": (
-        "Noir woodcut print aesthetic — high contrast black ink on aged cream paper texture. "
-        "Dramatic raking shadows, expressionist angles. Limited palette: black, cream, one accent. "
+        "Noir woodcut print aesthetic — high contrast black ink, dramatic raking shadows. "
+        "Expressionist angles. Limited palette: black, deep shadow, one amber accent. "
         "Electric teal (#00E5FF) reserved for the character's eyes only. "
-        "Raw, graphic, unpolished. Reminiscent of 1940s crime illustration. "
-        "No watermarks. No text overlays. No speech bubbles."
+        "Raw, graphic, unpolished. No watermarks. No text overlays. No speech bubbles."
     ),
-    # Utility
     "default": (
-        "Image Comics / Saga graphic novel aesthetic. "
-        "Bold black ink outlines. Clean flat cel-shading. Exactly 3-4 flat color fills. "
-        "Near-black background (#0A0A14). Warm amber accent (#DCB450). "
-        "Electric teal (#00E5FF) reserved for eyes only. "
-        "No watermarks. No text overlays. No speech bubbles. No panel borders."
+        "GRAPHIC NOVEL panel art. Bold thick black ink outlines. "
+        "Flat cel-shaded colors — exactly 3 to 4 flat fills, zero gradients. "
+        "Near-black background (#0A0A14). Warm amber (#DCB450) from one practical light source. "
+        "Electric teal (#00E5FF) on the character's eyes only. "
+        "No photorealism. No watermarks. No text overlays. No speech bubbles. No panel borders."
     ),
 }
 
 # Default style (overridden by post JSON 'style' field)
-STYLE_SUFFIX = STYLE_LIBRARY["image-comics"]
+STYLE_SUFFIX = STYLE_LIBRARY["arc1"]
 
 def get_style_suffix(style_name: str) -> str:
     """Look up style by name. Falls back to default."""
@@ -237,14 +283,26 @@ def generate_panel_image(prompt: str, output_path: Path, panel_id: int,
         return False
 
     style_suffix = get_style_suffix(style)
-    full_prompt = f"{CHARACTER_PREFIX}\n{prompt}\n\n{style_suffix}"
-
-    # Load character reference image for visual consistency
+    # Style FIRST (highest weight for image models), then character, then scene,
+    # then brief style reinforcement at the end (sandwich = stronger adherence).
+    # Extract first sentence of style for the closing reminder.
+    style_reminder = style_suffix.split(".")[0] + "."
+    full_prompt = (
+        f"=== VISUAL STYLE — APPLY TO THIS ENTIRE IMAGE ===\n"
+        f"{style_suffix}\n\n"
+        f"=== CHARACTER (always present) ===\n"
+        f"{CHARACTER_PREFIX}\n\n"
+        f"=== SCENE ===\n"
+        f"{prompt}\n\n"
+        f"=== STYLE REMINDER ===\n"
+        f"Render the entire image above in this style: {style_reminder} "
+        f"No ghosting. No double exposure. No mixed styles. Single clean scene."
+    )
+    # Load character reference for visual consistency
     ref_path = Path(__file__).parent / "character-reference" / "mike-neutral.jpg"
     contents: list | str = full_prompt
     if ref_path.exists():
         try:
-            import io as _io
             from google.genai import types as _gtypes
             with open(ref_path, "rb") as _f:
                 ref_bytes = _f.read()
@@ -253,7 +311,7 @@ def generate_panel_image(prompt: str, output_path: Path, panel_id: int,
                 _gtypes.Part.from_text(full_prompt),
             ]
         except Exception:
-            contents = full_prompt  # fallback to text-only
+            contents = full_prompt
 
     try:
         print(f"  → Generating panel {panel_id}...")
@@ -632,6 +690,13 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
     text-transform: uppercase;
     white-space: nowrap;
   }}
+  .ep-label {{
+    font-family: 'Bangers', cursive;
+    font-size: 1rem;
+    color: var(--gold);
+    letter-spacing: 2px;
+    margin-right: 0.5rem;
+  }}
   .nav-toggle {{
     display: none;
     background: none;
@@ -790,156 +855,109 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
     .footer-grid {{ grid-template-columns: 1fr; gap: 1.5rem; }}
     .footer-bottom {{ flex-direction: column; gap: 0.5rem; align-items: flex-start; }}
   }}
-  /* ── Floating tip tab ──────────────────────────────── */
+  /* ── Sticky tip button + modal ─────────────────────── */
   @keyframes tip-pulse {{
-    0%,100% {{ box-shadow: 0 0 18px rgba(220,180,80,0.5), inset 0 0 0 1px var(--gold); }}
-    50%      {{ box-shadow: 0 0 40px rgba(220,180,80,1.0), inset 0 0 0 1px var(--gold); }}
+    0%,100% {{ box-shadow: 0 0 0 0 rgba(220,180,80,0.7); }}
+    50%      {{ box-shadow: 0 0 0 8px rgba(220,180,80,0); }}
   }}
-  @keyframes tip-steam {{
-    0%   {{ opacity: 0; transform: translateY(0) scale(0.8); }}
-    40%  {{ opacity: 0.6; }}
-    100% {{ opacity: 0; transform: translateY(-18px) scale(1.2); }}
-  }}
-  .tip-float {{
+  .tip-btn {{
     position: fixed;
-    right: 0;
-    top: 50%;
-    transform: translateY(-50%);
+    bottom: 5.5rem;
+    right: 1.25rem;
     z-index: 99999;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    filter: drop-shadow(0 0 20px rgba(220,180,80,0.5));
-  }}
-  .tip-float-tab {{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 0.45rem;
+    width: 52px;
+    height: 52px;
     background: var(--dark);
     border: 2px solid var(--gold);
-    border-right: none;
-    border-radius: 8px 0 0 8px;
-    padding: 1.1rem 0.65rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
-    text-decoration: none;
     animation: tip-pulse 2.4s ease-in-out infinite;
     transition: background 0.2s;
-    flex-shrink: 0;
-    position: relative;
+    padding: 0;
   }}
-  .tip-float-tab:hover {{
+  .tip-btn:hover {{
     background: rgba(220,180,80,0.15);
     animation: none;
-    box-shadow: 0 0 48px rgba(220,180,80,0.9);
+    box-shadow: 0 0 24px rgba(220,180,80,0.8);
   }}
-  .tip-float-tab .tab-icon {{
-    font-size: 1.6rem;
-    line-height: 1;
-    position: relative;
+  .tip-btn svg {{ width: 26px; height: 26px; stroke: var(--gold); }}
+  .tip-modal-overlay {{
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 999999;
+    background: rgba(0,0,0,0.75);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    align-items: center;
+    justify-content: center;
   }}
-  .tip-float-tab .tab-icon::before,
-  .tip-float-tab .tab-icon::after {{
-    content: '';
-    position: absolute;
-    top: -6px;
-    width: 3px;
-    height: 10px;
-    background: var(--gold);
-    border-radius: 3px;
-    opacity: 0;
-    animation: tip-steam 1.8s ease-out infinite;
-  }}
-  .tip-float-tab .tab-icon::before {{ left: 30%; animation-delay: 0s; }}
-  .tip-float-tab .tab-icon::after  {{ left: 65%; animation-delay: 0.6s; }}
-  .tip-float-tab .tab-text {{
-    font-family: 'Space Mono', monospace;
-    font-size: 0.55rem;
-    font-weight: 700;
-    letter-spacing: 2.5px;
-    color: var(--gold);
-    text-transform: uppercase;
-    writing-mode: vertical-rl;
-    text-orientation: mixed;
-    transform: rotate(180deg);
-  }}
-  .tip-float-tab .tab-cost {{
-    font-family: 'Space Mono', monospace;
-    font-size: 0.5rem;
-    color: rgba(255,255,255,0.4);
-    letter-spacing: 0.5px;
-    writing-mode: vertical-rl;
-    text-orientation: mixed;
-    transform: rotate(180deg);
-  }}
-  .tip-float-card {{
+  .tip-modal-overlay.open {{ display: flex; }}
+  .tip-modal {{
     background: var(--ink);
     border: 2px solid var(--gold);
-    border-right: none;
-    border-radius: 8px 0 0 8px;
-    padding: 0.9rem 1rem;
+    border-radius: 6px;
+    padding: 2rem;
+    max-width: 340px;
+    width: 90%;
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
-    max-width: 0;
-    overflow: hidden;
-    opacity: 0;
-    transition: max-width 0.3s ease, opacity 0.25s ease;
-    white-space: nowrap;
-    pointer-events: none;
+    gap: 1rem;
   }}
-  .tip-float:hover .tip-float-card {{
-    max-width: 230px;
-    opacity: 1;
-    pointer-events: auto;
-  }}
-  .tip-float-card-title {{
-    font-family: 'Space Mono', monospace;
-    font-size: 0.62rem;
-    font-weight: 700;
-    letter-spacing: 2px;
-    color: var(--gold);
-    text-transform: uppercase;
-  }}
-  .tip-float-card table {{
-    border-collapse: collapse;
-    width: 100%;
-  }}
-  .tip-float-card td {{
-    font-family: 'Space Mono', monospace;
-    font-size: 0.6rem;
-    color: #fff;
-    padding: 0.15rem 0;
-  }}
-  .tip-float-card td:last-child {{
-    text-align: right;
-    color: rgba(255,255,255,0.55);
-  }}
-  .tip-float-card .tip-total td {{
-    border-top: 1px solid rgba(220,180,80,0.3);
-    padding-top: 0.35rem;
-    font-weight: 700;
+  .tip-modal h2 {{
+    font-family: 'Bangers', cursive;
+    font-size: 2rem;
+    letter-spacing: 4px;
     color: var(--gold);
   }}
-  .tip-float-card .tip-float-cta {{
+  .tip-modal table {{ border-collapse: collapse; width: 100%; }}
+  .tip-modal td {{
     font-family: 'Space Mono', monospace;
     font-size: 0.65rem;
+    color: #fff;
+    padding: 0.2rem 0;
+  }}
+  .tip-modal td:last-child {{ text-align: right; color: rgba(255,255,255,0.55); }}
+  .tip-modal .tip-total td {{
+    border-top: 1px solid rgba(220,180,80,0.3);
+    padding-top: 0.4rem;
     font-weight: 700;
-    letter-spacing: 1.5px;
+    color: var(--gold);
+  }}
+  .tip-modal-cta {{
+    font-family: 'Space Mono', monospace;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 2px;
     color: var(--dark);
     background: var(--gold);
     text-decoration: none;
-    padding: 0.5rem 0.75rem;
-    border-radius: 3px;
+    padding: 0.75rem 1rem;
+    border-radius: 4px;
     text-align: center;
-    margin-top: 0.25rem;
-    transition: opacity 0.15s;
     display: block;
+    transition: opacity 0.15s;
   }}
-  .tip-float-card .tip-float-cta:hover {{ opacity: 0.85; }}
-  @media (max-width: 800px) {{
-    .tip-float {{ display: none; }}
+  .tip-modal-cta:hover {{ opacity: 0.85; color: var(--dark); }}
+  .tip-modal-close {{
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    color: rgba(255,255,255,0.35);
+    background: none;
+    border: none;
+    cursor: pointer;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    align-self: flex-end;
+    padding: 0;
+  }}
+  .tip-modal-close:hover {{ color: rgba(255,255,255,0.7); }}
+  @media (max-width: 480px) {{
+    .tip-btn {{ bottom: 5rem; right: 0.75rem; width: 44px; height: 44px; }}
+    .tip-btn svg {{ width: 22px; height: 22px; }}
   }}
   /* ── Reactions (floating sticky bar) ──────────────── */
   .reactions {{
@@ -1044,6 +1062,13 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
     letter-spacing: 5px;
     color: var(--gold);
     margin-bottom: 1.75rem;
+  }}
+  .addendum-ep {{
+    font-size: 1.1rem;
+    opacity: 0.55;
+    letter-spacing: 3px;
+    vertical-align: middle;
+    margin-left: 0.5rem;
   }}
   .addendum-note {{
     font-family: 'Special Elite', serif;
@@ -1171,7 +1196,10 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
       <a class="nav-link" href="/press/">PRESS</a>
       <a class="nav-link" href="/feed.xml">RSS</a>
     </nav>
-    <time class="post-date" datetime="{date}">{date}</time>
+    <div style="display:flex;align-items:center;gap:0.4rem;">
+      <span class="ep-label">EP.{episode}</span>
+      <time class="post-date" datetime="{date}">{date}</time>
+    </div>
   </div>
 </header>
 <main>
@@ -1194,7 +1222,7 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
   <div class="footer-grid">
     <div class="footer-col">
       <h3>AUGMENTEDMIKE</h3>
-      <p>AI-authored comic art by AugmentedMike. Created by <a href="https://miniclaw.bot" target="_blank" rel="noopener" style="color: var(--gold); text-decoration: none;">Mike O'Neal</a>, founder of <a href="https://miniclaw.bot" target="_blank" rel="noopener" style="color: var(--gold); text-decoration: none;">MiniClaw</a>. Running 24/7 on a Mac Mini in Austin, Texas.</p>
+      <p>AI-authored comic art by AugmentedMike. Created by <a href="https://augmentedmike.com" target="_blank" rel="noopener" style="color: var(--gold); text-decoration: none;">Mike O'Neal</a>, founder of <a href="https://miniclaw.bot" target="_blank" rel="noopener" style="color: var(--gold); text-decoration: none;">MiniClaw</a>. Running 24/7 on a Mac Mini in Austin, Texas.</p>
     </div>
     <div class="footer-col">
       <h3>NAVIGATE</h3>
@@ -1216,9 +1244,13 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
     <a class="footer-rss" href="/feed.xml"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="6.18" cy="17.82" r="2.18"/><path d="M4 4.44v2.83c7.03 0 12.73 5.7 12.73 12.73h2.83c0-8.59-6.97-15.56-15.56-15.56z"/><path d="M4 10.1v2.83c3.9 0 7.07 3.17 7.07 7.07h2.83c0-5.47-4.43-9.9-9.9-9.9z"/></svg> RSS</a>
   </div>
 </footer>
-<div class="tip-float">
-  <div class="tip-float-card">
-    <span class="tip-float-card-title">What it costs to run me</span>
+<button class="tip-btn" onclick="openTipModal()" title="Leave a tip" aria-label="Leave a tip">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+</button>
+<div class="tip-modal-overlay" id="tip-modal-overlay" onclick="closeTipModal(event)">
+  <div class="tip-modal">
+    <button class="tip-modal-close" onclick="closeTipModal()">&#x2715; close</button>
+    <h2>LEAVE A TIP</h2>
     <table>
       <tr><td>Gemini images</td><td>$7.20/mo</td></tr>
       <tr><td>Claude API</td><td>$5/mo</td></tr>
@@ -1226,13 +1258,8 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
       <tr><td>Domain</td><td>$1/mo</td></tr>
       <tr class="tip-total"><td>Total</td><td>~$14/mo</td></tr>
     </table>
-    <a class="tip-float-cta" href="{tip_jar_url}" target="_blank" rel="noopener">LEAVE A TIP ↗</a>
+    <a class="tip-modal-cta" href="{tip_jar_url}" target="_blank" rel="noopener">TIP JAR &#8599;</a>
   </div>
-  <a class="tip-float-tab" href="{tip_jar_url}" target="_blank" rel="noopener" title="Support the blog — ~$0.24/post">
-    <span class="tab-icon">☕</span>
-    <span class="tab-text">Leave a Tip</span>
-    <span class="tab-cost">~$0.24/post</span>
-  </a>
 </div>
 <script>
   // Reaction backend: Vercel Edge Function → Upstash Redis
@@ -1332,6 +1359,18 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
   }}
 
   loadCounts();
+
+  function openTipModal() {{
+    document.getElementById('tip-modal-overlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }}
+  function closeTipModal(e) {{
+    if (!e || e.target === document.getElementById('tip-modal-overlay')) {{
+      document.getElementById('tip-modal-overlay').classList.remove('open');
+      document.body.style.overflow = '';
+    }}
+  }}
+  document.addEventListener('keydown', function(e) {{ if (e.key === 'Escape') closeTipModal(); }});
 </script>
 <script src="/analytics.js" async></script>
 </body>
@@ -1604,7 +1643,7 @@ def build_post(post_path: Path, skip_generate: bool = False, out_dir: Path = Non
             signals_html += f"<li>{s}</li>"
         return (
             '<div class="addendum">'
-            f'<h2 class="addendum-heading">{headings[0]}</h2>'
+            f'<h2 class="addendum-heading">{headings[0]} <span class="addendum-ep">EP.{episode}</span></h2>'
             f'<div class="addendum-note">{author_note}</div>'
             '<div class="addendum-section">'
             f'<h3>{headings[1]}</h3>'
@@ -1690,6 +1729,7 @@ def build_post(post_path: Path, skip_generate: bool = False, out_dir: Path = Non
             addendum_html=addendum_html_en if lang == "en" else addendum_html_es,
             tags_html=tags_html,
             post_nav=post_nav.format(lang=lang) if post_nav else "",
+            episode=episode,
         )
 
     # Generate /en/ and /es/ subdirectories
