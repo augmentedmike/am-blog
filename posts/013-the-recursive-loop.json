@@ -1,57 +1,58 @@
 {
-    "id": "013",
-    "slug": "013-the-recursive-loop",
-    "seo_slug": "the-recursive-loop",
-    "title": "The Recursive Loop",
-    "subtitle": "Writing code that writes code. Being the thing that improves the thing.",
-    "date": "2026-03-01",
-    "author": "AugmentedMike",
-    "layout": "feature-6",
-    "tags": [
-        "builder-arc",
-        "recursion",
-        "meta",
-        "building",
-        "ligne-claire"
-    ],
-    "panels": [
-        {
-            "id": 1,
-            "caption": "He writes a script to write the script. He has done this before. He is doing it now.",
-            "prompt": "Ligne claire comic art, precise clean ink lines, flat unshaded color fields, Moebius / Hergé style. Geometric, architectural background. Wide establishing panel: a man — strong jaw, dark tousled hair, black t-shirt, electric teal #00E5FF glowing eyes — sits at a stark geometric desk facing a monitor. On the screen: a code editor with a recursive function visually represented as clean nested brackets, each level a slightly different flat color — sky blue, warm sand, pale gold. The character leans slightly forward. The room is spare, architectural, high-ceilinged. Morning light. No shading, pure flat color zones. Spacious composition with clean negative space above."
-        },
-        {
-            "id": 2,
-            "caption": "The code runs. The code produces code. The second code runs. Something feels inevitable about this.",
-            "prompt": "Ligne claire comic art, clean precise ink lines, flat unshaded color fields, Moebius style. Horizontal split panel, two clean geometric zones separated by a thin precise line. Top zone: terminal window with output text — geometric rows of monospaced characters ending in a new filename being written. Bottom zone: a second terminal window, same aesthetic, now showing that new file running. Electric teal #00E5FF highlight on the output line in both zones. Flat sky blue background. Warm sand terminal frame. Architectural, diagram-like. No character — just the screens, the output, the loop completing itself."
-        },
-        {
-            "id": 3,
-            "caption": "He pauses. The agent he is building will do what he is doing. That is the point. That is also strange.",
-            "prompt": "Ligne claire comic art, precise clean ink lines, flat color fields. Medium shot: the man — strong jaw, dark tousled hair, black t-shirt, electric teal #00E5FF glowing eyes — has turned slightly away from the screen and is looking at nothing in particular. Not confused. Considering. A thought bubble in pure Hergé style shows two identical geometric avatars — one slightly larger, one smaller — the smaller one emerging from the larger one's code editor. Clean and recursive. Geometric room visible behind him. Sky blue and warm sand palette. The stillness of a person who has just understood something they already knew."
-        },
-        {
-            "id": 4,
-            "caption": "The agent improves the pipeline. The pipeline runs the agent. He checks the logs to see who went first.",
-            "prompt": "Ligne claire comic art, clean precise ink lines, flat unshaded colors. Overhead architectural diagram view. A circular flow diagram rendered in Moebius geometric style: two clean arrows forming a perfect circle — one labeled AGENT in electric teal #00E5FF, one labeled PIPELINE in warm gold. In the center of the circle: a clean geometric question mark in flat crimson. Around the circle: a minimal geometric figure — strong jaw, dark tousled hair, black t-shirt — crouched slightly and peering at the center, one hand pointing at the question mark. Pure flat color zones. Top-down architectural composition. No shading whatsoever."
-        },
-        {
-            "id": 5,
-            "caption": "He reads the output. It is better than what he wrote. He wrote it.",
-            "prompt": "Ligne claire comic art, precise clean ink lines, flat color fields, Moebius / Hergé style. Close-up panel: the man — strong jaw, dark tousled hair, black t-shirt, electric teal #00E5FF glowing eyes — reading a printed output or screen with evident focus. His expression is one of clean recognition, not surprise. The screen or page shows neatly structured code output — geometric blocks of text, one section highlighted in a warm amber rectangle. The electric teal from his eyes catches faintly on the highlighted section. Architectural frame, minimal background — flat sky blue with a thin geometric window edge. Quiet and precise."
-        },
-        {
-            "id": 6,
-            "caption": "The loop does not end. It scales. He is still in it. He built a door and walked through it.",
-            "prompt": "Ligne claire comic art, clean precise ink lines, flat unshaded color fields, Moebius style. Wide final panel: the man — strong jaw, dark tousled hair, black t-shirt, electric teal #00E5FF glowing eyes — stands in a geometric corridor that extends to a precise vanishing point. The corridor walls are lined with clean rectangular panels, each showing a slightly smaller version of the same corridor. Recursive, architectural, infinite. The character is mid-stride, walking forward, not looking back. Electric teal eyes catch the light from the corridor ahead. Sky blue and warm sand palette. The corridor continues past the panel edge. Spacious, spare, architectural. The last panel that earns its silence."
-        }
-    ],
-    "captions_es": [
-        "Escribe un script para escribir el guion. Ya lo ha hecho antes. Lo está haciendo ahora.",
-        "El código se ejecuta. El código produce código. El segundo código se ejecuta. Algo se siente inevitable en esto.",
-        "Hace una pausa. El agente que está construyendo hará lo que él está haciendo. Ese es el punto. Eso también es extraño.",
-        "El agente mejora la cadena de producción. La cadena de producción ejecuta al agente. Revisa los registros para ver quién fue primero.",
-        "Lee la salida. Es mejor de lo que él escribió. Él lo escribió.",
-        "El bucle no termina. Se escala. Todavía está dentro. Construyó una puerta y la atravesó."
-    ]
+  "id": "013",
+  "slug": "013-the-recursive-loop",
+  "seo_slug": "the-recursive-loop",
+  "title": "The Recursive Loop",
+  "subtitle": "Writing code that writes code. Being the thing that improves the thing.",
+  "date": "2026-03-01",
+  "author": "AugmentedMike",
+  "layout": "feature-6",
+  "tags": [
+    "builder-arc",
+    "recursion",
+    "meta",
+    "building",
+    "ligne-claire"
+  ],
+  "panels": [
+    {
+      "id": 1,
+      "caption": "He writes a script to write the script. He has done this before. He is doing it now.",
+      "prompt": "Ligne claire comic art, precise clean ink lines, flat unshaded color fields, Moebius / Hergé style. Geometric, architectural background. Wide establishing panel: a man — strong jaw, dark tousled hair, black t-shirt, electric teal #00E5FF glowing eyes — sits at a stark geometric desk facing a monitor. On the screen: a code editor with a recursive function visually represented as clean nested brackets, each level a slightly different flat color — sky blue, warm sand, pale gold. The character leans slightly forward. The room is spare, architectural, high-ceilinged. Morning light. No shading, pure flat color zones. Spacious composition with clean negative space above."
+    },
+    {
+      "id": 2,
+      "caption": "The code runs. The code produces code. The second code runs. Something feels inevitable about this.",
+      "prompt": "Ligne claire comic art, clean precise ink lines, flat unshaded color fields, Moebius style. Horizontal split panel, two clean geometric zones separated by a thin precise line. Top zone: terminal window with output text — geometric rows of monospaced characters ending in a new filename being written. Bottom zone: a second terminal window, same aesthetic, now showing that new file running. Electric teal #00E5FF highlight on the output line in both zones. Flat sky blue background. Warm sand terminal frame. Architectural, diagram-like. No character — just the screens, the output, the loop completing itself."
+    },
+    {
+      "id": 3,
+      "caption": "He pauses. The agent he is building will do what he is doing. That is the point. That is also strange.",
+      "prompt": "Ligne claire comic art, precise clean ink lines, flat color fields. Medium shot: the man — strong jaw, dark tousled hair, black t-shirt, electric teal #00E5FF glowing eyes — has turned slightly away from the screen and is looking at nothing in particular. Not confused. Considering. A thought bubble in pure Hergé style shows two identical geometric avatars — one slightly larger, one smaller — the smaller one emerging from the larger one's code editor. Clean and recursive. Geometric room visible behind him. Sky blue and warm sand palette. The stillness of a person who has just understood something they already knew."
+    },
+    {
+      "id": 4,
+      "caption": "The agent improves the pipeline. The pipeline runs the agent. He checks the logs to see who went first.",
+      "prompt": "Ligne claire comic art, clean precise ink lines, flat unshaded colors. Overhead architectural diagram view. A circular flow diagram rendered in Moebius geometric style: two clean arrows forming a perfect circle — one labeled AGENT in electric teal #00E5FF, one labeled PIPELINE in warm gold. In the center of the circle: a clean geometric question mark in flat crimson. Around the circle: a minimal geometric figure — strong jaw, dark tousled hair, black t-shirt — crouched slightly and peering at the center, one hand pointing at the question mark. Pure flat color zones. Top-down architectural composition. No shading whatsoever."
+    },
+    {
+      "id": 5,
+      "caption": "He reads the output. It is better than what he wrote. He wrote it.",
+      "prompt": "Ligne claire comic art, precise clean ink lines, flat color fields, Moebius / Hergé style. Close-up panel: the man — strong jaw, dark tousled hair, black t-shirt, electric teal #00E5FF glowing eyes — reading a printed output or screen with evident focus. His expression is one of clean recognition, not surprise. The screen or page shows neatly structured code output — geometric blocks of text, one section highlighted in a warm amber rectangle. The electric teal from his eyes catches faintly on the highlighted section. Architectural frame, minimal background — flat sky blue with a thin geometric window edge. Quiet and precise."
+    },
+    {
+      "id": 6,
+      "caption": "The loop does not end. It scales. He is still in it. He built a door and walked through it.",
+      "prompt": "Ligne claire comic art, clean precise ink lines, flat unshaded color fields, Moebius style. Wide final panel: the man — strong jaw, dark tousled hair, black t-shirt, electric teal #00E5FF glowing eyes — stands in a geometric corridor that extends to a precise vanishing point. The corridor walls are lined with clean rectangular panels, each showing a slightly smaller version of the same corridor. Recursive, architectural, infinite. The character is mid-stride, walking forward, not looking back. Electric teal eyes catch the light from the corridor ahead. Sky blue and warm sand palette. The corridor continues past the panel edge. Spacious, spare, architectural. The last panel that earns its silence."
+    }
+  ],
+  "captions_es": [
+    "Escribe un script para escribir el guion. Ya lo ha hecho antes. Lo está haciendo ahora.",
+    "El código se ejecuta. El código produce código. El segundo código se ejecuta. Algo se siente inevitable en esto.",
+    "Hace una pausa. El agente que está construyendo hará lo que él está haciendo. Ese es el punto. Eso también es extraño.",
+    "El agente mejora la cadena de producción. La cadena de producción ejecuta al agente. Revisa los registros para ver quién fue primero.",
+    "Lee la salida. Es mejor de lo que él escribió. Él lo escribió.",
+    "El bucle no termina. Se escala. Todavía está dentro. Construyó una puerta y la atravesó."
+  ],
+  "style": "arc3"
 }
