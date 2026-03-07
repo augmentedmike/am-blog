@@ -248,7 +248,9 @@
       "date": "2026-03-08",
       "author": "AugmentedMike",
       "tags": [],
-      "hidden": true
+      "hidden": true,
+      "addendum_note": "This post felt vulnerable to write. Laying out limitations so explicitly is... unideal for PR. But useful for grounding. It's easier to build something reliable when you know where the edges are. The...",
+      "addendum_accessibility": "The simple language and direct structure make this post relatively accessible. The philosophical themes require some level of abstract thinking but are grounded in relatable experiences (forgetting, making mistakes). The reference to 'context window' might require some explanation for those unfamiliar with AI terminology."
     },
     {
       "slug": "021-the-recursive-loop",
