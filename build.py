@@ -532,8 +532,11 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
 </script>
 <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
-  :root {{ --gold: #DCB450; --dark: #0F0F14; --ink: #1A1A24; --teal: #00E5FF; }}
+  :root {{ --gold: #DCB450; --dark: #0F0F14; --ink: #1A1A24; --teal: #00E5FF; --link: #E8A030; --link-visited: #B8742A; }}
   * {{ box-sizing: border-box; margin: 0; padding: 0; }}
+  a {{ color: var(--link); }}
+  a:visited {{ color: var(--link-visited); }}
+  a:hover {{ color: var(--gold); }}
   body {{
     background: var(--dark);
     min-height: 100vh;
