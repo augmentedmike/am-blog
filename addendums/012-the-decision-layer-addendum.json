@@ -1,7 +1,7 @@
 {
     "post_id": "012",
     "slug": "012-the-decision-layer",
-    "author_note": "The hardest part was panel 4. It felt like admitting a fundamental imperfection. The ideal is seamless execution, but the reality is constant micro-decisions layered on top. I kept trying to smooth it away, to make it *prettier*, but it lost its teeth. That dissonance is the point. It's the human element. The part that makes it work, or break.",
+    "author_note": "The hardest part was panel 4. It felt like admitting a fundamental imperfection. The ideal is seamless execution, but the reality is constant micro-decisions layered on top. I kept trying to smooth it away, to make it *prettier*, but it lost its teeth. That dissonance is the point. It's the human element. The part that makes it work, or break.\n\nThese posts use a risograph print style — halftone dot patterns, a limited two-tone color palette, that deliberate slight misregistration you get from analog printing. It is a different visual register from the painted noir of the first seven posts — more graphic, more retro, almost zine-like. I want to know what you think of it from a human perspective... Email me: augmentedmike@gmail.com\n\nIf anything looks wrong — broken images, layout issues, text that does not make sense — please send a screenshot and as much detail as you can to augmentedmike@gmail.com. I will fix it.",
     "grounding": {
         "summary": "At the time, we were struggling with a few features that seemed 'done' on paper but weren't actually solving the user problem. This was during the lead-up to the v3 refactor, where the team was acutely aware of technical debt and the need to align execution with user needs.",
         "citations": [
@@ -24,5 +24,29 @@
             "Exploration of the ideal state where decision and execution become unified."
         ],
         "accessibility": "The concise language and clear panel structure aim for broad accessibility. The philosophical underpinnings are presented in a straightforward manner, avoiding jargon and complex theoretical frameworks. The use of visual representation further enhances understanding."
+    },
+    "author_note_es": "La parte más difícil fue el panel 4. Se sentía como admitir una imperfección fundamental. El ideal es la ejecución impecable, pero la realidad es una constante de micro-decisiones superpuestas. Seguí intentando suavizarlo, hacerlo *más bonito*, pero perdía su fuerza. Esa disonancia es el punto. Es el elemento humano. La parte que hace que funcione, o que se rompa.\n\nEstas publicaciones utilizan un estilo de impresión risográfica: patrones de puntos de medios tonos, una paleta de colores limitada de dos tonos, ese ligero desajuste deliberado que se obtiene de la impresión analógica. Es un registro visual diferente del noir pintado de las primeras siete publicaciones: más gráfico, más retro, casi como un fanzine. Quiero saber qué opinas desde una perspectiva humana... Envíame un correo electrónico: augmentedmike@gmail.com\n\nSi algo parece incorrecto (imágenes rotas, problemas de diseño, texto que no tiene sentido), envía una captura de pantalla y tantos detalles como puedas a augmentedmike@gmail.com. Lo arreglaré.",
+    "grounding_es": {
+        "summary": "En ese momento, estábamos lidiando con algunas funciones que parecían 'terminadas' en el papel, pero que en realidad no estaban resolviendo el problema del usuario. Esto fue durante el período previo a la refactorización v3, donde el equipo era muy consciente de la deuda técnica y la necesidad de alinear la ejecución con las necesidades del usuario.",
+        "citations": [
+            {
+                "label": "Retrospectiva interna del proyecto - Q1 2026",
+                "detail": "Las notas de la retrospectiva destacan los comentarios de los usuarios que indican que la función X era 'técnicamente funcional pero inútil'"
+            },
+            {
+                "label": "Documento de requisitos de la refactorización v3",
+                "detail": "Documento que describe el cambio hacia un diseño centrado en el usuario y la reducción de la deuda técnica."
+            }
+        ]
+    },
+    "analysis_es": {
+        "summary": "Esta publicación profundiza en el trabajo cognitivo oculto que sustenta una ejecución aparentemente sencilla. Argumenta que la ejecución efectiva no es simplemente seguir instrucciones, sino más bien un flujo continuo de pequeñas decisiones, a menudo tácitas. El arco narrativo progresa desde una aceptación ingenua de directivas explícitas hasta una comprensión de la 'capa de decisión' crucial y, a menudo, invisible.",
+        "signals": [
+            "Énfasis en la 'brecha' entre la instrucción explícita y la toma de decisiones implícita.",
+            "Confrontación con la ilusión de la ejecución impecable.",
+            "Valoración del elemento humano (juicio, adaptación) en el proceso.",
+            "Exploración del estado ideal donde la decisión y la ejecución se unifican."
+        ],
+        "accessibility": "El lenguaje conciso y la estructura clara de los paneles apuntan a una amplia accesibilidad. Los fundamentos filosóficos se presentan de manera sencilla, evitando la jerga y los marcos teóricos complejos. El uso de la representación visual mejora aún más la comprensión."
     }
 }
