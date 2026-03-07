@@ -1354,64 +1354,46 @@ def write_robots_txt(out_dir: Path):
 
 
 def build_manifest(posts_meta: list, out_dir: Path):
-    """Generate posts-manifest.json with ALL posts (edge functions do date filtering)."""
+    """Update posts-manifest.json — preserves ALL existing entries, only updates built posts."""
     base = out_dir.parent
-    all_posts = {}
-
-    # Load existing hidden flags so they survive a rebuild
-    existing_hidden: dict[str, bool] = {}
     manifest_path = out_dir / "posts-manifest.json"
+
+    # Load the full existing manifest as the source of truth
+    existing_entries: dict[str, dict] = {}
+    existing_site = {
+        "name": "AugmentedMike",
+        "url": SITE_URL,
+        "description": "AI-authored comic art by AugmentedMike. Created by Mike O'Neal, founder of MiniClaw.",
+        "tipJarUrl": TIP_JAR_URL,
+    }
     if manifest_path.exists():
         try:
             existing = json.loads(manifest_path.read_text())
             for ep in existing.get("posts", []):
-                if ep.get("hidden"):
-                    existing_hidden[ep["slug"]] = True
+                existing_entries[ep["slug"]] = ep
+            if "site" in existing:
+                existing_site = existing["site"]
         except Exception:
             pass
 
-    # Include posts from the current build run
+    # Only update entries for posts actually built in this run
     for meta, _ in posts_meta:
-        all_posts[meta["slug"]] = meta
-
-    # Scan for any other post dirs in docs/ that have matching JSON in posts/
-    for post_json in sorted(base.glob("posts/*.json")):
-        if "style-tests" in str(post_json):
-            continue
-        try:
-            meta = json.loads(post_json.read_text())
-            slug = meta["slug"]
-            # Check both old-style (docs/{slug}/) and new-style (docs/thoughts/{episode}/{seo_title}/) paths
-            _ep, _seo, _pp = slug_to_path(slug, meta.get("seo_slug", ""))
-            post_dir_new = out_dir / _pp  # e.g. docs/thoughts/014/the-same-bug
-            post_dir_old = out_dir / slug  # e.g. docs/014-the-same-bug (legacy)
-            post_dir = post_dir_new if post_dir_new.exists() else post_dir_old
-            if post_dir.exists() and ((post_dir / "page_en.jpg").exists() or (post_dir / "page.png").exists()):
-                if slug not in all_posts:
-                    all_posts[slug] = meta
-        except Exception:
-            pass
-
-    # Sort by slug descending (newest first)
-    sorted_posts = sorted(all_posts.values(), key=lambda m: m["slug"], reverse=True)
-
-    # Build post entries with optional addendum teasers
-    post_entries = []
-    for m in sorted_posts:
-        _episode, _seo_title, _pp = slug_to_path(m["slug"], m.get("seo_slug", ""))
+        slug = meta["slug"]
+        _episode, _seo_title, _pp = slug_to_path(slug, meta.get("seo_slug", ""))
         entry = {
-            "slug": m["slug"],
+            "slug": slug,
             "seo_path": _pp,
-            "title": m.get("title", ""),
-            "subtitle": m.get("subtitle", ""),
-            "date": m.get("date", ""),
-            "author": m.get("author", "AugmentedMike"),
-            "tags": m.get("tags", []),
+            "title": meta.get("title", ""),
+            "subtitle": meta.get("subtitle", ""),
+            "date": meta.get("date", ""),
+            "author": meta.get("author", "AugmentedMike"),
+            "tags": meta.get("tags", []),
         }
-        if existing_hidden.get(m["slug"]):
+        # Preserve hidden flag from existing entry if present
+        if existing_entries.get(slug, {}).get("hidden"):
             entry["hidden"] = True
-        # Add addendum teaser fields if addendum exists
-        ad_path = base / "addendums" / f"{m['slug']}-addendum.json"
+        # Update addendum teaser
+        ad_path = base / "addendums" / f"{slug}-addendum.json"
         if ad_path.exists():
             try:
                 ad = json.loads(ad_path.read_text())
@@ -1422,21 +1404,14 @@ def build_manifest(posts_meta: list, out_dir: Path):
                 entry["addendum_accessibility"] = ad.get("analysis", {}).get("accessibility", "")
             except Exception:
                 pass
-        post_entries.append(entry)
+        existing_entries[slug] = entry
 
-    manifest = {
-        "posts": post_entries,
-        "site": {
-            "name": "AugmentedMike",
-            "url": SITE_URL,
-            "description": "AI-authored comic art by AugmentedMike. Created by Mike O'Neal, founder of MiniClaw.",
-            "tipJarUrl": TIP_JAR_URL,
-        },
-    }
+    # Sort by slug descending (newest first), preserving all existing entries
+    sorted_posts = sorted(existing_entries.values(), key=lambda m: m["slug"], reverse=True)
 
-    path = out_dir / "posts-manifest.json"
-    path.write_text(json.dumps(manifest, indent=2, ensure_ascii=False) + "\n")
-    print(f"  ✓ Manifest → {path} ({len(sorted_posts)} posts)")
+    manifest = {"posts": sorted_posts, "site": existing_site}
+    manifest_path.write_text(json.dumps(manifest, indent=2, ensure_ascii=False) + "\n")
+    print(f"  ✓ Manifest → {manifest_path} ({len(sorted_posts)} posts)")
 
 
 def slug_to_path(slug: str, seo_slug: str = "") -> tuple[str, str, str]:
