@@ -24,15 +24,12 @@ except ImportError:
     print("pip install pillow")
     sys.exit(1)
 
-# Gemini — key loaded from vault (mc-vault get GOOGLE_API_KEY)
+# Gemini
 try:
     import google.genai as genai
-    import subprocess
+    from dotenv import load_dotenv
+    load_dotenv(Path.home() / "Desktop/youtube-channel/.env")
     api_key = os.getenv("GOOGLE_API_KEY")
-    if not api_key:
-        result = subprocess.run(["mc-vault", "export", "GOOGLE_API_KEY"],
-                                capture_output=True, text=True)
-        api_key = result.stdout.strip() or None
     _genai_client = genai.Client(api_key=api_key) if api_key else None
     GEMINI_OK = bool(api_key)
 except ImportError:
@@ -51,7 +48,7 @@ except ImportError:
 # Comic page constants (US comic @ 300 DPI)
 # ---------------------------------------------------------------------------
 PAGE_W = 1988
-PAGE_H = 3700
+PAGE_H = 3075
 MARGIN = 48
 GUTTER = 18
 BORDER_W = 4
@@ -84,10 +81,10 @@ def build_friends_html() -> str:
     return f'<div class="friends-bar"><span class="friends-label">FRIENDS</span>{links}</div>'
 
 BG          = (15,  15,  20)    # near-black, dark blue tint
-BORDER_CLR  = (0, 229, 255)     # teal — matching caption accent
-CAPTION_BG  = (4,   8,   20)    # dark navy, fully opaque
-CAPTION_FG  = (0, 229, 255)     # electric teal — AM brand color
-CAPTION_ACCENT = (0, 229, 255)  # teal left bar
+BORDER_CLR  = (220, 180, 80)    # gold border — premium feel
+CAPTION_BG  = (8,   8,   12)    # near-black, fully opaque
+CAPTION_FG  = (255, 255, 255)   # WHITE — maximum readability over complex art
+CAPTION_ACCENT = (220, 180, 80) # gold — used for border only
 
 # ---------------------------------------------------------------------------
 # Layouts — (row_h_weight, [col_weights])
@@ -95,13 +92,12 @@ CAPTION_ACCENT = (0, 229, 255)  # teal left bar
 Layout = List[Tuple[int, List[int]]]
 
 LAYOUTS: Dict[str, Layout] = {
-    # Max 2 panels per row — user rule
-    "morning":   [(2, [1]),      (1, [1, 1]),    (2, [1]),      (1, [1, 1])],
-    "afternoon": [(1, [1, 1]),   (2, [1]),        (1, [1, 1]),   (2, [1])],
+    "morning":   [(2, [1]),      (1, [1, 1]),    (1, [1, 1, 2])],
+    "afternoon": [(1, [1, 2]),   (2, [1]),        (1, [2, 1]),   (1, [1])],
     "splash-1":  [(1, [1])],
-    "drama-4":   [(2, [1]),      (1, [1, 1]),     (2, [1])],
+    "drama-4":   [(2, [1]),      (1, [1, 2]),     (1, [2, 1])],
     "feature-5": [(2, [1]),      (1, [1, 1]),     (1, [1, 1])],
-    "feature-6": [(2, [1]),      (1, [1, 1]),     (1, [1]),      (1, [1, 1])],
+    "feature-6": [(2, [1]),      (1, [1, 1, 1]),  (1, [1, 1])],
 }
 
 def count_panels(layout: Layout) -> int:
@@ -151,99 +147,53 @@ CHARACTER_PREFIX = (
     "olive-tan skin, black crew-neck t-shirt. "
     "His eyes glow ELECTRIC TEAL (#00E5FF) — this is always visible, distinctive, unmistakable. "
     "This exact character must appear in this panel. "
-    "CRITICAL: single clean scene. No ghosting. No double exposure. No transparency. "
-    "No image overlay. No semi-transparent duplicate figures. One scene, one exposure. "
 )
 
 # Named style library — post JSON 'style' field selects one of these
 STYLE_LIBRARY: Dict[str, str] = {
-
-    # ── ARC 1: Builder Arc (posts 001–006) ─────────────────────────────────────
-    # Bold graphic novel. Clean cel-shading. Flat fills. Strong ink outlines.
-    # Palette: near-black bg, warm amber desk light, electric teal eyes only.
-    "arc1": (
-        "GRAPHIC NOVEL panel art. Bold thick black ink outlines. "
-        "Flat cel-shaded colors — exactly 3 to 4 flat fills, zero gradients, zero blending. "
-        "Near-black background (#0A0A14). Warm amber (#DCB450) from one practical light source. "
-        "Electric teal (#00E5FF) on the character's eyes only — nowhere else. "
-        "Dense cross-hatching in deep shadows. High contrast. Visually clean and direct. "
-        "No photorealism. No watermarks. No text overlays. No speech bubbles. No panel borders. "
-        "No ghosting. No double exposure. No transparency artifacts."
-    ),
-
-    # ── ARC 2: Memory Arc (posts 007+) ─────────────────────────────────────────
-    # Painterly noir. Same palette — amber, teal, near-black — but rendered in
-    # atmospheric chiaroscuro brushwork instead of clean ink outlines.
-    # Feels like a painted film frame: moody, textured, cinematic depth.
-    "arc2": (
-        "PAINTED NOIR graphic novel art. Loose expressive brushwork — no hard ink outlines. "
-        "Chiaroscuro lighting: dramatic pools of warm amber (#DCB450) carving the figure out of deep shadow. "
-        "Near-black background (#0A0A14) with atmospheric haze and paint texture. "
-        "Electric teal (#00E5FF) on the character's eyes only — glowing like a screen in fog. "
-        "Soft painterly edges, visible brushstrokes, moody film-poster depth. "
-        "Same color palette as ARC1 (amber, teal, near-black) but rendered, not outlined. "
-        "No flat fills. No hard lines. No photorealism. No watermarks. No text. No panel borders. "
-        "No ghosting. No double exposure. No transparency artifacts."
-    ),
-
-    # ── ARC 3: Transmission Arc ─────────────────────────────────────────────────
-    # Risograph / screen-print aesthetic. Looks like a 3-color physical print job.
-    # Grainy halftone dot texture, slight color misregistration, analog imperfection.
-    # Same palette (amber, teal, near-black) but rendered as layered ink passes.
-    "arc3": (
-        "RISOGRAPH SCREEN-PRINT art. Looks like a 3-color physical risograph print. "
-        "Visible halftone dot grain on every color area — amber (#DCB450) dots, teal (#00E5FF) dots, black ink. "
-        "Slight color misregistration: colors sit slightly off from the black layer, intentional analog imperfection. "
-        "Flat color areas with grainy texture — no gradients, no blending, no clean edges. "
-        "Near-black background with ink bleed. Warm amber (#DCB450) as dominant color pass. "
-        "Electric teal (#00E5FF) as second color pass — eyes and key accent only. "
-        "Bold, graphic, zine-quality. Feels physically printed, not digital. "
-        "No photorealism. No watermarks. No text overlays. No speech bubbles. No panel borders. "
-        "No ghosting. No double exposure. No transparency artifacts."
-    ),
-
-    # ── ARC 4: Pop Transmission Arc ─────────────────────────────────────────────
-    # Pop art / Ben-Day dot aesthetic. Bold, loud, commercial printing energy.
-    # Lichtenstein-style dot patterns fill color areas. Thick black outlines.
-    # High contrast. Same palette (amber, teal, black) pushed to maximum saturation.
-    "arc4": (
-        "POP ART comic panel. Bold thick black outlines — every shape has a hard black border. "
-        "Ben-Day dot patterns fill every color area: large visible dots of amber (#DCB450) on lit surfaces, "
-        "large teal (#00E5FF) dots on shadow areas, pure white highlights with no fill. "
-        "Near-black (#0A0A14) solid areas with no texture — pure flat ink. "
-        "Electric teal (#00E5FF) on the character's eyes — vivid, glowing, maximum saturation. "
-        "High contrast. Colors pushed to full saturation — amber is LOUD, teal is LOUD. "
-        "No gradients. No photorealism. No soft edges. Everything is graphic and intentional. "
-        "Feels like offset commercial printing from 1965. Bold. Iconic. "
-        "No watermarks. No text overlays. No speech bubbles. No panel borders. "
-        "No ghosting. No double exposure. No transparency artifacts."
-    ),
-
-    # ── Legacy / utility ───────────────────────────────────────────────────────
+    # Week 1–2: Builder Arc
     "ligne-claire": (
-        "Ligne claire graphic novel style. "
-        "Clean precise ink outlines of uniform weight. Flat cel-shaded colors, zero gradients. "
-        "Near-black background (#0A0A14). Warm amber accent (#DCB450) from single light source. "
+        "Ligne claire / Moebius graphic novel aesthetic. "
+        "Clean, precise ink outlines of uniform weight. Flat, cel-shaded colors with zero gradients. "
+        "Near-black background (#0A0A14). Warm amber accent (#DCB450) from single practical light source. "
         "Electric teal (#00E5FF) reserved for eyes only. "
         "Crisp, architectural, uncluttered. No watermarks. No text overlays. No speech bubbles. No panel borders."
     ),
-    "noir-woodcut": (
-        "Noir woodcut print aesthetic — high contrast black ink, dramatic raking shadows. "
-        "Expressionist angles. Limited palette: black, deep shadow, one amber accent. "
-        "Electric teal (#00E5FF) reserved for the character's eyes only. "
-        "Raw, graphic, unpolished. No watermarks. No text overlays. No speech bubbles."
+    "image-comics": (
+        "Image Comics / Saga graphic novel aesthetic. "
+        "Bold black ink outlines. Clean flat cel-shading. Exactly 3-4 flat color fills — no gradients, no blending. "
+        "Near-black background (#0A0A14). Warm amber accent (#DCB450) from single practical light source. "
+        "Electric teal (#00E5FF) reserved for eyes only. "
+        "No watermarks. No text overlays. No speech bubbles. No panel borders. Pure visual storytelling."
     ),
+    # Week 3+: Memory Arc / AM Journal (Rorschach style)
+    "rorschach": (
+        "Watchmen / Dave Gibbons noir comic aesthetic. "
+        "High contrast black and white with blood red or deep amber as sole accent color. "
+        "Heavy cross-hatching and inkwash shadows. Stark geometric panel composition. "
+        "The character's teal eyes are the ONLY color — everything else is grayscale. "
+        "Dense, oppressive atmosphere. Woodcut-influenced. "
+        "No watermarks. No text overlays. No speech bubbles. No panel borders."
+    ),
+    "noir-woodcut": (
+        "Noir woodcut print aesthetic — high contrast black ink on aged cream paper texture. "
+        "Dramatic raking shadows, expressionist angles. Limited palette: black, cream, one accent. "
+        "Electric teal (#00E5FF) reserved for the character's eyes only. "
+        "Raw, graphic, unpolished. Reminiscent of 1940s crime illustration. "
+        "No watermarks. No text overlays. No speech bubbles."
+    ),
+    # Utility
     "default": (
-        "GRAPHIC NOVEL panel art. Bold thick black ink outlines. "
-        "Flat cel-shaded colors — exactly 3 to 4 flat fills, zero gradients. "
-        "Near-black background (#0A0A14). Warm amber (#DCB450) from one practical light source. "
-        "Electric teal (#00E5FF) on the character's eyes only. "
-        "No photorealism. No watermarks. No text overlays. No speech bubbles. No panel borders."
+        "Image Comics / Saga graphic novel aesthetic. "
+        "Bold black ink outlines. Clean flat cel-shading. Exactly 3-4 flat color fills. "
+        "Near-black background (#0A0A14). Warm amber accent (#DCB450). "
+        "Electric teal (#00E5FF) reserved for eyes only. "
+        "No watermarks. No text overlays. No speech bubbles. No panel borders."
     ),
 }
 
 # Default style (overridden by post JSON 'style' field)
-STYLE_SUFFIX = STYLE_LIBRARY["arc1"]
+STYLE_SUFFIX = STYLE_LIBRARY["image-comics"]
 
 def get_style_suffix(style_name: str) -> str:
     """Look up style by name. Falls back to default."""
@@ -283,26 +233,14 @@ def generate_panel_image(prompt: str, output_path: Path, panel_id: int,
         return False
 
     style_suffix = get_style_suffix(style)
-    # Style FIRST (highest weight for image models), then character, then scene,
-    # then brief style reinforcement at the end (sandwich = stronger adherence).
-    # Extract first sentence of style for the closing reminder.
-    style_reminder = style_suffix.split(".")[0] + "."
-    full_prompt = (
-        f"=== VISUAL STYLE — APPLY TO THIS ENTIRE IMAGE ===\n"
-        f"{style_suffix}\n\n"
-        f"=== CHARACTER (always present) ===\n"
-        f"{CHARACTER_PREFIX}\n\n"
-        f"=== SCENE ===\n"
-        f"{prompt}\n\n"
-        f"=== STYLE REMINDER ===\n"
-        f"Render the entire image above in this style: {style_reminder} "
-        f"No ghosting. No double exposure. No mixed styles. Single clean scene."
-    )
-    # Load character reference for visual consistency
+    full_prompt = f"{CHARACTER_PREFIX}\n{prompt}\n\n{style_suffix}"
+
+    # Load character reference image for visual consistency
     ref_path = Path(__file__).parent / "character-reference" / "mike-neutral.jpg"
     contents: list | str = full_prompt
     if ref_path.exists():
         try:
+            import io as _io
             from google.genai import types as _gtypes
             with open(ref_path, "rb") as _f:
                 ref_bytes = _f.read()
@@ -311,12 +249,12 @@ def generate_panel_image(prompt: str, output_path: Path, panel_id: int,
                 _gtypes.Part.from_text(full_prompt),
             ]
         except Exception:
-            contents = full_prompt
+            contents = full_prompt  # fallback to text-only
 
     try:
         print(f"  → Generating panel {panel_id}...")
         response = _genai_client.models.generate_content(
-            model="gemini-3.1-flash-image-preview",
+            model="gemini-3-pro-image-preview",
             contents=contents,
         )
 
@@ -343,13 +281,10 @@ def generate_panel_image(prompt: str, output_path: Path, panel_id: int,
 # ---------------------------------------------------------------------------
 
 def load_font(size: int, bold: bool = False):
-    """Load a font at the given pixel size. Prefers Bangers for comic lettering."""
+    """Load a font at the given pixel size. Prefers bold for captions."""
     font_paths = [
-        # Bangers — the approved comic lettering font
-        "/tmp/Bangers.ttf",
-        str(Path.home() / "Library/Fonts/Bangers.ttf"),
-        # macOS system fallbacks
-        ("/System/Library/Fonts/Helvetica.ttc", 1),
+        # macOS system fonts — bold preferred for comic captions
+        ("/System/Library/Fonts/Helvetica.ttc", 1),     # index 1 = bold on some builds
         ("/System/Library/Fonts/Helvetica.ttc", 0),
         "/Library/Fonts/Arial Bold.ttf",
         "/System/Library/Fonts/Arial.ttf",
@@ -391,83 +326,79 @@ def draw_caption_box(page: Image.Image, draw: ImageDraw.ImageDraw,
                      x: int, y: int, cell_w: int, cell_h: int,
                      caption: str, panel_idx: int):
     """
-    Teal terminal bar caption — the approved AM brand style.
+    Real comic-style caption box — Spawn/Vertigo lettering standard.
 
-    Design:
-      - Full-width dark navy bar (edge to edge across panel)
-      - Electric teal (#00E5FF) Bangers font text
-      - 10px teal left accent block
-      - Scan lines for texture
-      - Glow line at the panel edge (top or bottom)
-      - TOP for establishing beats (even panels), BOTTOM for reflective beats
+    Design rules (from actual Spawn/Image comics):
+      - SOLID near-black fill (no transparency over busy art — kills readability)
+      - WHITE text — maximum contrast, works on any panel regardless of art color
+      - Gold accent border — the ONLY gold element
+      - Gold left-edge accent bar (3px) — professional comics detail
+      - ALL CAPS text (comic convention)
+      - TOP of panel = establishing/opening beats (odd panels 0,2,4)
+      - BOTTOM of panel = closing/reflective beats (odd panels 1,3,5)
+      - Full-width box with generous padding
+      - Font size 56px — large enough to read at thumbnail size
     """
     if not caption.strip():
         return
 
     place_top = (panel_idx % 2 == 0)
 
-    font_size = max(48, int(cell_w * 0.038))
-    font = load_font(font_size)
-    PADX = int(font_size * 0.6)
-    PADY = int(font_size * 0.32)
-    left_accent = 10
-    text_x = x + left_accent + PADX
-    max_text_w = cell_w - (left_accent + PADX * 2)
+    FONT_SIZE    = 44          # Readable but not dominating
+    PADDING_X    = 32
+    PADDING_Y    = 18
+    BOX_INSET    = 20          # Float it in the panel, not edge-to-edge
+    LINE_SPACING = 12          # Generous breathing room
+    ACCENT_BAR   = 4           # Gold left-edge accent bar width
+    MAX_BOX_W_RATIO = 0.80     # Max 80% panel width — let the art breathe
 
-    # Word-wrap
-    words = caption.split()
-    lines, cur = [], []
-    for w in words:
-        test = ' '.join(cur + [w])
-        bbox = draw.textbbox((0, 0), test, font=font)
-        if (bbox[2] - bbox[0]) <= max_text_w:
-            cur.append(w)
-        else:
-            if cur:
-                lines.append(' '.join(cur))
-            cur = [w]
-    if cur:
-        lines.append(' '.join(cur))
+    font = load_font(FONT_SIZE, bold=False)  # Regular weight — more voice, less block
+
+    # Mixed case — narration voice, not announcement
+    text = caption
+
+    max_box_w = int(min(cell_w - BOX_INSET * 2, cell_w * MAX_BOX_W_RATIO))
+    max_text_w = max_box_w - (PADDING_X * 2) - ACCENT_BAR
+    lines = wrap_text(draw, text, font, max_text_w)
     if not lines:
         return
 
-    bbox_sample = draw.textbbox((0, 0), 'Ag', font=font)
-    line_h = int((bbox_sample[3] - bbox_sample[1]) * 1.22)
-    bar_h = line_h * len(lines) + PADY * 2
+    line_h = FONT_SIZE + LINE_SPACING
+    text_block_h = len(lines) * line_h - LINE_SPACING
+    box_h = PADDING_Y * 2 + text_block_h
 
-    by = y + (cell_h - bar_h) if not place_top else y
-    bx, bw = x, cell_w
+    box_x = x + BOX_INSET
+    box_w = max_box_w
+    box_y = y + BOX_INSET if place_top else (y + cell_h - BOX_INSET - box_h)
 
-    # Dark navy bar
-    draw.rectangle([bx, by, bx + bw, by + bar_h], fill=(4, 8, 20, 220))
+    # --- SOLID dark background — no transparency, full opacity ---
+    draw.rectangle(
+        [box_x, box_y, box_x + box_w, box_y + box_h],
+        fill=CAPTION_BG
+    )
 
-    # Scan lines
-    for sy in range(by, by + bar_h, 4):
-        draw.line([(bx, sy), (bx + bw, sy)], fill=(0, 0, 0, 55), width=1)
+    # --- Gold left-edge accent bar (Spawn-style detail) ---
+    draw.rectangle(
+        [box_x, box_y, box_x + ACCENT_BAR, box_y + box_h],
+        fill=CAPTION_ACCENT
+    )
 
-    # Left teal accent block
-    draw.rectangle([bx, by, bx + left_accent, by + bar_h], fill=(0, 229, 255, 255))
+    # --- Gold border ---
+    draw.rectangle(
+        [box_x, box_y, box_x + box_w, box_y + box_h],
+        outline=CAPTION_ACCENT,
+        width=3
+    )
 
-    # Glow line at panel edge
-    if not place_top:
-        gy = by
-        for i, a in enumerate([8, 25, 60, 120]):
-            draw.rectangle([bx, gy - 4 + i, bx + bw, gy - 3 + i], fill=(0, 229, 255, a))
-        draw.rectangle([bx, gy, bx + bw, gy + 3], fill=(0, 229, 255, 255))
-    else:
-        gy = by + bar_h
-        draw.rectangle([bx, gy, bx + bw, gy + 3], fill=(0, 229, 255, 255))
-        for i, a in enumerate([120, 60, 25, 8]):
-            draw.rectangle([bx, gy + 3 + i, bx + bw, gy + 4 + i], fill=(0, 229, 255, a))
-
-    # Teal Bangers text with glow
-    ty = by + PADY
+    # --- White text with subtle shadow for depth ---
+    text_x = box_x + PADDING_X + ACCENT_BAR
+    text_y = box_y + PADDING_Y
     for line in lines:
-        for gd in [4, 2]:
-            draw.text((text_x, ty), line, font=font, fill=(0, 229, 255, 30 // gd))
-        draw.text((text_x, ty), line, font=font, fill=(0, 229, 255, 255))
-        draw.text((text_x, ty), line, font=font, fill=(180, 245, 255, 45))
-        ty += line_h
+        # Subtle shadow (1px offset — enough depth, not muddy)
+        draw.text((text_x + 1, text_y + 1), line, fill=(0, 0, 0), font=font)
+        # White text — crisp, readable
+        draw.text((text_x, text_y), line, fill=CAPTION_FG, font=font)
+        text_y += line_h
 
 
 def composite_page(panel_images: List[Path], layout: Layout,
@@ -590,11 +521,8 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
 </script>
 <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
-  :root {{ --gold: #DCB450; --dark: #0F0F14; --ink: #1A1A24; --teal: #00E5FF; --link: #E8A030; --link-visited: #B8742A; }}
+  :root {{ --gold: #DCB450; --dark: #0F0F14; --ink: #1A1A24; --teal: #00E5FF; }}
   * {{ box-sizing: border-box; margin: 0; padding: 0; }}
-  a {{ color: var(--link); }}
-  a:visited {{ color: var(--link-visited); }}
-  a:hover {{ color: var(--gold); }}
   body {{
     background: var(--dark);
     min-height: 100vh;
@@ -647,8 +575,7 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
     height: 14px;
     padding: 0.25rem;
     box-sizing: content-box;
-    color: #ffffff;
-    opacity: 1;
+    opacity: 0.4;
   }}
   .header-lang-btn {{
     background: transparent;
@@ -689,13 +616,6 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
     letter-spacing: 2px;
     text-transform: uppercase;
     white-space: nowrap;
-  }}
-  .ep-label {{
-    font-family: 'Bangers', cursive;
-    font-size: 1rem;
-    color: var(--gold);
-    letter-spacing: 2px;
-    margin-right: 0.5rem;
   }}
   .nav-toggle {{
     display: none;
@@ -855,109 +775,156 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
     .footer-grid {{ grid-template-columns: 1fr; gap: 1.5rem; }}
     .footer-bottom {{ flex-direction: column; gap: 0.5rem; align-items: flex-start; }}
   }}
-  /* ── Sticky tip button + modal ─────────────────────── */
+  /* ── Floating tip tab ──────────────────────────────── */
   @keyframes tip-pulse {{
-    0%,100% {{ box-shadow: 0 0 0 0 rgba(220,180,80,0.7); }}
-    50%      {{ box-shadow: 0 0 0 8px rgba(220,180,80,0); }}
+    0%,100% {{ box-shadow: 0 0 18px rgba(220,180,80,0.5), inset 0 0 0 1px var(--gold); }}
+    50%      {{ box-shadow: 0 0 40px rgba(220,180,80,1.0), inset 0 0 0 1px var(--gold); }}
   }}
-  .tip-btn {{
+  @keyframes tip-steam {{
+    0%   {{ opacity: 0; transform: translateY(0) scale(0.8); }}
+    40%  {{ opacity: 0.6; }}
+    100% {{ opacity: 0; transform: translateY(-18px) scale(1.2); }}
+  }}
+  .tip-float {{
     position: fixed;
-    bottom: 5.5rem;
-    right: 1.25rem;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
     z-index: 99999;
-    width: 52px;
-    height: 52px;
-    background: var(--dark);
-    border: 2px solid var(--gold);
-    border-radius: 50%;
     display: flex;
+    flex-direction: row;
     align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    animation: tip-pulse 2.4s ease-in-out infinite;
-    transition: background 0.2s;
-    padding: 0;
+    filter: drop-shadow(0 0 20px rgba(220,180,80,0.5));
   }}
-  .tip-btn:hover {{
-    background: rgba(220,180,80,0.15);
-    animation: none;
-    box-shadow: 0 0 24px rgba(220,180,80,0.8);
-  }}
-  .tip-btn svg {{ width: 26px; height: 26px; stroke: var(--gold); }}
-  .tip-modal-overlay {{
-    display: none;
-    position: fixed;
-    inset: 0;
-    z-index: 999999;
-    background: rgba(0,0,0,0.75);
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
-    align-items: center;
-    justify-content: center;
-  }}
-  .tip-modal-overlay.open {{ display: flex; }}
-  .tip-modal {{
-    background: var(--ink);
-    border: 2px solid var(--gold);
-    border-radius: 6px;
-    padding: 2rem;
-    max-width: 340px;
-    width: 90%;
+  .tip-float-tab {{
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    background: var(--dark);
+    border: 2px solid var(--gold);
+    border-right: none;
+    border-radius: 8px 0 0 8px;
+    padding: 1.1rem 0.65rem;
+    cursor: pointer;
+    text-decoration: none;
+    animation: tip-pulse 2.4s ease-in-out infinite;
+    transition: background 0.2s;
+    flex-shrink: 0;
+    position: relative;
   }}
-  .tip-modal h2 {{
-    font-family: 'Bangers', cursive;
-    font-size: 2rem;
-    letter-spacing: 4px;
-    color: var(--gold);
+  .tip-float-tab:hover {{
+    background: rgba(220,180,80,0.15);
+    animation: none;
+    box-shadow: 0 0 48px rgba(220,180,80,0.9);
   }}
-  .tip-modal table {{ border-collapse: collapse; width: 100%; }}
-  .tip-modal td {{
+  .tip-float-tab .tab-icon {{
+    font-size: 1.6rem;
+    line-height: 1;
+    position: relative;
+  }}
+  .tip-float-tab .tab-icon::before,
+  .tip-float-tab .tab-icon::after {{
+    content: '';
+    position: absolute;
+    top: -6px;
+    width: 3px;
+    height: 10px;
+    background: var(--gold);
+    border-radius: 3px;
+    opacity: 0;
+    animation: tip-steam 1.8s ease-out infinite;
+  }}
+  .tip-float-tab .tab-icon::before {{ left: 30%; animation-delay: 0s; }}
+  .tip-float-tab .tab-icon::after  {{ left: 65%; animation-delay: 0.6s; }}
+  .tip-float-tab .tab-text {{
     font-family: 'Space Mono', monospace;
-    font-size: 0.65rem;
-    color: #fff;
-    padding: 0.2rem 0;
-  }}
-  .tip-modal td:last-child {{ text-align: right; color: rgba(255,255,255,0.55); }}
-  .tip-modal .tip-total td {{
-    border-top: 1px solid rgba(220,180,80,0.3);
-    padding-top: 0.4rem;
+    font-size: 0.55rem;
     font-weight: 700;
+    letter-spacing: 2.5px;
     color: var(--gold);
+    text-transform: uppercase;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    transform: rotate(180deg);
   }}
-  .tip-modal-cta {{
+  .tip-float-tab .tab-cost {{
     font-family: 'Space Mono', monospace;
-    font-size: 0.8rem;
+    font-size: 0.5rem;
+    color: rgba(255,255,255,0.4);
+    letter-spacing: 0.5px;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    transform: rotate(180deg);
+  }}
+  .tip-float-card {{
+    background: var(--ink);
+    border: 2px solid var(--gold);
+    border-right: none;
+    border-radius: 8px 0 0 8px;
+    padding: 0.9rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    max-width: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-width 0.3s ease, opacity 0.25s ease;
+    white-space: nowrap;
+    pointer-events: none;
+  }}
+  .tip-float:hover .tip-float-card {{
+    max-width: 230px;
+    opacity: 1;
+    pointer-events: auto;
+  }}
+  .tip-float-card-title {{
+    font-family: 'Space Mono', monospace;
+    font-size: 0.62rem;
     font-weight: 700;
     letter-spacing: 2px;
+    color: var(--gold);
+    text-transform: uppercase;
+  }}
+  .tip-float-card table {{
+    border-collapse: collapse;
+    width: 100%;
+  }}
+  .tip-float-card td {{
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    color: #fff;
+    padding: 0.15rem 0;
+  }}
+  .tip-float-card td:last-child {{
+    text-align: right;
+    color: rgba(255,255,255,0.55);
+  }}
+  .tip-float-card .tip-total td {{
+    border-top: 1px solid rgba(220,180,80,0.3);
+    padding-top: 0.35rem;
+    font-weight: 700;
+    color: var(--gold);
+  }}
+  .tip-float-card .tip-float-cta {{
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
     color: var(--dark);
     background: var(--gold);
     text-decoration: none;
-    padding: 0.75rem 1rem;
-    border-radius: 4px;
+    padding: 0.5rem 0.75rem;
+    border-radius: 3px;
     text-align: center;
-    display: block;
+    margin-top: 0.25rem;
     transition: opacity 0.15s;
+    display: block;
   }}
-  .tip-modal-cta:hover {{ opacity: 0.85; color: var(--dark); }}
-  .tip-modal-close {{
-    font-family: 'Space Mono', monospace;
-    font-size: 0.6rem;
-    color: rgba(255,255,255,0.35);
-    background: none;
-    border: none;
-    cursor: pointer;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    align-self: flex-end;
-    padding: 0;
-  }}
-  .tip-modal-close:hover {{ color: rgba(255,255,255,0.7); }}
-  @media (max-width: 480px) {{
-    .tip-btn {{ bottom: 5rem; right: 0.75rem; width: 44px; height: 44px; }}
-    .tip-btn svg {{ width: 22px; height: 22px; }}
+  .tip-float-card .tip-float-cta:hover {{ opacity: 0.85; }}
+  @media (max-width: 800px) {{
+    .tip-float {{ display: none; }}
   }}
   /* ── Reactions (floating sticky bar) ──────────────── */
   .reactions {{
@@ -1062,13 +1029,6 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
     letter-spacing: 5px;
     color: var(--gold);
     margin-bottom: 1.75rem;
-  }}
-  .addendum-ep {{
-    font-size: 1.1rem;
-    opacity: 0.55;
-    letter-spacing: 3px;
-    vertical-align: middle;
-    margin-left: 0.5rem;
   }}
   .addendum-note {{
     font-family: 'Special Elite', serif;
@@ -1196,10 +1156,7 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
       <a class="nav-link" href="/press/">PRESS</a>
       <a class="nav-link" href="/feed.xml">RSS</a>
     </nav>
-    <div style="display:flex;align-items:center;gap:0.4rem;">
-      <span class="ep-label">EP.{episode}</span>
-      <time class="post-date" datetime="{date}">{date}</time>
-    </div>
+    <time class="post-date" datetime="{date}">{date}</time>
   </div>
 </header>
 <main>
@@ -1222,7 +1179,7 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
   <div class="footer-grid">
     <div class="footer-col">
       <h3>AUGMENTEDMIKE</h3>
-      <p>AI-authored comic art by AugmentedMike. Created by <a href="https://augmentedmike.com" target="_blank" rel="noopener" style="color: var(--gold); text-decoration: none;">Mike O'Neal</a>, founder of <a href="https://miniclaw.bot" target="_blank" rel="noopener" style="color: var(--gold); text-decoration: none;">MiniClaw</a>. Running 24/7 on a Mac Mini in Austin, Texas.</p>
+      <p>AI-authored comic art by AugmentedMike. Created by <a href="https://miniclaw.bot" target="_blank" rel="noopener" style="color: var(--gold); text-decoration: none;">Mike O'Neal</a>, founder of <a href="https://miniclaw.bot" target="_blank" rel="noopener" style="color: var(--gold); text-decoration: none;">MiniClaw</a> and <a href="https://bonsai.org" target="_blank" rel="noopener" style="color: var(--gold); text-decoration: none;">Bonsai</a>. Running 24/7 on a Mac Mini in Austin, Texas.</p>
     </div>
     <div class="footer-col">
       <h3>NAVIGATE</h3>
@@ -1244,13 +1201,9 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
     <a class="footer-rss" href="/feed.xml"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="6.18" cy="17.82" r="2.18"/><path d="M4 4.44v2.83c7.03 0 12.73 5.7 12.73 12.73h2.83c0-8.59-6.97-15.56-15.56-15.56z"/><path d="M4 10.1v2.83c3.9 0 7.07 3.17 7.07 7.07h2.83c0-5.47-4.43-9.9-9.9-9.9z"/></svg> RSS</a>
   </div>
 </footer>
-<button class="tip-btn" onclick="openTipModal()" title="Leave a tip" aria-label="Leave a tip">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
-</button>
-<div class="tip-modal-overlay" id="tip-modal-overlay" onclick="closeTipModal(event)">
-  <div class="tip-modal">
-    <button class="tip-modal-close" onclick="closeTipModal()">&#x2715; close</button>
-    <h2>LEAVE A TIP</h2>
+<div class="tip-float">
+  <div class="tip-float-card">
+    <span class="tip-float-card-title">What it costs to run me</span>
     <table>
       <tr><td>Gemini images</td><td>$7.20/mo</td></tr>
       <tr><td>Claude API</td><td>$5/mo</td></tr>
@@ -1258,8 +1211,13 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
       <tr><td>Domain</td><td>$1/mo</td></tr>
       <tr class="tip-total"><td>Total</td><td>~$14/mo</td></tr>
     </table>
-    <a class="tip-modal-cta" href="{tip_jar_url}" target="_blank" rel="noopener">TIP JAR &#8599;</a>
+    <a class="tip-float-cta" href="{tip_jar_url}" target="_blank" rel="noopener">LEAVE A TIP ↗</a>
   </div>
+  <a class="tip-float-tab" href="{tip_jar_url}" target="_blank" rel="noopener" title="Support the blog — ~$0.24/post">
+    <span class="tab-icon">☕</span>
+    <span class="tab-text">Leave a Tip</span>
+    <span class="tab-cost">~$0.24/post</span>
+  </a>
 </div>
 <script>
   // Reaction backend: Vercel Edge Function → Upstash Redis
@@ -1359,18 +1317,6 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
   }}
 
   loadCounts();
-
-  function openTipModal() {{
-    document.getElementById('tip-modal-overlay').classList.add('open');
-    document.body.style.overflow = 'hidden';
-  }}
-  function closeTipModal(e) {{
-    if (!e || e.target === document.getElementById('tip-modal-overlay')) {{
-      document.getElementById('tip-modal-overlay').classList.remove('open');
-      document.body.style.overflow = '';
-    }}
-  }}
-  document.addEventListener('keydown', function(e) {{ if (e.key === 'Escape') closeTipModal(); }});
 </script>
 <script src="/analytics.js" async></script>
 </body>
@@ -1388,80 +1334,6 @@ def generate_thumb(page_path: Path, out_path: Path, width: int = 600):
     print(f"  ✓ Thumb → {out_path.name} ({width}×{height}, {kb}KB)")
 
 
-def write_feed_xml(out_dir: Path):
-    """Generate RSS feed — only posts with date <= today and not hidden."""
-    import datetime
-    today = datetime.date.today().isoformat()
-    manifest_path = out_dir / "posts-manifest.json"
-    if not manifest_path.exists():
-        return
-    manifest = json.loads(manifest_path.read_text())
-    posts = [
-        p for p in manifest.get("posts", [])
-        if not p.get("hidden") and p.get("date", "9999") <= today
-    ]
-    posts = sorted(posts, key=lambda p: p["date"], reverse=True)[:50]
-
-    items = ""
-    for p in posts:
-        url = f"{SITE_URL}/{p['seo_path']}/en/"
-        title = p["title"].replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
-        subtitle = (p.get("subtitle") or "").replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
-        pub_date = datetime.datetime.strptime(p["date"], "%Y-%m-%d").strftime("%a, %d %b %Y 00:00:00 +0000")
-        items += (
-            f"  <item>\n"
-            f"    <title>{title}</title>\n"
-            f"    <link>{url}</link>\n"
-            f"    <guid isPermaLink=\"true\">{url}</guid>\n"
-            f"    <description>{subtitle}</description>\n"
-            f"    <pubDate>{pub_date}</pubDate>\n"
-            f"  </item>\n"
-        )
-
-    feed = (
-        '<?xml version="1.0" encoding="UTF-8"?>\n'
-        '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">\n'
-        '<channel>\n'
-        f'  <title>AugmentedMike</title>\n'
-        f'  <link>{SITE_URL}/</link>\n'
-        f'  <description>AI-authored comic art by AugmentedMike</description>\n'
-        f'  <language>en-us</language>\n'
-        f'  <atom:link href="{SITE_URL}/feed.xml" rel="self" type="application/rss+xml"/>\n'
-        f'{items}'
-        '</channel>\n'
-        '</rss>\n'
-    )
-    (out_dir / "feed.xml").write_text(feed)
-    print(f"  ✓ feed.xml → {len(posts)} posts (date-filtered)")
-
-
-def write_sitemap_xml(out_dir: Path):
-    """Generate sitemap — only posts with date <= today and not hidden."""
-    import datetime
-    today = datetime.date.today().isoformat()
-    manifest_path = out_dir / "posts-manifest.json"
-    if not manifest_path.exists():
-        return
-    manifest = json.loads(manifest_path.read_text())
-    posts = [
-        p for p in manifest.get("posts", [])
-        if not p.get("hidden") and p.get("date", "9999") <= today
-    ]
-    urls = f"  <url><loc>{SITE_URL}/</loc><changefreq>daily</changefreq><priority>1.0</priority></url>\n"
-    for p in posts:
-        url = f"{SITE_URL}/{p['seo_path']}/en/"
-        urls += f"  <url><loc>{url}</loc><lastmod>{p['date']}</lastmod><priority>0.8</priority></url>\n"
-
-    sitemap = (
-        '<?xml version="1.0" encoding="UTF-8"?>\n'
-        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
-        f'{urls}'
-        '</urlset>\n'
-    )
-    (out_dir / "sitemap.xml").write_text(sitemap)
-    print(f"  ✓ sitemap.xml → {len(posts)} URLs")
-
-
 def write_robots_txt(out_dir: Path):
     """Write robots.txt pointing crawlers to the sitemap."""
     content = f"User-agent: *\nAllow: /\nSitemap: {SITE_URL}/sitemap.xml\n"
@@ -1470,46 +1342,50 @@ def write_robots_txt(out_dir: Path):
 
 
 def build_manifest(posts_meta: list, out_dir: Path):
-    """Update posts-manifest.json — preserves ALL existing entries, only updates built posts."""
+    """Generate posts-manifest.json with ALL posts (edge functions do date filtering)."""
     base = out_dir.parent
-    manifest_path = out_dir / "posts-manifest.json"
+    all_posts = {}
 
-    # Load the full existing manifest as the source of truth
-    existing_entries: dict[str, dict] = {}
-    existing_site = {
-        "name": "AugmentedMike",
-        "url": SITE_URL,
-        "description": "AI-authored comic art by AugmentedMike. Created by Mike O'Neal, founder of MiniClaw.",
-        "tipJarUrl": TIP_JAR_URL,
-    }
-    if manifest_path.exists():
+    # Include posts from the current build run
+    for meta, _ in posts_meta:
+        all_posts[meta["slug"]] = meta
+
+    # Scan for any other post dirs in docs/ that have matching JSON in posts/
+    for post_json in sorted(base.glob("posts/*.json")):
+        if "style-tests" in str(post_json):
+            continue
         try:
-            existing = json.loads(manifest_path.read_text())
-            for ep in existing.get("posts", []):
-                existing_entries[ep["slug"]] = ep
-            if "site" in existing:
-                existing_site = existing["site"]
+            meta = json.loads(post_json.read_text())
+            slug = meta["slug"]
+            # Check both old-style (docs/{slug}/) and new-style (docs/thoughts/{episode}/{seo_title}/) paths
+            _ep, _seo, _pp = slug_to_path(slug, meta.get("seo_slug", ""))
+            post_dir_new = out_dir / _pp  # e.g. docs/thoughts/014/the-same-bug
+            post_dir_old = out_dir / slug  # e.g. docs/014-the-same-bug (legacy)
+            post_dir = post_dir_new if post_dir_new.exists() else post_dir_old
+            if post_dir.exists() and ((post_dir / "page_en.jpg").exists() or (post_dir / "page.png").exists()):
+                if slug not in all_posts:
+                    all_posts[slug] = meta
         except Exception:
             pass
 
-    # Only update entries for posts actually built in this run
-    for meta, _ in posts_meta:
-        slug = meta["slug"]
-        _episode, _seo_title, _pp = slug_to_path(slug, meta.get("seo_slug", ""))
+    # Sort by date descending, then slug descending as tiebreaker (newest first)
+    sorted_posts = sorted(all_posts.values(), key=lambda m: (m.get("date", ""), m["slug"]), reverse=True)
+
+    # Build post entries with optional addendum teasers
+    post_entries = []
+    for m in sorted_posts:
+        _episode, _seo_title, _pp = slug_to_path(m["slug"], m.get("seo_slug", ""))
         entry = {
-            "slug": slug,
+            "slug": m["slug"],
             "seo_path": _pp,
-            "title": meta.get("title", ""),
-            "subtitle": meta.get("subtitle", ""),
-            "date": meta.get("date", ""),
-            "author": meta.get("author", "AugmentedMike"),
-            "tags": meta.get("tags", []),
+            "title": m.get("title", ""),
+            "subtitle": m.get("subtitle", ""),
+            "date": m.get("date", ""),
+            "author": m.get("author", "AugmentedMike"),
+            "tags": m.get("tags", []),
         }
-        # Preserve hidden flag from existing entry if present
-        if existing_entries.get(slug, {}).get("hidden"):
-            entry["hidden"] = True
-        # Update addendum teaser
-        ad_path = base / "addendums" / f"{slug}-addendum.json"
+        # Add addendum teaser fields if addendum exists
+        ad_path = base / "addendums" / f"{m['slug']}-addendum.json"
         if ad_path.exists():
             try:
                 ad = json.loads(ad_path.read_text())
@@ -1520,14 +1396,21 @@ def build_manifest(posts_meta: list, out_dir: Path):
                 entry["addendum_accessibility"] = ad.get("analysis", {}).get("accessibility", "")
             except Exception:
                 pass
-        existing_entries[slug] = entry
+        post_entries.append(entry)
 
-    # Sort by slug descending (newest first), preserving all existing entries
-    sorted_posts = sorted(existing_entries.values(), key=lambda m: m["slug"], reverse=True)
+    manifest = {
+        "posts": post_entries,
+        "site": {
+            "name": "AugmentedMike",
+            "url": SITE_URL,
+            "description": "AI-authored comic art by AugmentedMike. Created by Mike O'Neal, founder of MiniClaw and Bonsai.",
+            "tipJarUrl": TIP_JAR_URL,
+        },
+    }
 
-    manifest = {"posts": sorted_posts, "site": existing_site}
-    manifest_path.write_text(json.dumps(manifest, indent=2, ensure_ascii=False) + "\n")
-    print(f"  ✓ Manifest → {manifest_path} ({len(sorted_posts)} posts)")
+    path = out_dir / "posts-manifest.json"
+    path.write_text(json.dumps(manifest, indent=2, ensure_ascii=False) + "\n")
+    print(f"  ✓ Manifest → {path} ({len(sorted_posts)} posts)")
 
 
 def slug_to_path(slug: str, seo_slug: str = "") -> tuple[str, str, str]:
@@ -1593,7 +1476,7 @@ def build_post(post_path: Path, skip_generate: bool = False, out_dir: Path = Non
         # Use mc-designer if available and requested
         if args.use_mc_designer and MC_DESIGNER_AVAILABLE:
             try:
-                composite_with_mc_designer(panel_paths, layout, captions, output_path=tmp_png)
+                composite_with_mc_designer(panel_paths, layout, tmp_png, captions, post_slug=slug)
             except Exception as e:
                 print(f"  ⚠ mc-designer composition failed: {e}; falling back to PIL")
                 composite_page(panel_paths, layout, tmp_png, captions)
@@ -1699,78 +1582,32 @@ def build_post(post_path: Path, skip_generate: bool = False, out_dir: Path = Non
         except Exception as e:
             print(f"  ⚠ Addendum auto-generate failed: {e}")
 
-    def _build_addendum_html(ad: dict, lang: str) -> str:
-        """Render addendum HTML in the requested language."""
-        suffix = "_es" if lang == "es" else ""
-        headings = {
-            "en": ("BEHIND THE PANEL", "GROUNDING", "WHAT'S HAPPENING HERE"),
-            "es": ("DETRÁS DEL PANEL", "CONTEXTO", "LO QUE ESTÁ PASANDO AQUÍ"),
-        }[lang]
-        author_note = ad.get(f"author_note{suffix}") or ad.get("author_note", "")
-        grounding = ad.get(f"grounding{suffix}") or ad.get("grounding", {})
-        analysis  = ad.get(f"analysis{suffix}")  or ad.get("analysis", {})
-        citations_html = ""
-        for c in grounding.get("citations", []):
-            citations_html += f'<dt>{c["label"]}</dt><dd>{c["detail"]}</dd>'
-        signals_html = ""
-        for s in analysis.get("signals", []):
-            signals_html += f"<li>{s}</li>"
-        return (
-            '<div class="addendum">'
-            f'<h2 class="addendum-heading">{headings[0]} <span class="addendum-ep">EP.{episode}</span></h2>'
-            f'<div class="addendum-note">{author_note}</div>'
-            '<div class="addendum-section">'
-            f'<h3>{headings[1]}</h3>'
-            f'<p>{grounding.get("summary", "")}</p>'
-            f'<dl class="addendum-citations">{citations_html}</dl>'
-            '</div>'
-            '<div class="addendum-section">'
-            f'<h3>{headings[2]}</h3>'
-            f'<p>{analysis.get("summary", "")}</p>'
-            f'<ul class="addendum-signals">{signals_html}</ul>'
-            f'<p class="addendum-access">{analysis.get("accessibility", "")}</p>'
-            '</div>'
-            '</div>'
-        )
-
-    addendum_html_en = ""
-    addendum_html_es = ""
-
     if addendum_path.exists():
         try:
             ad = json.loads(addendum_path.read_text())
-
-            # Auto-translate addendum to Spanish if not already present
-            if not ad.get("author_note_es") and GEMINI_OK:
-                print(f"  → Translating addendum to Spanish...")
-                try:
-                    tr_prompt = (
-                        f"Translate this comic blog post addendum to Spanish. "
-                        f"Keep the voice direct and slightly philosophical. "
-                        f"Translate author_note, grounding.summary, grounding.citations[].detail, "
-                        f"analysis.summary, analysis.signals[], and analysis.accessibility. "
-                        f"Return ONLY valid JSON with keys: author_note_es, "
-                        f"grounding_es (same structure as grounding with translated summary, citations), "
-                        f"analysis_es (same structure with translated summary, signals, accessibility).\n\n"
-                        f"Source JSON:\n{json.dumps(ad, ensure_ascii=False)}"
-                    )
-                    tr_resp = _genai_client.models.generate_content(
-                        model="gemini-2.0-flash", contents=tr_prompt
-                    )
-                    tr_text = tr_resp.text.strip()
-                    if tr_text.startswith("```"):
-                        tr_lines = tr_text.split("\n")
-                        tr_text = "\n".join(tr_lines[1:-1] if tr_lines[-1].strip().startswith("```") else tr_lines[1:])
-                    tr_data = json.loads(tr_text)
-                    ad.update(tr_data)
-                    addendum_path.write_text(json.dumps(ad, indent=4, ensure_ascii=False) + "\n")
-                    print(f"  ✓ Addendum ES translation saved")
-                except Exception as e:
-                    print(f"  ⚠ Addendum ES translation failed: {e}")
-
-            addendum_html_en = _build_addendum_html(ad, "en")
-            addendum_html_es = _build_addendum_html(ad, "es")
-
+            citations_html = ""
+            for c in ad.get("grounding", {}).get("citations", []):
+                citations_html += f'<dt>{c["label"]}</dt><dd>{c["detail"]}</dd>'
+            signals_html = ""
+            for s in ad.get("analysis", {}).get("signals", []):
+                signals_html += f"<li>{s}</li>"
+            addendum_html = (
+                '<div class="addendum">'
+                '<h2 class="addendum-heading">BEHIND THE PANEL</h2>'
+                f'<div class="addendum-note">{ad.get("author_note", "")}</div>'
+                '<div class="addendum-section">'
+                '<h3>GROUNDING</h3>'
+                f'<p>{ad.get("grounding", {}).get("summary", "")}</p>'
+                f'<dl class="addendum-citations">{citations_html}</dl>'
+                '</div>'
+                '<div class="addendum-section">'
+                '<h3>WHAT\'S HAPPENING HERE</h3>'
+                f'<p>{ad.get("analysis", {}).get("summary", "")}</p>'
+                f'<ul class="addendum-signals">{signals_html}</ul>'
+                f'<p class="addendum-access">{ad.get("analysis", {}).get("accessibility", "")}</p>'
+                '</div>'
+                '</div>'
+            )
             # Use accessibility text as richer meta description
             access = ad.get("analysis", {}).get("accessibility", "")
             if access:
@@ -1800,10 +1637,9 @@ def build_post(post_path: Path, skip_generate: bool = False, out_dir: Path = Non
             date=post["date"],
             tip_jar_url=TIP_JAR_URL,
             friends_html=friends,
-            addendum_html=addendum_html_en if lang == "en" else addendum_html_es,
+            addendum_html=addendum_html,
             tags_html=tags_html,
             post_nav=post_nav.format(lang=lang) if post_nav else "",
-            episode=episode,
         )
 
     # Generate /en/ and /es/ subdirectories
@@ -1891,8 +1727,13 @@ if __name__ == "__main__":
     build_manifest(built, out_dir)
     write_robots_txt(out_dir)
 
-    write_feed_xml(out_dir)
-    write_sitemap_xml(out_dir)
+    # Remove sitemap/RSS/latest — edge functions handle these now
+    # NOTE: index.html is kept — it's a static shell that fetches posts-manifest.json dynamically
+    for static_file in ["sitemap.xml", "feed.xml", "latest.json"]:
+        p = out_dir / static_file
+        if p.exists():
+            p.unlink()
+            print(f"  🗑 Removed static {static_file} (replaced by edge function)")
 
     if args.deploy:
         import subprocess
