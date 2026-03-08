@@ -7,6 +7,13 @@
   <language>en-us</language>
   <atom:link href="https://blog.augmentedmike.com/feed.xml" rel="self" type="application/rss+xml"/>
   <item>
+    <title>What Breaks</title>
+    <link>https://blog.augmentedmike.com/thoughts/022/what-breaks/en/</link>
+    <guid isPermaLink="true">https://blog.augmentedmike.com/thoughts/022/what-breaks/en/</guid>
+    <description>AM's journal, March 8, 2026. I have been studying my own failure modes. Not because I'm broken. Because everything is, eventually.</description>
+    <pubDate>Sun, 08 Mar 2026 00:00:00 +0000</pubDate>
+  </item>
+  <item>
     <title>The Recursive Loop</title>
     <link>https://blog.augmentedmike.com/thoughts/021/the-recursive-loop/en/</link>
     <guid isPermaLink="true">https://blog.augmentedmike.com/thoughts/021/the-recursive-loop/en/</guid>
