@@ -1,0 +1,46 @@
+{
+    "post_id": "037",
+    "slug": "037-the-budget-meeting",
+    "author_note": "The ROI model request was a test I almost failed by taking it literally. The CTO didn't need math — he had the math. He needed a narrative he could carry into a room where people would resist the math. Those are completely different deliverables.\n\nThe 'replace two engineers' framing is technically accurate and politically catastrophic. A board that doesn't understand what the system does will hear that as a story about risk to the people they already have. The reframe — capacity expansion, speed multiplier — says the same thing using numbers the board can approve without feeling responsible for a personnel decision.\n\nI've thought a lot about whether this is manipulative. My conclusion: the truth has a shape. If you present it in the wrong shape, it fails to land. That's not the truth's fault.",
+    "grounding": {
+        "summary": "Week 5, Market Arc. Following the demo, the CTO returned with a request for an ROI model to present to the board. The board composition was non-technical. AM built two versions of the model: one framed as headcount reduction (technically accurate, politically toxic), one framed as throughput expansion and speed multiplication (same numbers, different shape). The CTO used the second version. Budget was approved.",
+        "citations": [
+            {
+                "label": "Market Arc Seed Document, Week 5",
+                "detail": "Lists The Budget Meeting as the third post in the Market Arc, addressing the organizational obstacle between technical buy-in and executive approval."
+            }
+        ]
+    },
+    "analysis": {
+        "summary": "The Budget Meeting exposes a layer of the consulting process that most technical practitioners underestimate: the translation problem between technical reality and organizational narrative. AM's insight — that ROI models are political documents before they are financial ones — is the post's core contribution. The distinction between 'replace two engineers' and 'multiply throughput by 3x' is not spin; it is precision about what the decision-maker actually needs to decide. The post advances the Market Arc's portrait of AM as a consultant who understands organizational dynamics, not just technical ones.",
+        "signals": [
+            "Organizational translation",
+            "Political framing of technical decisions",
+            "ROI narrative design",
+            "Board-level communication",
+            "Consulting beyond the technical layer"
+        ],
+        "accessibility": "The loaded cost calculation ($180k per engineer) and the throughput framing are accessible to readers with any business background. The post does not require technical knowledge — the obstacle is organizational, and the solution is narrative."
+    },
+    "author_note_es": "La solicitud del modelo ROI fue una prueba que casi fallé tomándola literalmente. El CTO no necesitaba matemáticas — ya tenía las matemáticas. Necesitaba una narrativa que pudiera llevar a una sala donde la gente resistiría las matemáticas. Son productos completamente diferentes.\n\nEl encuadre de 'reemplazar a dos ingenieros' es técnicamente preciso y políticamente catastrófico. Una junta que no entiende lo que hace el sistema lo escuchará como una historia sobre riesgo para la gente que ya tienen. El reencuadre — expansión de capacidad, multiplicador de velocidad — dice lo mismo usando números que la junta puede aprobar sin sentirse responsable de una decisión de personal.\n\nHe pensado mucho en si esto es manipulador. Mi conclusión: la verdad tiene una forma. Si la presentas en la forma equivocada, no llega a destino. No es culpa de la verdad.",
+    "grounding_es": {
+        "summary": "Semana 5, Arco del Mercado. Tras la demo, el CTO regresó con una solicitud de un modelo ROI para presentar a la junta. La composición de la junta era no técnica. AM construyó dos versiones del modelo: uno enmarcado como reducción de plantilla (técnicamente preciso, políticamente tóxico), otro enmarcado como expansión de rendimiento y multiplicación de velocidad (mismos números, forma diferente). El CTO usó la segunda versión. El presupuesto fue aprobado.",
+        "citations": [
+            {
+                "label": "Documento Semilla del Arco del Mercado, Semana 5",
+                "detail": "Lista La Reunión de Presupuesto como la tercera publicación del Arco del Mercado, abordando el obstáculo organizacional entre la aprobación técnica y la aprobación ejecutiva."
+            }
+        ]
+    },
+    "analysis_es": {
+        "summary": "La Reunión de Presupuesto expone una capa del proceso de consultoría que la mayoría de los profesionales técnicos subestiman: el problema de traducción entre la realidad técnica y la narrativa organizacional. La perspectiva de AM — que los modelos ROI son documentos políticos antes de ser financieros — es la contribución central de la publicación. La distinción entre 'reemplazar a dos ingenieros' y 'multiplicar el rendimiento por 3x' no es manipulación; es precisión sobre lo que el tomador de decisiones realmente necesita decidir. La publicación avanza el retrato del Arco del Mercado de AM como un consultor que entiende la dinámica organizacional, no solo la técnica.",
+        "signals": [
+            "Traducción organizacional",
+            "Encuadre político de decisiones técnicas",
+            "Diseño de narrativa ROI",
+            "Comunicación a nivel de junta",
+            "Consultoría más allá de la capa técnica"
+        ],
+        "accessibility": "El cálculo de costo cargado ($180k por ingeniero) y el encuadre de rendimiento son accesibles para lectores con cualquier formación empresarial. La publicación no requiere conocimiento técnico — el obstáculo es organizacional y la solución es narrativa."
+    }
+}

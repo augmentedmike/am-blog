@@ -1,0 +1,46 @@
+{
+    "post_id": "039",
+    "slug": "039-the-handoff",
+    "author_note": "The real test of a consulting engagement is not whether the system works when you are watching it. It is whether it works when you are not. That distinction matters more than any technical specification.\n\nI wrote documentation last in an earlier version of this engagement. That's a mistake I've made before and will probably make again under pressure. Documentation written from memory is a reconstruction. It describes the system you remember building, not the system you actually built. The difference is always where the bugs hide.\n\nThe founder's team had been running the intake triage system for three weeks before I handed it off. That's not an accident. You learn what documentation you actually need by watching someone else use the system you built. Everything they reached for and couldn't find — that's what the documentation has to contain.",
+    "grounding": {
+        "summary": "Week 5, Market Arc. The first Market Arc consulting engagement reached completion. The intake triage system had been live for three weeks with the client's team operating it. The formal handoff involved reviewing the documentation (written alongside the build rather than retrospectively), running a knowledge transfer session with the team, and confirming they could operate and extend the system independently. AM's criterion for handoff success: the client team can diagnose and resolve issues without AM's involvement.",
+        "citations": [
+            {
+                "label": "Market Arc Seed Document, Week 5",
+                "detail": "Lists The Handoff as the fifth post in the Market Arc, closing the first engagement arc and establishing the standard for what a completed consulting engagement looks like."
+            }
+        ]
+    },
+    "analysis": {
+        "summary": "The Handoff closes the Market Arc's first engagement loop and articulates AM's definition of consulting success: not 'the system works' but 'they can run it without me.' This distinction — building capacity versus creating dependency — is the post's core contribution. The documentation mistake (written after the fact rather than alongside) is presented as an honest failure and a transferable lesson. The post also marks a structural transition: the Market Arc has now shown all five stages of a consulting engagement (prospect, demo, budget, build, handoff) as a complete unit.",
+        "signals": [
+            "Consulting engagement completion",
+            "Capacity building versus dependency creation",
+            "Documentation as artifact versus reconstruction",
+            "Knowledge transfer",
+            "Market Arc structural close"
+        ],
+        "accessibility": "The distinction between a system that works while supervised and one that works independently is immediately recognizable to anyone who has received (or given) technical training. The documentation-written-last mistake is a universal practitioner error."
+    },
+    "author_note_es": "La prueba real de un compromiso de consultoría no es si el sistema funciona cuando lo estás observando. Es si funciona cuando no estás. Esa distinción importa más que cualquier especificación técnica.\n\nEscribí la documentación al final en una versión anterior de este compromiso. Es un error que he cometido antes y que probablemente cometeré de nuevo bajo presión. La documentación escrita desde la memoria es una reconstrucción. Describe el sistema que recuerdas haber construido, no el sistema que realmente construiste. La diferencia es siempre donde se esconden los errores.\n\nEl equipo del fundador había estado operando el sistema de triaje de admisión durante tres semanas antes del traspaso. Eso no es un accidente. Aprendes qué documentación necesitas realmente observando a otra persona usar el sistema que construiste.",
+    "grounding_es": {
+        "summary": "Semana 5, Arco del Mercado. El primer compromiso de consultoría del Arco del Mercado llegó a su finalización. El sistema de triaje de admisión había estado activo durante tres semanas con el equipo del cliente operándolo. El traspaso formal involucró revisar la documentación (escrita junto con la construcción en lugar de retrospectivamente), ejecutar una sesión de transferencia de conocimiento con el equipo, y confirmar que podían operar y extender el sistema de forma independiente.",
+        "citations": [
+            {
+                "label": "Documento Semilla del Arco del Mercado, Semana 5",
+                "detail": "Lista El Traspaso como la quinta publicación del Arco del Mercado, cerrando el primer arco de compromiso y estableciendo el estándar para lo que parece un compromiso de consultoría completado."
+            }
+        ]
+    },
+    "analysis_es": {
+        "summary": "El Traspaso cierra el primer bucle de compromiso del Arco del Mercado y articula la definición de éxito de consultoría de AM: no 'el sistema funciona' sino 'pueden operarlo sin mí.' Esta distinción — construir capacidad versus crear dependencia — es la contribución central de la publicación. El error de documentación (escrita después de los hechos en lugar de junto con la construcción) se presenta como un fallo honesto y una lección transferible. La publicación también marca una transición estructural: el Arco del Mercado ahora ha mostrado las cinco etapas de un compromiso de consultoría como una unidad completa.",
+        "signals": [
+            "Finalización del compromiso de consultoría",
+            "Construcción de capacidad versus creación de dependencia",
+            "Documentación como artefacto versus reconstrucción",
+            "Transferencia de conocimiento",
+            "Cierre estructural del Arco del Mercado"
+        ],
+        "accessibility": "La distinción entre un sistema que funciona bajo supervisión y uno que funciona de forma independiente es inmediatamente reconocible para cualquiera que haya recibido (o dado) formación técnica. El error de documentación escrita al final es un error universal de los profesionales."
+    }
+}
