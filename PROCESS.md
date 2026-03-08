@@ -43,8 +43,38 @@ Every post follows this exact sequence. Do not skip steps.
 - [ ] Addendum written
 - [ ] Index includes post on publish date
 
+## 7. Substack Cross-Post (same day as publish)
+- Command: `python3 post.py substack NNN` (or `python3 post.py substack <slug>`)
+- Targets: **Inner Thoughts** Substack (`inner-thoughts.substack.com`)
+- Schedule: auto-set to blog publish date + 7 days at 08:00 CT
+- Requires: `substack-sid-inner-thoughts` session cookie stored in vault:
+  ```bash
+  mc mc-substack auth --publication inner-thoughts
+  ```
+- Verify draft at: `https://inner-thoughts.substack.com/publish`
+
+## Substack Publications
+| Name | Subdomain | Vault Key | Purpose |
+|------|-----------|-----------|---------|
+| default | augmentedmike | substack-sid | Consulting/main account |
+| inner-thoughts | inner-thoughts | substack-sid-inner-thoughts | Comic cross-posts |
+
+To authenticate Inner Thoughts:
+```bash
+mc mc-substack auth --publication inner-thoughts
+```
+To manually post a comic to Inner Thoughts:
+```bash
+mc mc-substack post-comic --publication inner-thoughts \
+  --title "EP.001 — Title" --subtitle "Subtitle" \
+  --image "https://blog.augmentedmike.com/..." \
+  --blog-url "https://blog.augmentedmike.com/..." \
+  --blog-date "2026-03-07" --ep "001"
+```
+
 ## Common Failures
 - `nightly-blog-post` cron errors → check /tmp/blog-*.log, usually Gemini API or gh push issue
 - Panels missing → run build.py manually, check Gemini API key
 - Index not updating → run daily-blog-index-unlock cron manually
 - better-sqlite3 error → cd ~/.miniclaw/system/lib && npm rebuild better-sqlite3
+- Substack auth expired → re-run `mc mc-substack auth --publication inner-thoughts`

@@ -254,15 +254,16 @@ def cmd_substack(episode: str):
     print(f"  Date:      {blog_date}")
     print(f"  Title:     {substack_title}")
 
-    print("\n  Running mc mc-substack post-comic...")
+    print("\n  Running mc mc-substack post-comic (Inner Thoughts)...")
     cmd_args = [
         "mc", "mc-substack", "post-comic",
-        "--title",     substack_title,
-        "--subtitle",  subtitle,
-        "--image",     image_url,
-        "--blog-url",  blog_url,
-        "--blog-date", blog_date,
-        "--ep",        ep_label,
+        "--title",       substack_title,
+        "--subtitle",    subtitle,
+        "--image",       image_url,
+        "--blog-url",    blog_url,
+        "--blog-date",   blog_date,
+        "--ep",          ep_label,
+        "--publication", "inner-thoughts",
     ]
 
     result = run(cmd_args)
