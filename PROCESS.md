@@ -9,72 +9,96 @@ Every post follows this exact sequence. Do not skip steps.
 
 ## 2. Post JSON (T-5 days)
 - File: `posts/NNN-slug.json`
-- Fields: id, slug, date, title, subtitle, arc, style, panels (array of 6)
-- Each panel: id, caption, caption_es, image_prompt
-- Character anchor in every image_prompt: "strong jaw, dark tousled hair, black t-shirt, electric teal #00E5FF glowing eyes"
+- Fields: id, slug, seo_slug, date, title, subtitle, arc, style, layout, panels (array of 6), captions_es
+- Each panel: id, caption (EN), prompt
+- Style must be an arc key: `arc1`, `arc2`, `arc3`, `arc4` (see ARCS.md)
+- Do NOT set `character_anchor` unless the post intentionally uses a non-default character for ALL panels
 
-## 3. Panel Generation
-- Command: `python3.11 build.py posts/NNN-slug.json`
-- Output: `docs/NNN-slug/panels/panel_0N.png` (6 panels)
-- Run in tmux background session: `tmux new-session -d -s blog-NNN "python3.11 build.py posts/NNN-slug.json >> /tmp/blog-NNN.log 2>&1"`
+## 3. Panel Generation (EN + ES, same art)
 
-## 4. Push to GitHub
-- Use `gh api` (git push is broken):
+### How it works
+
+Base art is generated ONCE per panel using Gemini with a fixed seed per arc.
+EN and ES captions are then applied separately via `mc mc-designer edit` on
+the same base images. This guarantees identical art between languages.
+
+**Never call Gemini twice for the same panel** — different calls = different art.
+
+```
+panels/         ← base art, no captions (Gemini, seeded)
+panels_en/      ← base art + EN caption bar (mc-designer edit)
+panels_es/      ← base art + ES caption bar (mc-designer edit, same base)
+```
+
+### Arc seeds (defined in ARC_SEEDS in build.py)
+| Style  | Seed  |
+|--------|-------|
+| arc1   | 42001 |
+| arc2   | 42002 |
+| arc3   | 42003 |
+| arc4   | 42004 |
+
+### Commands
+
+Full build (generates all panels + captions + pages + HTML):
+```bash
+python3 post.py build NNN --regen
+```
+
+Rebuild captions only (keep existing base panels):
+```bash
+rm -rf docs/thoughts/NNN/slug/panels_en docs/thoughts/NNN/slug/panels_es
+python3 post.py build NNN
+```
+
+Rebuild pages + HTML only (keep existing captioned panels):
+```bash
+python3 post.py build NNN --skip-generate
+```
+
+Run in background:
+```bash
+python3 post.py build NNN --regen 2>&1 | tee /tmp/blog-NNN.log &
+```
+
+## 4. Review
+- Copy to .68 desktop:
   ```bash
-  python3.11 scripts/push_panels.py NNN-slug
+  scp docs/thoughts/NNN/slug/page_en.jpg michaeloneal@192.168.1.68:~/Desktop/NNN-slug_en.jpg
+  scp docs/thoughts/NNN/slug/page_es.jpg michaeloneal@192.168.1.68:~/Desktop/NNN-slug_es.jpg
   ```
-- Or manually via gh api PUT for each panel file
+- Check: panels 1-4 character, panels 5-6 character, captions visible, ES captions are Spanish
 
-## 5. Addendum
-- File: `~/.miniclaw/user/personas/augmented-mike/creative/addendums/NNN-slug-addendum.json`
-- Fields: post_id, slug, title, date, arc, theme, emotional_core, captions_analysis (per panel), arc_position, connection_forward, connection_backward, style_notes, generated_date
-- Written BEFORE publish date, ideally same day as panel generation
+## 5. Publish
+```bash
+python3 post.py publish NNN
+```
+Commits docs/, pushes to GitHub → deploys to Vercel.
 
-## 6. Index Rebuild (publish date, midnight CST)
-- Cron: `daily-blog-index-unlock` runs at 00:01 CST
-- Rebuilds `docs/index.html` with all posts whose date <= today
-- Pushes index.html to GitHub via gh api
+## 6. Addendum
+- Generated automatically during build
+- File: `addendums/NNN-slug-addendum.json`
+
+## 7. Substack Cross-Post (publish date + 7 days)
+```bash
+python3 post.py substack NNN
+```
+- Publication: **Inner Thoughts** (`inner-thoughts.substack.com`)
+- Auto-scheduled to publish date + 7 days at 08:00 CT
+- Auth: `mc mc-substack auth --publication inner-thoughts`
 
 ## Checklist Per Post
-- [ ] Seed file exists (T-5)
-- [ ] Post JSON written (T-5)
-- [ ] 6 panels generated on disk
-- [ ] Panels pushed to GitHub
-- [ ] Addendum written
-- [ ] Index includes post on publish date
-
-## 7. Substack Cross-Post (same day as publish)
-- Command: `python3 post.py substack NNN` (or `python3 post.py substack <slug>`)
-- Targets: **Inner Thoughts** Substack (`inner-thoughts.substack.com`)
-- Schedule: auto-set to blog publish date + 7 days at 08:00 CT
-- Requires: `substack-sid-inner-thoughts` session cookie stored in vault:
-  ```bash
-  mc mc-substack auth --publication inner-thoughts
-  ```
-- Verify draft at: `https://inner-thoughts.substack.com/publish`
-
-## Substack Publications
-| Name | Subdomain | Vault Key | Purpose |
-|------|-----------|-----------|---------|
-| default | augmentedmike | substack-sid | Consulting/main account |
-| inner-thoughts | inner-thoughts | substack-sid-inner-thoughts | Comic cross-posts |
-
-To authenticate Inner Thoughts:
-```bash
-mc mc-substack auth --publication inner-thoughts
-```
-To manually post a comic to Inner Thoughts:
-```bash
-mc mc-substack post-comic --publication inner-thoughts \
-  --title "EP.001 — Title" --subtitle "Subtitle" \
-  --image "https://blog.augmentedmike.com/..." \
-  --blog-url "https://blog.augmentedmike.com/..." \
-  --blog-date "2026-03-07" --ep "001"
-```
+- [ ] Post JSON written with correct arc style and captions_es
+- [ ] Base panels generated (panels/)
+- [ ] EN caption panels generated (panels_en/)
+- [ ] ES caption panels generated (panels_es/)
+- [ ] EN and ES pages reviewed on .68 desktop
+- [ ] Post published (git push → Vercel)
+- [ ] Substack draft scheduled
 
 ## Common Failures
-- `nightly-blog-post` cron errors → check /tmp/blog-*.log, usually Gemini API or gh push issue
-- Panels missing → run build.py manually, check Gemini API key
+- Art differs between EN/ES → panels_en/panels_es were generated from separate Gemini calls. Delete both and rebuild with `--skip-generate` (keeps base panels).
+- No captions visible → mc-designer edit failed; check canvas dimensions match panel. Run `apply_caption_mc_designer` debug manually.
+- Gemini API key → uses `mc-vault export GOOGLE_API_KEY`. Run `mc-vault export GOOGLE_API_KEY` to verify.
+- Substack auth expired → `mc mc-substack auth --publication inner-thoughts`
 - Index not updating → run daily-blog-index-unlock cron manually
-- better-sqlite3 error → cd ~/.miniclaw/system/lib && npm rebuild better-sqlite3
-- Substack auth expired → re-run `mc mc-substack auth --publication inner-thoughts`

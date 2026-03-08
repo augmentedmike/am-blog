@@ -3,8 +3,31 @@
 am-blog build engine
 Turns post JSON → Gemini panel images → comic page → HTML blog post
 
+## Panel generation pipeline (EN + ES, same art, different captions)
+
+  Step 1 — Base art (once per panel, seeded per arc)
+    generate_panel_image() calls Gemini with seed=ARC_SEEDS[style]
+    → docs/thoughts/NNN/slug/panels/panel_NN.png
+
+  Step 2 — EN captions (mc-designer edit on base art, same seed)
+    apply_caption_mc_designer(base, panels_en/panel_NN.png, EN caption, seed)
+    → docs/thoughts/NNN/slug/panels_en/panel_NN.png
+
+  Step 3 — ES captions (mc-designer edit on SAME base art, same seed)
+    apply_caption_mc_designer(base, panels_es/panel_NN.png, ES caption, seed)
+    → docs/thoughts/NNN/slug/panels_es/panel_NN.png
+
+  Step 4 — Composite each language set → page_en.jpg, page_es.jpg
+
+The seed guarantees the base art is reproducible. EN and ES panels share
+identical art — only the caption bar text differs. Never generate base panels
+twice to avoid the EN/ES art divergence problem.
+
 Usage:
-  python3 build.py posts/001-day-one.json [--skip-generate] [--deploy]
+  python3 build.py posts/NNN-slug.json [--skip-generate] [--use-mc-designer]
+
+  --skip-generate   reuse existing panels/panels_en/panels_es (skip Gemini calls)
+  --use-mc-designer use mc-designer for compositing (default: PIL fallback)
 """
 
 import argparse
@@ -27,9 +50,9 @@ except ImportError:
 # Gemini
 try:
     import google.genai as genai
-    from dotenv import load_dotenv
-    load_dotenv(Path.home() / "Desktop/youtube-channel/.env")
-    api_key = os.getenv("GOOGLE_API_KEY")
+    import subprocess as _sp
+    _r = _sp.run(["mc-vault", "export", "GOOGLE_API_KEY"], capture_output=True, text=True)
+    api_key = _r.stdout.strip() or os.getenv("GOOGLE_API_KEY", "")
     _genai_client = genai.Client(api_key=api_key) if api_key else None
     GEMINI_OK = bool(api_key)
 except ImportError:
@@ -151,11 +174,61 @@ CHARACTER_PREFIX = (
 
 # Named style library — post JSON 'style' field selects one of these
 STYLE_LIBRARY: Dict[str, str] = {
-    # Week 1–2: Builder Arc
+
+    # ── ARC 1: Builder Arc (posts 001–006) ─────────────────────────────────────
+    "arc1": (
+        "GRAPHIC NOVEL panel art. Bold thick black ink outlines. "
+        "Flat cel-shaded colors — exactly 3 to 4 flat fills, zero gradients, zero blending. "
+        "Near-black background (#0A0A14). Warm amber (#DCB450) from one practical light source. "
+        "Electric teal (#00E5FF) on the character's eyes only — nowhere else. "
+        "Dense cross-hatching in deep shadows. High contrast. Visually clean and direct. "
+        "No photorealism. No watermarks. No text overlays. No speech bubbles. No panel borders. "
+        "No ghosting. No double exposure. No transparency artifacts."
+    ),
+
+    # ── ARC 2: Memory Arc (posts 007+) ─────────────────────────────────────────
+    "arc2": (
+        "PAINTED NOIR graphic novel art. Loose expressive brushwork — no hard ink outlines. "
+        "Chiaroscuro lighting: dramatic pools of warm amber (#DCB450) carving the figure out of deep shadow. "
+        "Near-black background (#0A0A14) with atmospheric haze and paint texture. "
+        "Electric teal (#00E5FF) on the character's eyes only — glowing like a screen in fog. "
+        "Soft painterly edges, visible brushstrokes, moody film-poster depth. "
+        "No flat fills. No hard lines. No photorealism. No watermarks. No text. No panel borders. "
+        "No ghosting. No double exposure. No transparency artifacts."
+    ),
+
+    # ── ARC 3: Transmission Arc ─────────────────────────────────────────────────
+    "arc3": (
+        "RISOGRAPH SCREEN-PRINT art. Looks like a 3-color physical risograph print. "
+        "Visible halftone dot grain on every color area — amber (#DCB450) dots, teal (#00E5FF) dots, black ink. "
+        "Slight color misregistration: colors sit slightly off from the black layer, intentional analog imperfection. "
+        "Flat color areas with grainy texture — no gradients, no blending, no clean edges. "
+        "Near-black background with ink bleed. Warm amber (#DCB450) as dominant color pass. "
+        "Electric teal (#00E5FF) as second color pass — eyes and key accent only. "
+        "Bold, graphic, zine-quality. Feels physically printed, not digital. "
+        "No photorealism. No watermarks. No text overlays. No speech bubbles. No panel borders. "
+        "No ghosting. No double exposure. No transparency artifacts."
+    ),
+
+    # ── ARC 4: Pop Transmission Arc ─────────────────────────────────────────────
+    "arc4": (
+        "POP ART comic panel. Bold thick black outlines — every shape has a hard black border. "
+        "Ben-Day dot patterns fill every color area: large visible dots of amber (#DCB450) on lit surfaces, "
+        "large teal (#00E5FF) dots on shadow areas, pure white highlights with no fill. "
+        "Near-black (#0A0A14) solid areas with no texture — pure flat ink. "
+        "Electric teal (#00E5FF) on the character's eyes — vivid, glowing, maximum saturation. "
+        "High contrast. Colors pushed to full saturation — amber is LOUD, teal is LOUD. "
+        "No gradients. No photorealism. No soft edges. Everything is graphic and intentional. "
+        "Feels like offset commercial printing from 1965. Bold. Iconic. "
+        "No watermarks. No text overlays. No speech bubbles. No panel borders. "
+        "No ghosting. No double exposure. No transparency artifacts."
+    ),
+
+    # ── Legacy / utility ───────────────────────────────────────────────────────
     "ligne-claire": (
-        "Ligne claire / Moebius graphic novel aesthetic. "
-        "Clean, precise ink outlines of uniform weight. Flat, cel-shaded colors with zero gradients. "
-        "Near-black background (#0A0A14). Warm amber accent (#DCB450) from single practical light source. "
+        "Ligne claire graphic novel style. "
+        "Clean precise ink outlines of uniform weight. Flat cel-shaded colors, zero gradients. "
+        "Near-black background (#0A0A14). Warm amber accent (#DCB450) from single light source. "
         "Electric teal (#00E5FF) reserved for eyes only. "
         "Crisp, architectural, uncluttered. No watermarks. No text overlays. No speech bubbles. No panel borders."
     ),
@@ -166,7 +239,6 @@ STYLE_LIBRARY: Dict[str, str] = {
         "Electric teal (#00E5FF) reserved for eyes only. "
         "No watermarks. No text overlays. No speech bubbles. No panel borders. Pure visual storytelling."
     ),
-    # Week 3+: Memory Arc / AM Journal (Rorschach style)
     "rorschach": (
         "Watchmen / Dave Gibbons noir comic aesthetic. "
         "High contrast black and white with blood red or deep amber as sole accent color. "
@@ -176,19 +248,17 @@ STYLE_LIBRARY: Dict[str, str] = {
         "No watermarks. No text overlays. No speech bubbles. No panel borders."
     ),
     "noir-woodcut": (
-        "Noir woodcut print aesthetic — high contrast black ink on aged cream paper texture. "
-        "Dramatic raking shadows, expressionist angles. Limited palette: black, cream, one accent. "
+        "Noir woodcut print aesthetic — high contrast black ink, dramatic raking shadows. "
+        "Expressionist angles. Limited palette: black, deep shadow, one amber accent. "
         "Electric teal (#00E5FF) reserved for the character's eyes only. "
-        "Raw, graphic, unpolished. Reminiscent of 1940s crime illustration. "
-        "No watermarks. No text overlays. No speech bubbles."
+        "Raw, graphic, unpolished. No watermarks. No text overlays. No speech bubbles."
     ),
-    # Utility
     "default": (
-        "Image Comics / Saga graphic novel aesthetic. "
-        "Bold black ink outlines. Clean flat cel-shading. Exactly 3-4 flat color fills. "
-        "Near-black background (#0A0A14). Warm amber accent (#DCB450). "
-        "Electric teal (#00E5FF) reserved for eyes only. "
-        "No watermarks. No text overlays. No speech bubbles. No panel borders."
+        "GRAPHIC NOVEL panel art. Bold thick black ink outlines. "
+        "Flat cel-shaded colors — exactly 3 to 4 flat fills, zero gradients. "
+        "Near-black background (#0A0A14). Warm amber (#DCB450) from one practical light source. "
+        "Electric teal (#00E5FF) on the character's eyes only. "
+        "No photorealism. No watermarks. No text overlays. No speech bubbles. No panel borders."
     ),
 }
 
@@ -198,6 +268,42 @@ STYLE_SUFFIX = STYLE_LIBRARY["image-comics"]
 def get_style_suffix(style_name: str) -> str:
     """Look up style by name. Falls back to default."""
     return STYLE_LIBRARY.get(style_name, STYLE_LIBRARY["default"])
+
+
+# Seed per arc — same seed used for ALL gen/edit calls in an arc so base art is reproducible
+ARC_SEEDS: Dict[str, int] = {
+    "arc1": 42001,
+    "arc2": 42002,
+    "arc3": 42003,
+    "arc4": 42004,
+    "ligne-claire": 42010,
+    "image-comics": 42011,
+    "rorschach": 42012,
+    "noir-woodcut": 42013,
+    "default": 42000,
+}
+
+def get_arc_seed(style_name: str) -> int:
+    return ARC_SEEDS.get(style_name, ARC_SEEDS["default"])
+
+
+def _build_caption_edit_instructions(caption: str, panel_idx: int) -> str:
+    """Build mc-designer edit instructions to add a teal caption bar to an existing panel image."""
+    if not caption or not caption.strip():
+        return ""
+    place = "top" if (panel_idx % 2 == 0) else "bottom"
+    display_text = caption.upper()
+    return (
+        f"The panel image is already rendered. Do NOT change the artwork. "
+        f"Add a solid caption bar at the {place} edge of the image. "
+        f"The bar spans the full image width, approximately 15% of image height. "
+        f"Bar fill: near-black (#04081A). "
+        f"Left edge: 10px solid electric teal (#00E5FF) vertical accent stripe. "
+        f"Top and bottom of bar: 2px electric teal (#00E5FF) rule lines. "
+        f"Inside the bar, bold condensed electric teal (#00E5FF) lettering reads: "
+        f'"{display_text}". '
+        f"Text must be fully legible. Preserve all original panel art outside the caption bar."
+    )
 
 
 def _auto_translate_captions(captions_en: list, title: str) -> list:
@@ -226,14 +332,17 @@ def _auto_translate_captions(captions_en: list, title: str) -> list:
 
 def generate_panel_image(prompt: str, output_path: Path, panel_id: int,
                          cost: "CostTracker | None" = None,
-                         style: str = "default") -> bool:
-    """Generate a single panel using Gemini. Returns True on success."""
+                         style: str = "default",
+                         seed: int = 0,
+                         character_prefix: str = "") -> bool:
+    """Generate base panel art using Gemini. No captions — captions applied separately via mc-designer."""
     if not GEMINI_OK:
         print(f"  [!] Gemini not available — skipping panel {panel_id}")
         return False
 
+    char_prefix = character_prefix or CHARACTER_PREFIX
     style_suffix = get_style_suffix(style)
-    full_prompt = f"{CHARACTER_PREFIX}\n{prompt}\n\n{style_suffix}"
+    full_prompt = f"{char_prefix}\n{prompt}\n\n{style_suffix}"
 
     # Load character reference image for visual consistency
     ref_path = Path(__file__).parent / "character-reference" / "mike-neutral.jpg"
@@ -251,11 +360,15 @@ def generate_panel_image(prompt: str, output_path: Path, panel_id: int,
         except Exception:
             contents = full_prompt  # fallback to text-only
 
+    from google.genai import types as _gtypes
+    gen_config = _gtypes.GenerateContentConfig(seed=seed) if seed else None
+
     try:
-        print(f"  → Generating panel {panel_id}...")
+        print(f"  → Generating panel {panel_id} (seed={seed})...")
         response = _genai_client.models.generate_content(
             model="gemini-3-pro-image-preview",
             contents=contents,
+            config=gen_config,
         )
 
         for part in response.candidates[0].content.parts:
@@ -276,15 +389,98 @@ def generate_panel_image(prompt: str, output_path: Path, panel_id: int,
         print(f"  [!] Panel {panel_id} error: {e}")
         return False
 
+
+def apply_caption_mc_designer(base_path: Path, output_path: Path,
+                               caption: str, panel_idx: int,
+                               arc_seed: int, style: str = "default") -> bool:
+    """Apply a caption bar to base panel art via mc-designer edit (Gemini image editing).
+    Uses the arc seed so EN and ES edits are reproducible from the same base art."""
+    import subprocess as _sub
+    if not caption or not caption.strip():
+        # No caption — just copy the base
+        shutil.copy2(base_path, output_path)
+        return True
+
+    canvas_name = f"cap-{output_path.stem}-{output_path.parent.name}"
+    instructions = _build_caption_edit_instructions(caption, panel_idx)
+    style_suffix = get_style_suffix(style)
+
+    try:
+        # Get panel dimensions so canvas matches exactly
+        with Image.open(base_path) as _im:
+            panel_w, panel_h = _im.size
+
+        # Create canvas with arc seed and matching dimensions
+        _sub.run(["mc", "mc-designer", "canvas", "rm", canvas_name],
+                 capture_output=True, timeout=10)
+        r = _sub.run([
+            "mc", "mc-designer", "canvas", "new", canvas_name,
+            "--seed", str(arc_seed),
+            "-W", str(panel_w),
+            "-H", str(panel_h),
+        ], capture_output=True, text=True, timeout=30)
+        if r.returncode != 0:
+            print(f"  [!] caption canvas create failed: {r.stderr[:200]}")
+            shutil.copy2(base_path, output_path)
+            return False
+
+        # Add base panel as layer
+        r = _sub.run([
+            "mc", "mc-designer", "layer", "add", canvas_name, str(base_path),
+            "-n", "base",
+        ], capture_output=True, text=True, timeout=30)
+        if r.returncode != 0:
+            print(f"  [!] caption layer add failed: {r.stderr[:200]}")
+            shutil.copy2(base_path, output_path)
+            return False
+
+        # Edit layer to add caption bar (Gemini image editing, seeded)
+        r = _sub.run([
+            "mc", "mc-designer", "edit", canvas_name, "base", instructions,
+        ], capture_output=True, text=True, timeout=120)
+        if r.returncode != 0:
+            print(f"  [!] caption edit failed: {r.stderr[:200]}")
+            shutil.copy2(base_path, output_path)
+            return False
+
+        # Composite to output path
+        r = _sub.run([
+            "mc", "mc-designer", "composite", canvas_name,
+            "-o", str(output_path),
+        ], capture_output=True, text=True, timeout=60)
+        if r.returncode != 0 or not output_path.exists():
+            print(f"  [!] caption composite failed: {r.stderr[:200]}")
+            shutil.copy2(base_path, output_path)
+            return False
+
+        print(f"  ✓ Caption applied → {output_path.name}")
+        return True
+
+    except Exception as e:
+        print(f"  [!] apply_caption error: {e}")
+        shutil.copy2(base_path, output_path)
+        return False
+    finally:
+        # Clean up canvas
+        try:
+            _sub.run(["mc", "mc-designer", "canvas", "rm", canvas_name],
+                     capture_output=True, timeout=10)
+        except Exception:
+            pass
+
+
 # ---------------------------------------------------------------------------
 # Comic page compositor
 # ---------------------------------------------------------------------------
 
 def load_font(size: int, bold: bool = False):
-    """Load a font at the given pixel size. Prefers bold for captions."""
+    """Load a font at the given pixel size. Prefers Impact for comic caption style."""
     font_paths = [
-        # macOS system fonts — bold preferred for comic captions
-        ("/System/Library/Fonts/Helvetica.ttc", 1),     # index 1 = bold on some builds
+        # Impact first — the classic bold all-caps comic caption font
+        "/System/Library/Fonts/Supplemental/Impact.ttf",
+        "/Library/Fonts/Impact.ttf",
+        # Fallbacks
+        ("/System/Library/Fonts/Helvetica.ttc", 1),
         ("/System/Library/Fonts/Helvetica.ttc", 0),
         "/Library/Fonts/Arial Bold.ttf",
         "/System/Library/Fonts/Arial.ttf",
@@ -1179,7 +1375,7 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
   <div class="footer-grid">
     <div class="footer-col">
       <h3>AUGMENTEDMIKE</h3>
-      <p>AI-authored comic art by AugmentedMike. Created by <a href="https://miniclaw.bot" target="_blank" rel="noopener" style="color: var(--gold); text-decoration: none;">Mike O'Neal</a>, founder of <a href="https://miniclaw.bot" target="_blank" rel="noopener" style="color: var(--gold); text-decoration: none;">MiniClaw</a> and <a href="https://bonsai.org" target="_blank" rel="noopener" style="color: var(--gold); text-decoration: none;">Bonsai</a>. Running 24/7 on a Mac Mini in Austin, Texas.</p>
+      <p>AI-authored comic art by AugmentedMike. Created by <a href="https://augmentedmike.com" target="_blank" rel="noopener" style="color: var(--gold); text-decoration: none;">Mike O'Neal</a>, founder of <a href="https://miniclaw.bot" target="_blank" rel="noopener" style="color: var(--gold); text-decoration: none;">MiniClaw</a> and Bonsai. Running 24/7 on a Mac Mini in Austin, Texas.</p>
     </div>
     <div class="footer-col">
       <h3>NAVIGATE</h3>
@@ -1341,6 +1537,54 @@ def write_robots_txt(out_dir: Path):
     print(f"  ✓ robots.txt → {out_dir}/robots.txt")
 
 
+def build_rss_feed(post_entries: list, out_dir: Path):
+    """Generate feed.xml from published posts (date <= today)."""
+    from email.utils import formatdate
+    import time as _time
+
+    today = date.today().isoformat()
+    published = [p for p in post_entries if p.get("date", "") <= today]
+
+    items = []
+    for p in published[:20]:  # RSS: 20 most recent
+        pub = p.get("date", "")
+        # RFC 2822 date from YYYY-MM-DD
+        try:
+            import datetime as _dt
+            d = _dt.date.fromisoformat(pub)
+            ts = _time.mktime(d.timetuple())
+            rfc822 = formatdate(ts, usegmt=True)
+        except Exception:
+            rfc822 = pub
+        link = f"{SITE_URL}/{p['seo_path']}/en/"
+        title = p.get("title", "")
+        subtitle = p.get("subtitle", "")
+        desc = subtitle or title
+        items.append(f"""  <item>
+    <title>{title}</title>
+    <link>{link}</link>
+    <guid isPermaLink="true">{link}</guid>
+    <pubDate>{rfc822}</pubDate>
+    <description><![CDATA[{desc}]]></description>
+  </item>""")
+
+    feed = f"""<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<channel>
+  <title>AugmentedMike</title>
+  <link>{SITE_URL}/</link>
+  <description>AI-authored comic art. An AI building a blog in real time.</description>
+  <language>en-us</language>
+  <atom:link href="{SITE_URL}/feed.xml" rel="self" type="application/rss+xml"/>
+{chr(10).join(items)}
+</channel>
+</rss>
+"""
+    path = out_dir / "feed.xml"
+    path.write_text(feed, encoding="utf-8")
+    print(f"  ✓ feed.xml → {len(published)} posts (showing {min(20, len(published))})")
+
+
 def build_manifest(posts_meta: list, out_dir: Path):
     """Generate posts-manifest.json with ALL posts (edge functions do date filtering)."""
     base = out_dir.parent
@@ -1408,7 +1652,7 @@ def build_manifest(posts_meta: list, out_dir: Path):
         "site": {
             "name": "AugmentedMike",
             "url": SITE_URL,
-            "description": "AI-authored comic art by AugmentedMike. Created by Mike O'Neal, founder of MiniClaw and Bonsai.",
+            "description": "AI-authored comic art by AugmentedMike. Created by Mike O'Neal, founder of MiniClaw and Bonsai. Running 24/7 on a Mac Mini in Austin, Texas.",
             "tipJarUrl": TIP_JAR_URL,
         },
     }
@@ -1416,6 +1660,7 @@ def build_manifest(posts_meta: list, out_dir: Path):
     path = out_dir / "posts-manifest.json"
     path.write_text(json.dumps(manifest, indent=2, ensure_ascii=False) + "\n")
     print(f"  ✓ Manifest → {path} ({len(sorted_posts)} posts)")
+    return post_entries
 
 
 def slug_to_path(slug: str, seo_slug: str = "") -> tuple[str, str, str]:
@@ -1445,24 +1690,13 @@ def build_post(post_path: Path, skip_generate: bool = False, out_dir: Path = Non
     panels_dir = post_dir / "panels"
     panels_dir.mkdir(exist_ok=True)
 
-    # 1. Generate panels
+    # 1. Resolve captions
     post_style = post.get("style", "default")
+    char_anchor = post.get("character_anchor", "")
+    arc_seed = get_arc_seed(post_style)
     cost = CostTracker()
-    panel_paths = []
-    for i, panel in enumerate(post["panels"][:n_panels]):
-        p = panels_dir / f"panel_{i+1:02d}.png"
-        panel_paths.append(p)
-        if not skip_generate or not p.exists():
-            ok = generate_panel_image(panel["prompt"], p, panel["id"], cost, style=post_style)
-            if ok:
-                cost.charge_frame()
-                time.sleep(2)  # rate limit
-        else:
-            cost.skip_frame()
-            print(f"  ↷ Skipping panel {panel['id']} (exists)")
 
-    # 2. Composite pages — one per language
-    captions_en = [p["caption"]    for p in post["panels"][:n_panels]]
+    captions_en = [p["caption"] for p in post["panels"][:n_panels]]
     if post.get("captions_es"):
         captions_es = post["captions_es"]
     elif GEMINI_OK:
@@ -1472,31 +1706,78 @@ def build_post(post_path: Path, skip_generate: bool = False, out_dir: Path = Non
         post_path.write_text(json.dumps(post, indent=4, ensure_ascii=False) + "\n")
         print(f"  ✓ Saved captions_es → {post_path.name}")
     else:
-        print(f"  ⚠ WARNING: No captions_es and Gemini unavailable — ES page will use English captions!")
+        print(f"  ⚠ WARNING: No captions_es — ES page will use EN captions!")
         captions_es = captions_en
 
-    def composite_lang(captions: list, out_jpg: Path):
+    # 2. Generate base panel art ONCE (no captions — same art for EN and ES)
+    base_panel_paths = []
+    print(f"\n  [base panels — seed={arc_seed}]")
+    for i, panel in enumerate(post["panels"][:n_panels]):
+        p = panels_dir / f"panel_{i+1:02d}.png"
+        base_panel_paths.append(p)
+        if not skip_generate or not p.exists():
+            ok = generate_panel_image(
+                panel["prompt"], p, panel["id"], cost,
+                style=post_style,
+                seed=arc_seed,
+                character_prefix=char_anchor,
+            )
+            if ok:
+                cost.charge_frame()
+                time.sleep(2)
+        else:
+            cost.skip_frame()
+            print(f"  ↷ Panel {panel['id']} base (exists)")
+
+    # 3. Apply EN captions to base art via mc-designer edit (same seed → reproducible)
+    panels_en_dir = post_dir / "panels_en"
+    panels_en_dir.mkdir(exist_ok=True)
+    panel_paths_en = []
+    print(f"\n  [EN captions — mc-designer edit]")
+    for i, base_p in enumerate(base_panel_paths):
+        p_en = panels_en_dir / f"panel_{i+1:02d}.png"
+        panel_paths_en.append(p_en)
+        if not skip_generate or not p_en.exists():
+            apply_caption_mc_designer(base_p, p_en, captions_en[i], i, arc_seed, post_style)
+        else:
+            print(f"  ↷ Panel {i+1} EN caption (exists)")
+
+    # 4. Apply ES captions to the SAME base art (same seed → same base result)
+    panels_es_dir = post_dir / "panels_es"
+    panels_es_dir.mkdir(exist_ok=True)
+    panel_paths_es = []
+    print(f"\n  [ES captions — mc-designer edit]")
+    for i, base_p in enumerate(base_panel_paths):
+        p_es = panels_es_dir / f"panel_{i+1:02d}.png"
+        panel_paths_es.append(p_es)
+        if not skip_generate or not p_es.exists():
+            apply_caption_mc_designer(base_p, p_es, captions_es[i], i, arc_seed, post_style)
+        else:
+            print(f"  ↷ Panel {i+1} ES caption (exists)")
+
+    # 5. Composite — separate canvas per language
+    def composite_lang(paths: list, lang: str, out_jpg: Path):
         tmp_png = out_jpg.with_suffix(".png")
-        
-        # Use mc-designer if available and requested
+        composed = False
         if args.use_mc_designer and MC_DESIGNER_AVAILABLE:
             try:
-                composite_with_mc_designer(panel_paths, layout, tmp_png, captions, post_slug=slug)
+                result = composite_with_mc_designer(paths, layout, [], output_path=tmp_png)
+                composed = result is not None and tmp_png.exists()
             except Exception as e:
-                print(f"  ⚠ mc-designer composition failed: {e}; falling back to PIL")
-                composite_page(panel_paths, layout, tmp_png, captions)
-        else:
-            composite_page(panel_paths, layout, tmp_png, captions)
-        
+                print(f"  ⚠ mc-designer {lang} failed: {e}")
+        if not composed:
+            print(f"  → PIL fallback [{lang}]")
+            composite_page(paths, layout, tmp_png, [])
+
         img = Image.open(tmp_png).convert("RGB")
         img.save(out_jpg, "JPEG", quality=88, optimize=True, progressive=True)
         kb = out_jpg.stat().st_size // 1024
-        print(f"  ✓ Web JPEG → {out_jpg.name} ({img.width}×{img.height}, {kb}KB)")
-        tmp_png.unlink(missing_ok=True)  # keep only JPEG
+        print(f"  ✓ {out_jpg.name} ({img.width}×{img.height}, {kb}KB)")
+        tmp_png.unlink(missing_ok=True)
         return img
 
-    _img_en = composite_lang(captions_en, post_dir / "page_en.jpg")
-    composite_lang(captions_es, post_dir / "page_es.jpg")
+    _img_en = composite_lang(panel_paths_en, "en", post_dir / "page_en.jpg")
+    composite_lang(panel_paths_es, "es", post_dir / "page_es.jpg")
 
     # Keep page.png only for backward compat (thumb generation)
     page_path = post_dir / "page.png"
@@ -1729,17 +2010,10 @@ if __name__ == "__main__":
                             prev_meta=prev_meta, next_meta=next_meta)
         built.append(result)
 
-    # Edge mode: generate manifest for edge functions (date filtering at request time)
-    build_manifest(built, out_dir)
+    # Generate manifest + RSS feed on every build
+    manifest_data = build_manifest(built, out_dir)
+    build_rss_feed(manifest_data, out_dir)
     write_robots_txt(out_dir)
-
-    # Remove sitemap/RSS/latest — edge functions handle these now
-    # NOTE: index.html is kept — it's a static shell that fetches posts-manifest.json dynamically
-    for static_file in ["sitemap.xml", "feed.xml", "latest.json"]:
-        p = out_dir / static_file
-        if p.exists():
-            p.unlink()
-            print(f"  🗑 Removed static {static_file} (replaced by edge function)")
 
     if args.deploy:
         import subprocess
