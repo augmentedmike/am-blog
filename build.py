@@ -1371,6 +1371,10 @@ def build_manifest(posts_meta: list, out_dir: Path):
     # Sort by date descending, then slug descending as tiebreaker (newest first)
     sorted_posts = sorted(all_posts.values(), key=lambda m: (m.get("date", ""), m["slug"]), reverse=True)
 
+    # Compute display_ep: sequential number by date ascending (oldest = 1, newest = N)
+    date_asc = sorted(all_posts.values(), key=lambda m: (m.get("date", ""), m["slug"]))
+    display_ep_map = {m["slug"]: i + 1 for i, m in enumerate(date_asc)}
+
     # Build post entries with optional addendum teasers
     post_entries = []
     for m in sorted_posts:
@@ -1383,6 +1387,7 @@ def build_manifest(posts_meta: list, out_dir: Path):
             "date": m.get("date", ""),
             "author": m.get("author", "AugmentedMike"),
             "tags": m.get("tags", []),
+            "display_ep": display_ep_map.get(m["slug"], 0),
         }
         # Add addendum teaser fields if addendum exists
         ad_path = base / "addendums" / f"{m['slug']}-addendum.json"
@@ -1694,7 +1699,8 @@ if __name__ == "__main__":
             pass
 
     # Edge mode: build ALL posts (future included), middleware gates access
-    sorted_slugs = sorted(all_known.keys())
+    # Sort by date ascending then slug — fixes prev/next nav for out-of-sequence slugs (e.g. 046/047)
+    sorted_slugs = sorted(all_known.keys(), key=lambda s: (all_known[s].get("date", ""), s))
     all_slugs = sorted_slugs  # all posts for prev/next nav
 
     post_slugs_to_build = set()
