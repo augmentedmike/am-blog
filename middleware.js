@@ -25,7 +25,9 @@ export default async function middleware(req) {
   const path = url.pathname;
 
   const manifest = await loadManifest(url.origin);
-  const today = new Date().toISOString().slice(0, 10);
+  // Use Austin TX time (CT = UTC-6 standard, UTC-5 DST) — a post published "today" in Austin
+  // should not be visible before midnight CT, not midnight UTC.
+  const today = new Date().toLocaleDateString('en-CA', { timeZone: 'America/Chicago' }); // YYYY-MM-DD in CT
 
   // ── 1. Old-slug redirect: /NNN-some-slug/ → /thoughts/NNN/seo-title/en/
   const oldMatch = path.match(/^\/(\d{3}-[^/]+)(\/.*)?$/);
