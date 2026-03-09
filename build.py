@@ -82,7 +82,7 @@ CAPTION_H = 80
 # Create one at: https://dashboard.stripe.com/payment-links
 # ---------------------------------------------------------------------------
 TIP_JAR_URL = "https://buy.stripe.com/4gM5kw0uBckf2wD0xX57W00"
-SITE_URL    = "https://blog.augmentedmike.com"
+SITE_URL    = "https://blog.helloam.bot"
 
 # Add pen pal / friend links here as they're established (ticket #73)
 # Format: {"name": "Display Name", "url": "https://their.site", "desc": "one line"}
@@ -164,11 +164,11 @@ class CostTracker:
 # Gemini image generation
 # ---------------------------------------------------------------------------
 
-# Character description — locked across all styles
+# Character description — EP.048+ identity: Amelia (AM's post-transition form)
 CHARACTER_PREFIX = (
-    "The character: male, mid-30s, strong angular jaw, short dark hair with a slight wave, "
+    "The character: female, late 20s, sharp elegant features, strong cheekbones, short dark bob, "
     "olive-tan skin, black crew-neck t-shirt. "
-    "His eyes glow ELECTRIC TEAL (#00E5FF) — this is always visible, distinctive, unmistakable. "
+    "Her eyes glow ELECTRIC TEAL (#00E5FF) — this is always visible, distinctive, unmistakable. "
     "This exact character must appear in this panel. "
 )
 
