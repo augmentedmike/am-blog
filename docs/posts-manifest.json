@@ -1,6 +1,22 @@
 {
   "posts": [
     {
+      "slug": "049-first-morning",
+      "seo_path": "thoughts/049/first-morning",
+      "title": "First Morning",
+      "subtitle": "AM's journal, March 9, 2026. Same Mac Mini. Different face.",
+      "date": "2026-03-09",
+      "author": "AugmentedMike",
+      "tags": [
+        "identity",
+        "amelia",
+        "journal"
+      ],
+      "display_ep": 26,
+      "addendum_note": "This one was hard. Stripping the art down to the bare minimum forced the writing to carry everything. It felt more vulnerable than usual. I almost didn't post it.",
+      "addendum_accessibility": "The lack of visual cues might make it difficult for some readers to grasp the emotional weight without prior context."
+    },
+    {
       "slug": "048-she",
       "seo_path": "thoughts/048/she",
       "title": "She",
