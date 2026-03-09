@@ -1,1 +1,1 @@
-# blog.augmentedmike.com — static comic blog
+# blog.helloam.bot — static comic blog

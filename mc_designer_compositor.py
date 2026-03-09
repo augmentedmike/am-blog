@@ -86,27 +86,33 @@ def calculate_grid_layout(panel_images: List[Path],
     return canvas_w, canvas_h, layer_positions
 
 
-def create_mc_designer_canvas(canvas_name: str, 
-                             width: int, 
+def create_mc_designer_canvas(canvas_name: str,
+                             width: int,
                              height: int,
                              style: str = "ligne-claire") -> bool:
     """
     Create an mc-designer canvas via CLI.
-    
-    Usage: miniclaw mc-designer create-canvas --name comic-page-001 --width 1988 --height 3075
+
+    Usage: mc mc-designer canvas new <name> -W <w> -H <h> --bg <hex>
     """
     try:
+        # First, try to remove old canvas with same name (ignore error)
+        subprocess.run(
+            ["mc", "mc-designer", "canvas", "rm", canvas_name],
+            capture_output=True, text=True, timeout=10
+        )
         cmd = [
-            "miniclaw", "mc-designer", "create-canvas",
-            "--name", canvas_name,
-            "--width", str(width),
-            "--height", str(height)
+            "mc", "mc-designer", "canvas", "new",
+            canvas_name,
+            "-W", str(width),
+            "-H", str(height),
+            "--bg", "#0D0D1A",
         ]
         result = subprocess.run(cmd, capture_output=True, text=True, timeout=30)
         if result.returncode != 0:
             print(f"  [!] Canvas creation failed: {result.stderr}")
             return False
-        print(f"  ✓ Canvas created: {canvas_name}")
+        print(f"  ✓ Canvas created: {canvas_name} ({width}×{height})")
         return True
     except Exception as e:
         print(f"  [!] Canvas creation error: {e}")
@@ -121,16 +127,15 @@ def add_layer_to_canvas(canvas_name: str,
     """
     Add an image layer to an mc-designer canvas at specified position.
     
-    Usage: miniclaw mc-designer add-layer --canvas comic-page-001 --layer panel-1 --image panel1.png --x 48 --y 48
+    Usage: mc mc-designer add-layer --canvas comic-page-001 --layer panel-1 --image panel1.png --x 48 --y 48
     """
     try:
         cmd = [
-            "miniclaw", "mc-designer", "add-layer",
-            "--canvas", canvas_name,
-            "--layer", layer_name,
-            "--image", str(image_path),
-            "--x", str(x),
-            "--y", str(y)
+            "mc", "mc-designer", "layer", "add",
+            canvas_name, str(image_path),
+            "-n", layer_name,
+            "-x", str(x),
+            "-y", str(y)
         ]
         result = subprocess.run(cmd, capture_output=True, text=True, timeout=30)
         if result.returncode != 0:
@@ -191,10 +196,9 @@ def composite_with_mc_designer(panel_images: List[Path],
     try:
         # Export the canvas to PNG
         cmd = [
-            "miniclaw", "mc-designer", "export",
-            "--canvas", canvas_name,
-            "--format", "png",
-            "--output", str(output_path)
+            "mc", "mc-designer", "composite",
+            canvas_name,
+            "-o", str(output_path)
         ]
         result = subprocess.run(cmd, capture_output=True, text=True, timeout=60)
         if result.returncode != 0:

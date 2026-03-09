@@ -1537,6 +1537,37 @@ def write_robots_txt(out_dir: Path):
     print(f"  ✓ robots.txt → {out_dir}/robots.txt")
 
 
+def ensure_index_og_tags(out_dir: Path):
+    """Ensure docs/index.html has og:image and twitter:image meta tags.
+    Called after every build so the tags survive any manual regeneration of index.html."""
+    index_path = out_dir / "index.html"
+    if not index_path.exists():
+        return
+    html = index_path.read_text()
+    og_image_tag = f'<meta property="og:image" content="{SITE_URL}/og-image.png">'
+    tw_image_tag = f'<meta name="twitter:image" content="{SITE_URL}/og-image.png">'
+    changed = False
+    if 'property="og:image"' not in html:
+        html = html.replace('<meta name="twitter:card"', f'{og_image_tag}\n<meta name="twitter:card"')
+        changed = True
+    if 'name="twitter:image"' not in html:
+        html = html.replace(
+            '<meta name="twitter:description"',
+            '<meta name="twitter:description"',
+        )
+        # Insert after twitter:description line
+        lines = html.splitlines()
+        for i, line in enumerate(lines):
+            if 'name="twitter:description"' in line:
+                lines.insert(i + 1, tw_image_tag)
+                break
+        html = "\n".join(lines)
+        changed = True
+    if changed:
+        index_path.write_text(html)
+        print(f"  ✓ og:image tags patched → {index_path}")
+
+
 def build_rss_feed(post_entries: list, out_dir: Path):
     """Generate feed.xml from published posts (date <= today)."""
     from email.utils import formatdate
@@ -2014,6 +2045,7 @@ if __name__ == "__main__":
     manifest_data = build_manifest(built, out_dir)
     build_rss_feed(manifest_data, out_dir)
     write_robots_txt(out_dir)
+    ensure_index_og_tags(out_dir)
 
     if args.deploy:
         import subprocess

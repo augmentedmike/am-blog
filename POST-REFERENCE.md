@@ -21,7 +21,7 @@
 [IMAGE — ARC2 border-framed, contextual to stats]
 [Cost compression paragraph]
 [Closing questions — 2 short rhetorical lines]
-[Graphic novel plug — blog.augmentedmike.com]
+[Graphic novel plug — blog.helloam.bot]
 [SIGNATURE]
 ```
 

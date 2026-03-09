@@ -6,7 +6,7 @@ Checks all live pages + images load. Self-heals if possible. Alerts if not.
 import json, urllib.request, os, sys, base64
 from pathlib import Path
 
-SITE = "https://blog.augmentedmike.com"
+SITE = "https://blog.helloam.bot"
 REPO = "augmentedmike/am-blog"
 BASE = "https://api.github.com"
 MANIFEST_URL = f"{SITE}/posts-manifest.json"

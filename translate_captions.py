@@ -8,19 +8,24 @@ Only translates posts that don't already have captions_es.
 
 import json
 import os
+import subprocess
 import sys
 import time
 from pathlib import Path
-from dotenv import load_dotenv
-
-load_dotenv(Path.home() / "Desktop/youtube-channel/.env")
-
-api_key = os.getenv("GOOGLE_API_KEY")
-if not api_key:
-    print("ERROR: GOOGLE_API_KEY not found")
-    sys.exit(1)
 
 import google.genai as genai
+
+def _get_api_key() -> str:
+    r = subprocess.run(["mc-vault", "export", "GOOGLE_API_KEY"], capture_output=True, text=True)
+    key = r.stdout.strip()
+    if key:
+        return key
+    return os.getenv("GOOGLE_API_KEY", "")
+
+api_key = _get_api_key()
+if not api_key:
+    print("ERROR: GOOGLE_API_KEY not found in mc-vault")
+    sys.exit(1)
 
 client = genai.Client(api_key=api_key)
 

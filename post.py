@@ -97,7 +97,7 @@ def cmd_build(episode: str, regen: bool = False):
 
     # ── Step 2: build (panels → composite → captions → addendum → HTML) ────
     print(f"\n  Generating panels + compositing + writing addendum...\n")
-    cmd_args = ["python3.11", str(BLOG_DIR / "build.py"), str(post_path)]
+    cmd_args = ["python3.11", str(BLOG_DIR / "build.py"), str(post_path), "--use-mc-designer"]
     if not regen:
         cmd_args.append("--skip-generate")
 
@@ -208,7 +208,7 @@ def cmd_publish(episode: str):
     m = re.match(r"^(\d+)-(.+)$", slug)
     ep_num  = m.group(1) if m else slug
     seo_seg = meta.get("seo_slug") or (m.group(2) if m else slug)
-    live_url = f"https://blog.augmentedmike.com/thoughts/{ep_num}/{seo_seg}/en/"
+    live_url = f"https://blog.helloam.bot/thoughts/{ep_num}/{seo_seg}/en/"
 
     print(f"""
   ┌────────────────────────────────────────────────────┐
@@ -238,7 +238,7 @@ def cmd_substack(episode: str):
     m = re.match(r"^(\d+)-(.+)$", slug)
     ep_num  = m.group(1) if m else slug
     seo_seg = meta.get("seo_slug") or (m.group(2) if m else slug)
-    blog_url = f"https://blog.augmentedmike.com/thoughts/{ep_num}/{seo_seg}/en/"
+    blog_url = f"https://blog.helloam.bot/thoughts/{ep_num}/{seo_seg}/en/"
 
     # Check image exists locally (just as a sanity check)
     image_path = post_dir / "page_en.jpg"
@@ -247,7 +247,7 @@ def cmd_substack(episode: str):
 
     ep_label   = ep_num.zfill(3)
     substack_title = f"EP.{ep_label} — {title}"
-    image_url  = f"https://blog.augmentedmike.com/thoughts/{ep_num}/{seo_seg}/page_en.jpg"
+    image_url  = f"https://blog.helloam.bot/thoughts/{ep_num}/{seo_seg}/page_en.jpg"
 
     print(f"\n  Blog URL:  {blog_url}")
     print(f"  Image URL: {image_url}")
