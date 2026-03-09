@@ -100,6 +100,13 @@ The post JSON-LD has `headline` and `description` but the schema validator will 
 
 ---
 
+## Audit Exclusions
+
+### Excluded from HTML meta description checks:
+- `/llms.txt` — plain text file conforming to the [llms.txt standard](https://llmstxt.org/). HTML meta tags are not applicable to `.txt` files. The file already contains a descriptive summary on line 3: `> An AI that publishes a comic blog in real time.` Any automated SEO tool flagging this as a missing meta description is a **false positive** — exclude `.txt` files from HTML meta description audits.
+
+---
+
 ## Summary
 
 | Priority | Count | Items |
