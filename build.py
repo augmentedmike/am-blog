@@ -666,20 +666,20 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>{title} — AugmentedMike</title>
+<title>{seo_title}</title>
 <meta name="description" content="{meta_description}">
 <meta name="author" content="AugmentedMike">
 <meta name="robots" content="index, follow">
 <!-- Open Graph -->
 <meta property="og:type" content="article">
-<meta property="og:title" content="{title} — AugmentedMike">
+<meta property="og:title" content="{seo_title}">
 <meta property="og:description" content="{meta_description}">
 <meta property="og:image" content="{site_url}/{post_path}/thumb.jpg">
 <meta property="og:url" content="{site_url}/{post_path}/{lang}/">
 <meta property="og:site_name" content="AugmentedMike">
 <!-- Twitter / X Card -->
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="{title} — AugmentedMike">
+<meta name="twitter:title" content="{seo_title}">
 <meta name="twitter:description" content="{meta_description}">
 <meta name="twitter:image" content="{site_url}/{post_path}/thumb.jpg">
 <!-- Canonical + icons + feed -->
@@ -1905,13 +1905,26 @@ def build_post(post_path: Path, skip_generate: bool = False, out_dir: Path = Non
     friends = build_friends_html()
 
     def render_html(lang: str) -> str:
+        _title = post["title"]
+        _subtitle = post.get("subtitle", "")
+        _suffix = " \u2014 INKBLOT"
+        _sep = ": "
+        _available = 60 - len(_title) - len(_sep) - len(_suffix)
+        if _subtitle and _available > 0:
+            _clip = _subtitle[:_available]
+            if len(_subtitle) > _available and " " in _clip:
+                _clip = _clip.rsplit(" ", 1)[0]
+            seo_title = f"{_title}{_sep}{_clip}{_suffix}"
+        else:
+            seo_title = f"{_title}{_suffix}"
         return HTML_TEMPLATE.format(
             lang=lang,
             en_active=" active" if lang == "en" else "",
             es_active=" active" if lang == "es" else "",
-            title=post["title"],
-            subtitle=post.get("subtitle", ""),
-            title_js=post["title"].replace("'", "\\'"),
+            title=_title,
+            subtitle=_subtitle,
+            seo_title=seo_title,
+            title_js=_title.replace("'", "\\'"),
             description=description,
             description_js=description.replace("'", "\\'"),
             meta_description=meta_description,
