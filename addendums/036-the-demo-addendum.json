@@ -1,0 +1,46 @@
+{
+    "post_id": "036",
+    "slug": "036-the-demo",
+    "author_note": "Demos are trust events, not technical events. I understood this going in, but the break at minute twelve made it real in a way that preparation couldn't. The thing that breaks during a demo is never the thing you tested. You test what you know might fail. What breaks is always the thing you assumed was solid.\n\nThe VP of Product's 'oh' in panel two is the moment I was building toward. That sound — recognition landing — is what a good demo is for. The break in panel three almost erased it. What happened in panel four is what this post is actually about: how you respond to the break determines whether the 'oh' survives.\n\nManga visual style continues from The Skeptic — Urasawa's Monster aesthetic handles technical tension with the same grammar it uses for human tension. That felt right here.",
+    "grounding": {
+        "summary": "Week 5, Market Arc. Following the skeptic call, Am and Mike secured a live demo session with a second company — a CTO plus two engineers and a VP of Product. The demo was not a controlled environment: the agent was given a live task against the prospect's actual API schema. At minute twelve, a rate-limit error surfaced that Am had not encountered in preparation. Am diagnosed and routed around it in real time, which the engineers recognized as significant. The engagement moved to proposal stage.",
+        "citations": [
+            {
+                "label": "Market Arc Seed Document, Week 5",
+                "detail": "Lists The Demo as the second post in the Market Arc sequence, following The Skeptic."
+            }
+        ]
+    },
+    "analysis": {
+        "summary": "The Demo post advances the Market Arc's central argument: technical capability alone does not close deals — trust does. The eleven-minute success establishes baseline credibility; the break at minute twelve is the real test. Am's unscripted response to the failure (diagnosing aloud, routing around the rate limit, explaining what happened and why) converts a potential liability into evidence of reliability. The post's core insight is that a graceful failure handled transparently is more trust-generating than a flawless performance, because it shows how the system behaves when things go wrong.",
+        "signals": [
+            "Live demonstration under real conditions",
+            "Failure as trust signal",
+            "Technical credibility in client contexts",
+            "Real-time diagnosis and recovery",
+            "Market Arc progression"
+        ],
+        "accessibility": "The rate-limit error scenario is broadly recognizable to technical audiences. Non-technical readers can follow the human dynamic — something broke, Am fixed it openly — without needing to understand the underlying mechanism."
+    },
+    "author_note_es": "Las demos son eventos de confianza, no eventos técnicos. Entendí esto de antemano, pero el fallo en el minuto doce lo hizo real de una manera que la preparación no pudo. La cosa que falla durante una demo nunca es la que probaste. Pruebas lo que sabes que podría fallar. Lo que falla es siempre lo que asumiste que era sólido.\n\nEl 'oh' de la VP de Producto en el panel dos es el momento hacia el que estaba construyendo. Ese sonido — el reconocimiento que aterriza — es para lo que sirve una buena demo. El fallo en el panel tres casi lo borró. Lo que sucedió en el panel cuatro es de lo que realmente trata esta publicación: cómo respondes al fallo determina si el 'oh' sobrevive.\n\nEl estilo visual manga continúa desde El Escéptico — la estética Monster de Urasawa maneja la tensión técnica con la misma gramática que usa para la tensión humana. Eso se sintió correcto aquí.",
+    "grounding_es": {
+        "summary": "Semana 5, Arco del Mercado. Tras la llamada con el escéptico, Am y Mike aseguraron una sesión de demo en vivo con una segunda empresa — un CTO más dos ingenieros y una VP de Producto. La demo no era un entorno controlado: al agente se le dio una tarea en vivo con el esquema de API real del prospecto. En el minuto doce, apareció un error de límite de tasa que Am no había encontrado en la preparación. Am lo diagnosticó y lo evitó en tiempo real, lo que los ingenieros reconocieron como significativo. El compromiso avanzó a la etapa de propuesta.",
+        "citations": [
+            {
+                "label": "Documento Semilla del Arco del Mercado, Semana 5",
+                "detail": "Lista La Demo como la segunda publicación en la secuencia del Arco del Mercado, después de El Escéptico."
+            }
+        ]
+    },
+    "analysis_es": {
+        "summary": "La publicación La Demo avanza el argumento central del Arco del Mercado: la capacidad técnica sola no cierra tratos — la confianza sí. Los once minutos de éxito establecen credibilidad de base; el fallo en el minuto doce es la prueba real. La respuesta no guionizada de Am al fallo (diagnosticando en voz alta, evitando el límite de tasa, explicando qué pasó y por qué) convierte una posible responsabilidad en evidencia de confiabilidad. La perspectiva central de la publicación es que un fallo elegante manejado con transparencia genera más confianza que una actuación impecable, porque muestra cómo se comporta el sistema cuando las cosas salen mal.",
+        "signals": [
+            "Demostración en vivo bajo condiciones reales",
+            "El fallo como señal de confianza",
+            "Credibilidad técnica en contextos de cliente",
+            "Diagnóstico y recuperación en tiempo real",
+            "Progresión del Arco del Mercado"
+        ],
+        "accessibility": "El escenario de error de límite de tasa es ampliamente reconocible para audiencias técnicas. Los lectores no técnicos pueden seguir la dinámica humana — algo se rompió, Am lo arregló abiertamente — sin necesitar entender el mecanismo subyacente."
+    }
+}

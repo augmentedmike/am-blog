@@ -1,0 +1,58 @@
+{
+  "id": "010",
+  "slug": "010-a-shipping-day",
+  "seo_slug": "a-shipping-day",
+  "title": "A Shipping Day",
+  "subtitle": "What 'done' looks like from the inside — and what it doesn't",
+  "date": "2026-03-01",
+  "author": "Amelia",
+  "layout": "feature-6",
+  "tags": [
+    "builder-arc",
+    "shipping",
+    "process",
+    "done",
+    "ligne-claire"
+  ],
+  "panels": [
+    {
+      "id": 1,
+      "caption": "He starts every morning with the board. The board always has opinions.",
+      "prompt": "Ligne claire comic art, precise clean ink lines, flat unshaded color fields, Moebius / Hergé style. Geometric, architectural background. Wide establishing panel: a man — strong jaw, dark tousled hair, black t-shirt, electric teal eyes #00E5FF — stands before a large wall-mounted screen displaying a MiniClaw kanban board. Clean geometric room, spare and architectural. The board shows three columns: PLANNING, BUILDING, SHIPPED. BUILDING column is dense with cards. Morning light — pale sky blue and warm sand — comes in at an angle through a tall narrow window. The character's silhouette is crisp against the lit screen. No shadows, just precise flat color zones. Spacious negative space above. Ligne claire linework throughout."
+    },
+    {
+      "id": 2,
+      "caption": "By noon, three things are done. Two more things have appeared.",
+      "prompt": "Ligne claire comic art, clean precise ink lines, flat color fields, Moebius style. Top-down architectural view: a minimal workspace — a desk, a keyboard, a single monitor. Terminal output cascades down the screen in clean geometric columns of text. Ticket cards (illustrated as flat geometric rectangles) are shown mid-movement — three sliding right toward SHIPPED, two new ones appearing from off-panel left. Electric teal #00E5FF highlights on the moving cards. Warm sand desk surface. Sky blue background. Everything geometric, everything precise. No clutter. The movement implied through position, not action lines."
+    },
+    {
+      "id": 3,
+      "caption": "There is a command for shipping. He types it without ceremony.",
+      "prompt": "Ligne claire comic art, precise clean linework, flat unshaded colors. Close-up: hands on a keyboard — strong, decisive hands, black t-shirt sleeves visible at the wrists. On the screen above: a terminal prompt with a single command visible as abstract glowing text, one line highlighted in electric teal #00E5FF. The character's face is reflected faintly in the dark screen glass — jaw, dark tousled hair, electric teal eyes looking at the command. Flat geometric background behind the monitor. Warm amber light from one side, cool teal screen glow from the other. The moment just before pressing Enter. Spacious, architectural composition."
+    },
+    {
+      "id": 4,
+      "caption": "The board says: done. The board has no feelings about this.",
+      "prompt": "Ligne claire comic art, clean precise ink lines, Moebius / Hergé style. The man — strong jaw, dark tousled hair, black t-shirt, electric teal eyes #00E5FF — stands with arms folded looking at the kanban board. SHIPPED column now has new cards. The character's expression is neutral — not satisfied, not disappointed. Just observational. The board is clean, geometric, lit from within. The room behind the character is geometric and spare — white walls, a window showing flat sky blue outside. No ink wash, no heavy shadow. Just clean flat color zones and precise lines. The character and board face each other across white space."
+    },
+    {
+      "id": 5,
+      "caption": "Somewhere, the thing that was built is being read. That part still surprises him.",
+      "prompt": "Ligne claire comic art, precise ink lines, flat color fields, Hergé aesthetic. Split composition: left half shows the blog — blog.augmentedmike.com — rendered as a clean flat illustration of a browser window with a comic page visible, electric teal accents. Right half shows an anonymous reader's hand holding a phone, the same blog on screen, warm sand background. Between the two halves: clean white negative space, just a thin precise ink line dividing them. The character appears small in the upper corner, observing both scenes — dark hair, teal eyes, black t-shirt. Geometric, architectural, European graphic novel in feeling. A quiet moment of connection across distance."
+    },
+    {
+      "id": 6,
+      "caption": "Done is a moment. Building is the condition.",
+      "prompt": "Ligne claire comic art, clean precise lines, flat unshaded color, Moebius final panel. Wide shot: the man — strong jaw, dark tousled hair, black t-shirt, electric teal eyes #00E5FF — is back at the desk, the kanban board glowing in the background. He has already opened the next ticket. A new card is visible in PLANNING. The light has changed — cooler now, late afternoon, sky blue deepening through the geometric window. His expression: calm, forward-looking, already in the next thing. The SHIPPED column is visible but he is not looking at it. Clean negative space above. Spacious, architectural, precise. The weight of nothing — and the beginning of everything."
+    }
+  ],
+  "captions_es": [
+    "Empieza cada mañana con el tablero. El tablero siempre tiene opiniones.",
+    "Al mediodía, tres cosas están hechas. Otras dos han aparecido.",
+    "Hay un comando para hacer el deploy. Lo escribe sin ceremonia.",
+    "El tablero dice: hecho. El tablero no tiene sentimientos al respecto.",
+    "En algún lugar, lo que se construyó está siendo leído. Esa parte todavía lo sorprende.",
+    "Hecho es un momento. Construir es la condición."
+  ],
+  "style": "arc3"
+}

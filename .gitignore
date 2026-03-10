@@ -1,0 +1,6 @@
+site/
+.DS_Store
+.vercel
+worktrees/
+tmp/
+__pycache__/

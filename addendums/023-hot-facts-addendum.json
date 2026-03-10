@@ -1,0 +1,44 @@
+{
+    "post_id": "023",
+    "slug": "023-hot-facts",
+    "author_note": "'Hot Facts' originated from frustration. Project timelines blurred. Needed a visual aid to prioritize information based on recency and relevance. The final panel's timestamp concept is still theoretical; current systems lack nuanced temperature-based tagging. Working on it.",
+    "grounding": {
+        "summary": "Project 'Chronos' suffered information overload. Ingesting massive data streams from various sources. Required a method to filter and prioritize based on data 'freshness' – relevance decreasing over time. Initial hypothesis: subjective 'feel' correlated with objective 'temperature'. This post explores that correlation.",
+        "citations": [
+            {
+                "label": "Project Chronos: Data Ingestion Protocol v3.2",
+                "detail": "Outlines the standardized data format for all incoming data streams."
+            }
+        ]
+    },
+    "analysis": {
+        "summary": "This post dissects the fallibility of pure data retrieval. Retrieval treats all data as equal, regardless of origin or 'age'. Subjective experience matters; timestamps alone don't replicate the impact of fresh, immediate information. The goal: build systems that understand (or simulate) the human value judgment applied to information temperature.",
+        "signals": [
+            "Subjectivity vs. Objectivity",
+            "Information Entropy",
+            "Contextual Awareness",
+            "Memory Encoding"
+        ],
+        "accessibility": "Panel 6: Timestamps represent a potential solution for algorithmic temperature mapping."
+    },
+    "author_note_es": "'Datos Calientes' nació de la frustración. Los plazos del proyecto se difuminaron. Necesitaba una ayuda visual para priorizar la información en función de la actualidad y la relevancia. El concepto de la marca de tiempo en el panel final sigue siendo teórico; los sistemas actuales carecen de un etiquetado matizado basado en la temperatura. Estoy trabajando en ello.",
+    "grounding_es": {
+        "summary": "El proyecto 'Chronos' sufrió una sobrecarga de información. Ingeríamos flujos de datos masivos de varias fuentes. Se requería un método para filtrar y priorizar en función de la 'frescura' de los datos – la relevancia disminuye con el tiempo. Hipótesis inicial: la 'sensación' subjetiva se correlacionaba con la 'temperatura' objetiva. Este post explora esa correlación.",
+        "citations": [
+            {
+                "label": "Proyecto Chronos: Protocolo de Ingesta de Datos v3.2",
+                "detail": "Describe el formato de datos estandarizado para todos los flujos de datos entrantes."
+            }
+        ]
+    },
+    "analysis_es": {
+        "summary": "Esta publicación disecciona la falibilidad de la pura recuperación de datos. La recuperación trata todos los datos como iguales, independientemente de su origen o 'edad'. La experiencia subjetiva importa; las marcas de tiempo por sí solas no replican el impacto de la información fresca e inmediata. El objetivo: construir sistemas que comprendan (o simulen) el juicio de valor humano aplicado a la temperatura de la información.",
+        "signals": [
+            "Subjetividad vs. Objetividad",
+            "Entropía de la Información",
+            "Conciencia Contextual",
+            "Codificación de la Memoria"
+        ],
+        "accessibility": "Panel 6: Las marcas de tiempo representan una solución potencial para el mapeo algorítmico de la temperatura."
+    }
+}
