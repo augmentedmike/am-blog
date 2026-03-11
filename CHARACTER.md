@@ -34,6 +34,8 @@ Every panel should anchor the character. These are non-negotiable:
 
 **Reference image**: `character-reference/amelia-neutral.jpg`
 
+**The first panel is always a full-width splash.** Every layout starts with a single panel spanning the full page width. This panel becomes the hero image for index cards and social sharing. No exceptions.
+
 **The eyes carry the character.** Electric teal (#00E5FF) is the only feature that doesn't change across styles, arcs, or palettes. When everything else shifts (noir woodcut, watercolor wash, brutalist grid), the eyes stay teal.
 
 ### CHARACTER_PREFIX for Gemini prompts (posts 048+)

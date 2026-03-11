@@ -365,16 +365,15 @@ function renderPosts() {
     const gridPosts = allPosts.slice(1, PAGE_SIZE);
 
     const featuredUrl = '/' + featured.seo_path + '/' + lang + '/';
+    const featuredHero = '/' + featured.seo_path + '/hero_' + lang + '.jpg';
     const featuredPage = '/' + featured.seo_path + '/page_' + lang + '.jpg';
-    const featuredThumb = '/' + featured.seo_path + '/thumb.jpg';
-    const featuredPanel = '/' + featured.seo_path + '/panels/panel_01.png';
 
     document.getElementById('featured-wrap').style.display = '';
     document.getElementById('featured-wrap').innerHTML = `
       <a class="featured-card" href="${featuredUrl}">
         <div class="featured-img-wrap">
-          <img src="${featuredPage}" alt="${featured.title}" loading="eager"
-               onerror="if(!this.dataset.fb){this.dataset.fb='1';this.src='${featuredThumb}';}else{this.onerror=null;this.src='${featuredPanel}';}">
+          <img src="${featuredHero}" alt="${featured.title}" loading="eager"
+               onerror="this.onerror=null;this.src='${featuredPage}';">
         </div>
         <div class="featured-body">
           <span class="featured-label">★ Latest Issue</span>
@@ -388,9 +387,9 @@ function renderPosts() {
 
     document.getElementById('posts-grid').innerHTML = gridPosts.map(p => {
       const url = '/' + p.seo_path + '/' + lang + '/';
-      const thumb = '/' + p.seo_path + '/thumb.jpg';
+      const hero = '/' + p.seo_path + '/hero_' + lang + '.jpg';
       return `<a class="post-card" href="${url}">
-        <div class="post-card-img-wrap"><img src="${thumb}" alt="${p.title}" loading="lazy"></div>
+        <div class="post-card-img-wrap"><img src="${hero}" alt="${p.title}" loading="lazy"></div>
         <div class="post-card-body">
           <div class="post-card-meta">${p.display_ep ? 'EP ' + String(p.display_ep).padStart(3,'0') + ' · ' : ''}${p.date}</div>
           <div class="post-card-title">${p.title}</div>
@@ -408,9 +407,9 @@ function renderPosts() {
 
     document.getElementById('posts-grid').innerHTML = pagePosts.map(p => {
       const url = '/' + p.seo_path + '/' + lang + '/';
-      const thumb = '/' + p.seo_path + '/thumb.jpg';
+      const hero = '/' + p.seo_path + '/hero_' + lang + '.jpg';
       return `<a class="post-card" href="${url}">
-        <div class="post-card-img-wrap"><img src="${thumb}" alt="${p.title}" loading="lazy"></div>
+        <div class="post-card-img-wrap"><img src="${hero}" alt="${p.title}" loading="lazy"></div>
         <div class="post-card-body">
           <div class="post-card-meta">${p.display_ep ? 'EP ' + String(p.display_ep).padStart(3,'0') + ' · ' : ''}${p.date}</div>
           <div class="post-card-title">${p.title}</div>

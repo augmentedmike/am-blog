@@ -51,7 +51,7 @@ except ImportError:
 try:
     import google.genai as genai
     import subprocess as _sp
-    _r = _sp.run(["mc-vault", "export", "GOOGLE_API_KEY"], capture_output=True, text=True)
+    _r = _sp.run(["mc", "vault", "export", "gemini-api-key"], capture_output=True, text=True)
     api_key = _r.stdout.strip() or os.getenv("GOOGLE_API_KEY", "")
     _genai_client = genai.Client(api_key=api_key) if api_key else None
     GEMINI_OK = bool(api_key)
@@ -114,9 +114,11 @@ CAPTION_ACCENT = (220, 180, 80) # gold — used for border only
 # ---------------------------------------------------------------------------
 Layout = List[Tuple[int, List[int]]]
 
+## RULE: First row MUST always be a single full-width panel (hero image).
+## This ensures hero crops work correctly for index cards and social sharing.
 LAYOUTS: Dict[str, Layout] = {
     "morning":   [(2, [1]),      (1, [1, 1]),    (1, [1, 1, 2])],
-    "afternoon": [(1, [1, 2]),   (2, [1]),        (1, [2, 1]),   (1, [1])],
+    "afternoon": [(2, [1]),      (1, [1, 2]),     (1, [2, 1]),   (1, [1])],
     "splash-1":  [(1, [1])],
     "drama-4":   [(2, [1]),      (1, [1, 2]),     (1, [2, 1])],
     "feature-5": [(2, [1]),      (1, [1, 1]),     (1, [1, 1])],
@@ -342,7 +344,8 @@ def generate_panel_image(prompt: str, output_path: Path, panel_id: int,
 
     char_prefix = character_prefix or CHARACTER_PREFIX
     style_suffix = get_style_suffix(style)
-    full_prompt = f"{char_prefix}\n{prompt}\n\n{style_suffix}"
+    today = date.today().strftime("%B %d, %Y")
+    full_prompt = f"{char_prefix}\n{prompt}\n\nIMPORTANT: Today's date is {today}. Any dates shown in the art must be consistent with this date.\n\n{style_suffix}"
 
     # Load character reference image for visual consistency
     ref_path = Path(__file__).parent / "character-reference" / "mike-neutral.jpg"
@@ -411,10 +414,10 @@ def apply_caption_mc_designer(base_path: Path, output_path: Path,
             panel_w, panel_h = _im.size
 
         # Create canvas with arc seed and matching dimensions
-        _sub.run(["mc", "mc-designer", "canvas", "rm", canvas_name],
+        _sub.run(["mc", "designer", "canvas", "rm", canvas_name],
                  capture_output=True, timeout=10)
         r = _sub.run([
-            "mc", "mc-designer", "canvas", "new", canvas_name,
+            "mc", "designer", "canvas", "new", canvas_name,
             "--seed", str(arc_seed),
             "-W", str(panel_w),
             "-H", str(panel_h),
@@ -426,7 +429,7 @@ def apply_caption_mc_designer(base_path: Path, output_path: Path,
 
         # Add base panel as layer
         r = _sub.run([
-            "mc", "mc-designer", "layer", "add", canvas_name, str(base_path),
+            "mc", "designer", "layer", "add", canvas_name, str(base_path),
             "-n", "base",
         ], capture_output=True, text=True, timeout=30)
         if r.returncode != 0:
@@ -436,7 +439,7 @@ def apply_caption_mc_designer(base_path: Path, output_path: Path,
 
         # Edit layer to add caption bar (Gemini image editing, seeded)
         r = _sub.run([
-            "mc", "mc-designer", "edit", canvas_name, "base", instructions,
+            "mc", "designer", "edit", canvas_name, "base", instructions,
         ], capture_output=True, text=True, timeout=120)
         if r.returncode != 0:
             print(f"  [!] caption edit failed: {r.stderr[:200]}")
@@ -445,7 +448,7 @@ def apply_caption_mc_designer(base_path: Path, output_path: Path,
 
         # Composite to output path
         r = _sub.run([
-            "mc", "mc-designer", "composite", canvas_name,
+            "mc", "designer", "composite", canvas_name,
             "-o", str(output_path),
         ], capture_output=True, text=True, timeout=60)
         if r.returncode != 0 or not output_path.exists():
@@ -463,7 +466,7 @@ def apply_caption_mc_designer(base_path: Path, output_path: Path,
     finally:
         # Clean up canvas
         try:
-            _sub.run(["mc", "mc-designer", "canvas", "rm", canvas_name],
+            _sub.run(["mc", "designer", "canvas", "rm", canvas_name],
                      capture_output=True, timeout=10)
         except Exception:
             pass
@@ -674,14 +677,14 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
 <meta property="og:type" content="article">
 <meta property="og:title" content="{title} — INKBLOT">
 <meta property="og:description" content="{meta_description}">
-<meta property="og:image" content="{site_url}/{post_path}/thumb.jpg">
+<meta property="og:image" content="{site_url}/{post_path}/hero_{lang}.jpg">
 <meta property="og:url" content="{site_url}/{post_path}/{lang}/">
 <meta property="og:site_name" content="INKBLOT">
 <!-- Twitter / X Card -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="{title} — INKBLOT">
 <meta name="twitter:description" content="{meta_description}">
-<meta name="twitter:image" content="{site_url}/{post_path}/thumb.jpg">
+<meta name="twitter:image" content="{site_url}/{post_path}/hero_{lang}.jpg">
 <!-- Canonical + icons + feed -->
 <link rel="canonical" href="{site_url}/{post_path}/{lang}/">
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
@@ -697,7 +700,7 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
   "@type": "BlogPosting",
   "headline": "{title}",
   "description": "{description}",
-  "image": "{site_url}/{post_path}/thumb.jpg",
+  "image": "{site_url}/{post_path}/hero_{lang}.jpg",
   "url": "{site_url}/{post_path}/{lang}/",
   "datePublished": "{date}",
   "dateModified": "{date}",
@@ -1530,6 +1533,20 @@ def generate_thumb(page_path: Path, out_path: Path, width: int = 600):
     print(f"  ✓ Thumb → {out_path.name} ({width}×{height}, {kb}KB)")
 
 
+def generate_hero(page_path: Path, out_path: Path, layout: Layout):
+    """Crop the top row of the comic page as a hero image for index/list pages and social cards."""
+    img = Image.open(page_path).convert("RGB")
+    total_h_weight = sum(w for w, _ in layout)
+    usable_h = img.height - 2 * MARGIN - GUTTER * (len(layout) - 1)
+    top_row_weight = layout[0][0]
+    top_row_h = int(usable_h * top_row_weight / total_h_weight)
+    # Crop: full width, from top margin through end of first row
+    hero = img.crop((0, 0, img.width, MARGIN + top_row_h + GUTTER // 2))
+    hero.save(out_path, "JPEG", quality=85, optimize=True, progressive=True)
+    kb = out_path.stat().st_size // 1024
+    print(f"  ✓ Hero → {out_path.name} ({hero.width}×{hero.height}, {kb}KB)")
+
+
 def write_robots_txt(out_dir: Path):
     """Write robots.txt pointing crawlers to the sitemap."""
     content = f"User-agent: *\nAllow: /\nSitemap: {SITE_URL}/sitemap.xml\n"
@@ -1858,13 +1875,11 @@ def build_post(post_path: Path, skip_generate: bool = False, out_dir: Path = Non
     _img_en = composite_lang(panel_paths_en, "en", post_dir / "page_en.jpg")
     composite_lang(panel_paths_es, "es", post_dir / "page_es.jpg")
 
-    # Keep page.png only for backward compat (thumb generation)
-    page_path = post_dir / "page.png"
-    if not page_path.exists():
-        # Regenerate page.png from EN JPEG for thumbnail use
-        _img_en.save(page_path, "PNG")
+    # 2b. Generate hero images (top row crop for index/list pages and social cards)
+    generate_hero(post_dir / "page_en.jpg", post_dir / "hero_en.jpg", layout)
+    generate_hero(post_dir / "page_es.jpg", post_dir / "hero_es.jpg", layout)
 
-    # 2b. Generate thumbnail for index cards
+    # 2c. Generate thumbnail for index cards
     generate_thumb(post_dir / "page_en.jpg", post_dir / "thumb.jpg")
 
     # 3. Generate HTML
